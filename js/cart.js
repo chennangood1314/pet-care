@@ -30,7 +30,7 @@ function initCart() {
   const checkoutBtn = document.getElementById('checkout-btn');
   if (checkoutBtn) {
     checkoutBtn.addEventListener('click', () => {
-      if (!cartItems || cartItems.length === 0) {
+      if (CartStore.isEmpty()) {
         showToast('购物车是空的，先去选购商品吧！');
         return;
       }
@@ -64,7 +64,9 @@ function renderCartBody() {
   const totalEl = document.querySelector('.total-amount');
   if (!cartBody) return;
 
-  if (!cartItems || cartItems.length === 0) {
+  const items = CartStore.get();
+
+  if (items.length === 0) {
     cartBody.innerHTML = `
       <div class="empty-cart">
         <i class="fas fa-shopping-basket"></i>
@@ -77,7 +79,7 @@ function renderCartBody() {
   }
 
   let total = 0;
-  cartBody.innerHTML = cartItems.map(item => {
+  cartBody.innerHTML = items.map(item => {
     total += item.price * item.quantity;
     return `
       <div class="cart-item" data-id="${item.id}">
@@ -103,22 +105,22 @@ function renderCartBody() {
 
 // 修改数量
 function changeQty(productId, delta) {
-  const item = cartItems.find(i => i.id === productId);
+  const items = CartStore.get();
+  const item = items.find(i => i.id === productId);
   if (!item) return;
   item.quantity += delta;
   if (item.quantity <= 0) {
-    removeFromCart(productId);
-    return;
+    CartStore.remove(productId);
+  } else {
+    CartStore.updateQty(productId, item.quantity);
   }
-  saveCart();
   updateCartBadge();
   renderCartBody();
 }
 
 // 删除商品
 function removeFromCart(productId) {
-  cartItems = cartItems.filter(i => i.id !== productId);
-  saveCart();
+  CartStore.remove(productId);
   updateCartBadge();
   renderCartBody();
 }
@@ -128,8 +130,10 @@ function renderOrderSummary() {
   const orderItems = document.getElementById('order-items');
   if (!orderItems) return;
 
+  const items = CartStore.get();
   let subtotal = 0;
-  orderItems.innerHTML = cartItems.map(item => {
+
+  orderItems.innerHTML = items.map(item => {
     const lineTotal = item.price * item.quantity;
     subtotal += lineTotal;
     return `

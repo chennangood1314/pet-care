@@ -87,7 +87,7 @@ function deletePet(petId) {
 // 保存宠物数据到本地存储
 function savePets() {
     try {
-        localStorage.setItem('userPets', JSON.stringify(pets));
+        storage.set('userPets', pets);
     } catch (error) {
         console.error('保存宠物数据失败:', error);
     }
@@ -96,9 +96,9 @@ function savePets() {
 // 从本地存储加载宠物数据
 function loadPets() {
     try {
-        const savedPets = localStorage.getItem('userPets');
+        const savedPets = storage.get('userPets', null);
         if (savedPets) {
-            pets = JSON.parse(savedPets);
+            pets = savedPets;
             renderPets();
         } else {
             // 如果没有数据，显示示例数据

@@ -170,25 +170,69 @@ const PRODUCTS = [
 ];
 
 let currentCategory = 'all';
-let cartItems = JSON.parse(localStorage.getItem('cartItems') || '[]');
+let currentSort = 'default';
+let searchQuery = '';
 
 // 初始化商城
 function initStore() {
-  renderProducts(currentCategory);
+  renderProducts();
   setupCategoryButtons();
+  setupSearchAndSort();
   updateCartBadge();
 }
 
+// 获取筛选和排序后的商品列表
+function getFilteredProducts() {
+  let filtered = currentCategory === 'all'
+    ? [...PRODUCTS]
+    : PRODUCTS.filter(p => p.category === currentCategory);
+
+  // 搜索过滤
+  if (searchQuery.trim()) {
+    const q = searchQuery.trim().toLowerCase();
+    filtered = filtered.filter(p =>
+      p.name.toLowerCase().includes(q) ||
+      p.desc.toLowerCase().includes(q) ||
+      p.tags.some(t => t.toLowerCase().includes(q))
+    );
+  }
+
+  // 排序
+  switch (currentSort) {
+    case 'price-asc':
+      filtered.sort((a, b) => a.price - b.price);
+      break;
+    case 'price-desc':
+      filtered.sort((a, b) => b.price - a.price);
+      break;
+    case 'rating':
+      filtered.sort((a, b) => b.rating - a.rating);
+      break;
+    case 'sales':
+      filtered.sort((a, b) => b.sales - a.sales);
+      break;
+  }
+
+  return filtered;
+}
+
 // 渲染商品列表
-function renderProducts(category) {
+function renderProducts() {
   const grid = document.getElementById('products-grid');
+  const empty = document.getElementById('products-empty');
   if (!grid) return;
 
-  const filtered = category === 'all'
-    ? PRODUCTS
-    : PRODUCTS.filter(p => p.category === category);
+  const products = getFilteredProducts();
 
-  grid.innerHTML = filtered.map(product => `
+  if (products.length === 0) {
+    grid.innerHTML = '';
+    if (empty) empty.style.display = 'block';
+    return;
+  }
+
+  if (empty) empty.style.display = 'none';
+
+  grid.innerHTML = products.map(product => `
     <div class="product-card" data-id="${product.id}">
       ${product.badge ? `<span class="product-badge">${product.badge}</span>` : ''}
       <div class="product-img">${product.img}</div>
@@ -224,9 +268,29 @@ function setupCategoryButtons() {
       document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       currentCategory = btn.dataset.category;
-      renderProducts(currentCategory);
+      renderProducts();
     });
   });
+}
+
+// 设置搜索和排序
+function setupSearchAndSort() {
+  const searchInput = document.getElementById('store-search-input');
+  const sortSelect = document.getElementById('store-sort');
+
+  if (searchInput) {
+    searchInput.addEventListener('input', () => {
+      searchQuery = searchInput.value;
+      renderProducts();
+    });
+  }
+
+  if (sortSelect) {
+    sortSelect.addEventListener('change', () => {
+      currentSort = sortSelect.value;
+      renderProducts();
+    });
+  }
 }
 
 // 加入购物车
@@ -234,27 +298,15 @@ function addToCart(productId) {
   const product = PRODUCTS.find(p => p.id === productId);
   if (!product) return;
 
-  const existingItem = cartItems.find(item => item.id === productId);
-  if (existingItem) {
-    existingItem.quantity += 1;
-  } else {
-    cartItems.push({ ...product, quantity: 1 });
-  }
-
-  saveCart();
+  CartStore.add(product);
   updateCartBadge();
   showAddToCartAnimation(productId);
-  showToast(`已将「${product.name}」加入购物车 🛒`);
-}
-
-// 保存购物车
-function saveCart() {
-  localStorage.setItem('cartItems', JSON.stringify(cartItems));
+  showToast(`已将「${product.name}」加入购物车`);
 }
 
 // 更新购物车数量徽标
 function updateCartBadge() {
-  const total = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+  const total = CartStore.totalCount();
   const badge = document.querySelector('.cart-count');
   if (badge) {
     badge.textContent = total;

@@ -274,9 +274,9 @@ function saveTaskStatus(taskId, completed) {
     try {
         const today = new Date().toDateString();
         const storageKey = `petTasks_${today}`;
-        let tasksStatus = JSON.parse(localStorage.getItem(storageKey) || '{}');
+        let tasksStatus = storage.get(storageKey, {});
         tasksStatus[taskId] = completed;
-        localStorage.setItem(storageKey, JSON.stringify(tasksStatus));
+        storage.set(storageKey, tasksStatus);
     } catch (error) {
         console.error('保存任务状态失败:', error);
     }
@@ -287,7 +287,7 @@ function loadTaskStatus() {
     try {
         const today = new Date().toDateString();
         const storageKey = `petTasks_${today}`;
-        return JSON.parse(localStorage.getItem(storageKey) || '{}');
+        return storage.get(storageKey, {});
     } catch (error) {
         console.error('加载任务状态失败:', error);
         return {};
@@ -297,13 +297,13 @@ function loadTaskStatus() {
 // 设置每日提醒
 function setupDailyReminders() {
     // 检查是否为当天第一次访问
-    const lastVisit = localStorage.getItem('lastVisitDate');
+    const lastVisit = storage.get('lastVisitDate', '');
     const today = new Date().toDateString();
-    
+
     if (lastVisit !== today) {
         // 是新的一天，重置任务状态
         resetDailyTasks();
-        localStorage.setItem('lastVisitDate', today);
+        storage.set('lastVisitDate', today);
         
         // 显示欢迎消息
         setTimeout(() => {
@@ -324,7 +324,7 @@ function resetDailyTasks() {
     // 清除当天的任务状态
     const today = new Date().toDateString();
     const storageKey = `petTasks_${today}`;
-    localStorage.removeItem(storageKey);
+    storage.remove(storageKey);
     
     // 重置UI状态
     document.querySelectorAll('.task-status').forEach(statusElement => {

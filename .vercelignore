@@ -1,0 +1,18 @@
+# 开发文件
+.git
+.gitignore
+.gitattributes
+README.md
+.vscode
+.idea
+
+# 依赖（此项目为纯静态，无需 node_modules 上传）
+node_modules
+package-lock.json
+yarn.lock
+
+# 临时文件
+*.tmp
+*.log
+.DS_Store
+Thumbs.db

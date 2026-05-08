@@ -192,16 +192,78 @@ function showNotification(message, type = 'info') {
     }
 }
 
-// 模拟API请求
-async function simulateAPIRequest(endpoint, data = null) {
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            console.log(`API请求: ${endpoint}`, data);
-            // 模拟成功响应
-            resolve({ success: true, data: {} });
-        }, 500);
-    });
-}
+// 安全的 localStorage 操作
+const storage = {
+    get(key, fallback = null) {
+        try {
+            const val = localStorage.getItem(key);
+            if (val === null) return fallback;
+            try { return JSON.parse(val); }
+            catch { return val; } // 非 JSON 字符串，返回原始值
+        } catch (e) {
+            console.error('storage.get error:', e);
+            return fallback;
+        }
+    },
+    set(key, value) {
+        try {
+            localStorage.setItem(key, JSON.stringify(value));
+            return true;
+        } catch (e) {
+            console.error('storage.set error:', e);
+            return false;
+        }
+    },
+    remove(key) {
+        try {
+            localStorage.removeItem(key);
+        } catch (e) {
+            console.error('storage.remove error:', e);
+        }
+    }
+};
+
+// 统一的购物车操作
+const CartStore = {
+    get() {
+        return storage.get('cartItems', []);
+    },
+    set(items) {
+        storage.set('cartItems', items);
+    },
+    add(item) {
+        const items = this.get();
+        const existing = items.find(i => i.id === item.id);
+        if (existing) {
+            existing.quantity += item.quantity || 1;
+        } else {
+            items.push({ ...item, quantity: item.quantity || 1 });
+        }
+        this.set(items);
+    },
+    remove(productId) {
+        const items = this.get().filter(i => i.id !== productId);
+        this.set(items);
+    },
+    updateQty(productId, quantity) {
+        const items = this.get();
+        const item = items.find(i => i.id === productId);
+        if (item) item.quantity = quantity;
+        this.set(items);
+    },
+    clear() {
+        this.set([]);
+    },
+    totalCount() {
+        return this.get().reduce((sum, i) => sum + i.quantity, 0);
+    },
+    totalPrice() {
+        return this.get().reduce((sum, i) => sum + i.price * i.quantity, 0);
+    },
+    isEmpty() {
+        return this.get().length === 0;
+    }
+};
 
 // 工具函数：格式化价格
 function formatPrice(price) {
@@ -221,6 +283,61 @@ function debounce(func, wait) {
     };
 }
 
+// 导航到指定页面区域
+function navigateTo(sectionId) {
+    const section = document.getElementById(sectionId);
+    if (section) {
+        window.scrollTo({
+            top: section.offsetTop - 70,
+            behavior: 'smooth'
+        });
+    }
+}
+
+// 显示轻提示 (Toast)
+function showToast(message) {
+    // 移除已存在的 toast
+    const existing = document.querySelector('.toast-message');
+    if (existing) existing.remove();
+
+    const toast = document.createElement('div');
+    toast.className = 'toast-message';
+    toast.textContent = message;
+    toast.style.cssText = `
+        position: fixed;
+        top: 90px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #333;
+        color: white;
+        padding: 12px 28px;
+        border-radius: 24px;
+        font-size: 15px;
+        z-index: 9999;
+        animation: toastIn 0.3s ease, toastOut 0.3s ease 2.5s forwards;
+        white-space: nowrap;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    `;
+
+    // 注入动画样式（如果还没有）
+    if (!document.getElementById('toast-styles')) {
+        const style = document.createElement('style');
+        style.id = 'toast-styles';
+        style.textContent = `
+            @keyframes toastIn { from { opacity:0; transform:translateX(-50%) translateY(-10px); } to { opacity:1; transform:translateX(-50%) translateY(0); } }
+            @keyframes toastOut { from { opacity:1; } to { opacity:0; } }
+        `;
+        document.head.appendChild(style);
+    }
+
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 3000);
+}
+
 // 导出全局函数
 window.showNotification = showNotification;
 window.formatPrice = formatPrice;
+window.navigateTo = navigateTo;
+window.showToast = showToast;
+window.CartStore = CartStore;
+window.storage = storage;

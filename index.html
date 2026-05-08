@@ -304,15 +304,34 @@
         <section id="store" class="store">
             <div class="container">
                 <h2 class="section-title">宠物商城 <span class="store-subtitle">正品保障 · 急速配送</span></h2>
-                <div class="store-categories">
-                    <button class="category-btn active" data-category="all">全部商品</button>
-                    <button class="category-btn" data-category="food">宠物食品</button>
-                    <button class="category-btn" data-category="health">健康护理</button>
-                    <button class="category-btn" data-category="toy">玩具用品</button>
-                    <button class="category-btn" data-category="home">家居用品</button>
+                <div class="store-controls">
+                    <div class="store-categories">
+                        <button class="category-btn active" data-category="all">全部商品</button>
+                        <button class="category-btn" data-category="food">宠物食品</button>
+                        <button class="category-btn" data-category="health">健康护理</button>
+                        <button class="category-btn" data-category="toy">玩具用品</button>
+                        <button class="category-btn" data-category="home">家居用品</button>
+                    </div>
+                    <div class="store-toolbar">
+                        <div class="store-search">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="store-search-input" placeholder="搜索商品名称或描述...">
+                        </div>
+                        <select class="store-sort" id="store-sort">
+                            <option value="default">默认排序</option>
+                            <option value="price-asc">价格从低到高</option>
+                            <option value="price-desc">价格从高到低</option>
+                            <option value="rating">评分最高</option>
+                            <option value="sales">销量最高</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="products-grid" id="products-grid">
                     <!-- 商品将通过JavaScript动态生成 -->
+                </div>
+                <div class="products-empty" id="products-empty" style="display:none;">
+                    <i class="fas fa-search"></i>
+                    <p>没有找到匹配的商品</p>
                 </div>
                 <div class="store-features">
                     <div class="feature-item">
