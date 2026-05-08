@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>宠物新手助手 - 科学养宠每一天</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">
+                <i class="fas fa-paw"></i>
+                <h1>宠物新手助手</h1>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#home" class="active"><i class="fas fa-home"></i> 首页</a></li>
+                <li><a href="#dashboard"><i class="fas fa-calendar-alt"></i> 每日养护</a></li>
+                <li><a href="#guide"><i class="fas fa-book"></i> 新手指南</a></li>
+                <li><a href="#training"><i class="fas fa-graduation-cap"></i> 训练方法</a></li>
+                <li><a href="#health"><i class="fas fa-heartbeat"></i> 健康管理</a></li>
+                <li><a href="#store"><i class="fas fa-store"></i> 宠物商城</a></li>
+                <li><a href="#profile"><i class="fas fa-user"></i> 我的宠物</a></li>
+                <li class="nav-cart">
+                    <a href="#cart">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-count">0</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="nav-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主内容区域 -->
+    <main>
+        <!-- 首页英雄区域 -->
+        <section id="home" class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <h2>科学养宠，从新手到专家</h2>
+                    <p>专为宠物新手设计的全方位养宠助手，每日提醒、专业指南、健康管理，让您的爱宠健康成长</p>
+                    <div class="hero-buttons">
+                        <a href="#dashboard" class="btn btn-primary">开始每日养护</a>
+                        <a href="#profile" class="btn btn-secondary">添加我的宠物</a>
+                    </div>
+                </div>
+                <div class="hero-image">
+                    <img src="https://images.unsplash.com/photo-1518717758536-85ae29035b6d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="宠物图片">
+                </div>
+            </div>
+        </section>
+
+        <!-- 功能卡片区域 -->
+        <section class="features">
+            <div class="container">
+                <h2 class="section-title">核心功能</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-bell"></i>
+                        </div>
+                        <h3>每日提醒</h3>
+                        <p>定时提醒喂食、喝水、排便等日常养护任务，养成良好养宠习惯</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <h3>打卡系统</h3>
+                        <p>记录每日养护完成情况，可视化展示养宠进度和习惯养成</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-first-aid"></i>
+                        </div>
+                        <h3>问题应对</h3>
+                        <p>常见问题快速指南，紧急情况应对措施，让新手不再慌张</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <h3>科学训练</h3>
+                        <p>宠物行为训练方法，养成良好习惯，建立健康的主宠关系</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 每日养护打卡区域 -->
+        <section id="dashboard" class="dashboard">
+            <div class="container">
+                <h2 class="section-title">今日养护任务</h2>
+                <div class="date-display">
+                    <i class="fas fa-calendar-day"></i>
+                    <span id="current-date">2026年3月27日 星期六</span>
+                </div>
+                <div class="tasks-container">
+                    <!-- 任务卡片将通过JavaScript动态生成 -->
+                </div>
+                <div class="progress-container">
+                    <h3>今日完成进度</h3>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill">0%</div>
+                    </div>
+                    <p class="progress-text">已完成 <span id="completed-tasks">0</span> / <span id="total-tasks">0</span> 项任务</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 宠物类型选择 -->
+        <section class="pet-type">
+            <div class="container">
+                <h2 class="section-title">选择您的宠物类型</h2>
+                <div class="pet-options">
+                    <div class="pet-option active" data-pet="dog">
+                        <i class="fas fa-dog"></i>
+                        <h3>狗狗</h3>
+                        <p>幼犬/成犬养护指南</p>
+                    </div>
+                    <div class="pet-option" data-pet="cat">
+                        <i class="fas fa-cat"></i>
+                        <h3>猫咪</h3>
+                        <p>幼猫/成猫养护指南</p>
+                    </div>
+                    <div class="pet-option" data-pet="other">
+                        <i class="fas fa-paw"></i>
+                        <h3>其他宠物</h3>
+                        <p>兔子、仓鼠等小宠物</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 新手指南 -->
+        <section id="guide" class="guide">
+            <div class="container">
+                <h2 class="section-title">新手养宠指南</h2>
+                <div class="guide-content">
+                    <div class="guide-tabs">
+                        <button class="guide-tab active" data-tab="day1">第1天准备</button>
+                        <button class="guide-tab" data-tab="week1">第1周适应</button>
+                        <button class="guide-tab" data-tab="month1">第1个月养成</button>
+                        <button class="guide-tab" data-tab="emergency">紧急处理</button>
+                    </div>
+                    <div class="guide-panels">
+                        <div class="guide-panel active" id="day1-panel">
+                            <h3>宠物到家第一天</h3>
+                            <ul>
+                                <li><i class="fas fa-check"></i> 准备安静舒适的环境</li>
+                                <li><i class="fas fa-check"></i> 提供干净的水和适量食物</li>
+                                <li><i class="fas fa-check"></i> 设置专用厕所区域</li>
+                                <li><i class="fas fa-check"></i> 避免过度互动，让宠物适应</li>
+                                <li><i class="fas fa-check"></i> 观察宠物的精神状态</li>
+                            </ul>
+                        </div>
+                        <div class="guide-panel" id="week1-panel">
+                            <h3>第一周适应期</h3>
+                            <ul>
+                                <li><i class="fas fa-check"></i> 建立规律的喂食时间</li>
+                                <li><i class="fas fa-check"></i> 开始基础服从训练</li>
+                                <li><i class="fas fa-check"></i> 社会化训练（接触不同环境）</li>
+                                <li><i class="fas fa-check"></i> 建立排便习惯</li>
+                                <li><i class="fas fa-check"></i> 第一次健康检查</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 健康管理 -->
+        <section id="health" class="health">
+            <div class="container">
+                <h2 class="section-title">宠物健康管理</h2>
+                <div class="health-grid">
+                    <div class="health-card">
+                        <h3><i class="fas fa-thermometer"></i> 常见症状识别</h3>
+                        <div class="symptom-list">
+                            <div class="symptom-item">
+                                <span class="symptom-name">呕吐/腹泻</span>
+                                <span class="symptom-level mild">轻微</span>
+                            </div>
+                            <div class="symptom-item">
+                                <span class="symptom-name">食欲不振</span>
+                                <span class="symptom-level moderate">中等</span>
+                            </div>
+                            <div class="symptom-item">
+                                <span class="symptom-name">呼吸困难</span>
+                                <span class="symptom-level severe">紧急</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="health-card">
+                        <h3><i class="fas fa-calendar-check"></i> 疫苗和驱虫计划</h3>
+                        <div class="vaccine-schedule">
+                            <div class="vaccine-item">
+                                <span>第8周</span>
+                                <span>第一针疫苗</span>
+                            </div>
+                            <div class="vaccine-item">
+                                <span>第12周</span>
+                                <span>第二针疫苗</span>
+                            </div>
+                            <div class="vaccine-item">
+                                <span>每月</span>
+                                <span>体外驱虫</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 我的宠物档案 -->
+        <section id="profile" class="profile">
+            <div class="container">
+                <h2 class="section-title">我的宠物档案</h2>
+                <div class="profile-container">
+                    <div class="pet-form">
+                        <h3>添加新宠物</h3>
+                        <form id="pet-form">
+                            <div class="form-group">
+                                <label for="pet-name"><i class="fas fa-signature"></i> 宠物名字</label>
+                                <input type="text" id="pet-name" placeholder="例如：旺财、咪咪" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="pet-type"><i class="fas fa-paw"></i> 宠物类型</label>
+                                <select id="pet-type" required>
+                                    <option value="">请选择宠物类型</option>
+                                    <option value="dog">狗狗</option>
+                                    <option value="cat">猫咪</option>
+                                    <option value="rabbit">兔子</option>
+                                    <option value="hamster">仓鼠</option>
+                                    <option value="other">其他</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="pet-breed"><i class="fas fa-dna"></i> 品种</label>
+                                <input type="text" id="pet-breed" placeholder="例如：金毛、布偶猫">
+                            </div>
+                            <div class="form-group">
+                                <label for="pet-age"><i class="fas fa-birthday-cake"></i> 年龄</label>
+                                <input type="number" id="pet-age" placeholder="月数" min="0" max="240">
+                            </div>
+                            <button type="submit" class="btn btn-primary">添加宠物</button>
+                        </form>
+                    </div>
+                    <div class="pet-list">
+                        <h3>我的宠物列表</h3>
+                        <div class="pets-container" id="pets-container">
+                            <!-- 宠物卡片将通过JavaScript动态生成 -->
+                            <div class="empty-pets">
+                                <i class="fas fa-paw"></i>
+                                <p>还没有添加宠物，快来添加您的第一个小伙伴吧！</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 训练方法 -->
+        <section id="training" class="training">
+            <div class="container">
+                <h2 class="section-title">宠物训练方法</h2>
+                <div class="training-cards">
+                    <div class="training-card">
+                        <div class="training-icon">
+                            <i class="fas fa-toilet"></i>
+                        </div>
+                        <h3>如厕训练</h3>
+                        <p>固定地点、定时引导、及时奖励，7天养成良好排便习惯</p>
+                        <a href="#" class="training-link">查看详细教程 <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                    <div class="training-card">
+                        <div class="training-icon">
+                            <i class="fas fa-utensils"></i>
+                        </div>
+                        <h3>进食训练</h3>
+                        <p>定时定量、不随意喂食、建立正确的进食礼仪</p>
+                        <a href="#" class="training-link">查看详细教程 <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                    <div class="training-card">
+                        <div class="training-icon">
+                            <i class="fas fa-hand-peace"></i>
+                        </div>
+                        <h3>社交训练</h3>
+                        <p>接触不同环境、人和其他动物，培养友好性格</p>
+                        <a href="#" class="training-link">查看详细教程 <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 宠物商城 -->
+        <section id="store" class="store">
+            <div class="container">
+                <h2 class="section-title">宠物商城 <span class="store-subtitle">正品保障 · 急速配送</span></h2>
+                <div class="store-categories">
+                    <button class="category-btn active" data-category="all">全部商品</button>
+                    <button class="category-btn" data-category="food">宠物食品</button>
+                    <button class="category-btn" data-category="health">健康护理</button>
+                    <button class="category-btn" data-category="toy">玩具用品</button>
+                    <button class="category-btn" data-category="home">家居用品</button>
+                </div>
+                <div class="products-grid" id="products-grid">
+                    <!-- 商品将通过JavaScript动态生成 -->
+                </div>
+                <div class="store-features">
+                    <div class="feature-item">
+                        <i class="fas fa-shield-alt"></i>
+                        <h4>正品保障</h4>
+                        <p>官方授权，假一赔十</p>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-truck"></i>
+                        <h4>急速配送</h4>
+                        <p>最快当日送达</p>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-headset"></i>
+                        <h4>专业客服</h4>
+                        <p>7x24小时在线</p>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-undo"></i>
+                        <h4>无忧退换</h4>
+                        <p>7天无理由退换</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 购物车模态框 -->
+        <div class="cart-modal" id="cart-modal">
+            <div class="cart-content">
+                <div class="cart-header">
+                    <h3><i class="fas fa-shopping-cart"></i> 购物车</h3>
+                    <button class="cart-close" id="cart-close">&times;</button>
+                </div>
+                <div class="cart-body" id="cart-body">
+                    <div class="empty-cart">
+                        <i class="fas fa-shopping-basket"></i>
+                        <p>购物车还是空的哦~</p>
+                        <a href="#store" class="btn btn-primary">去逛逛</a>
+                    </div>
+                </div>
+                <div class="cart-footer">
+                    <div class="cart-total">
+                        <span>合计：</span>
+                        <span class="total-amount">¥0.00</span>
+                    </div>
+                    <button class="btn btn-primary btn-pay" id="checkout-btn">去结算</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 支付页面 -->
+        <section id="checkout" class="checkout">
+            <div class="container">
+                <h2 class="section-title">确认订单</h2>
+                <div class="checkout-container">
+                    <div class="checkout-summary">
+                        <h3>订单信息</h3>
+                        <div class="order-items" id="order-items">
+                            <!-- 订单商品将通过JavaScript动态生成 -->
+                        </div>
+                        <div class="order-total">
+                            <div class="total-row">
+                                <span>商品金额：</span>
+                                <span class="subtotal">¥0.00</span>
+                            </div>
+                            <div class="total-row">
+                                <span>运费：</span>
+                                <span class="shipping">¥0.00</span>
+                            </div>
+                            <div class="total-row grand-total">
+                                <span>实付金额：</span>
+                                <span class="final-total">¥0.00</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="checkout-form">
+                        <h3>支付方式</h3>
+                        <div class="payment-methods">
+                            <label class="payment-option">
+                                <input type="radio" name="payment" value="alipay" checked>
+                                <div class="payment-content">
+                                    <i class="fab fa-alipay"></i>
+                                    <span>支付宝支付</span>
+                                </div>
+                            </label>
+                            <label class="payment-option">
+                                <input type="radio" name="payment" value="wechat">
+                                <div class="payment-content">
+                                    <i class="fab fa-weixin"></i>
+                                    <span>微信支付</span>
+                                </div>
+                            </label>
+                            <label class="payment-option">
+                                <input type="radio" name="payment" value="card">
+                                <div class="payment-content">
+                                    <i class="fas fa-credit-card"></i>
+                                    <span>银行卡支付</span>
+                                </div>
+                            </label>
+                        </div>
+                        <div class="checkout-actions">
+                            <button class="btn btn-secondary" id="back-to-cart">返回购物车</button>
+                            <button class="btn btn-primary" id="confirm-payment">确认支付</button>
+                        </div>
+                        <div class="payment-security">
+                            <i class="fas fa-lock"></i>
+                            <span>支付安全由支付宝/微信支付保障</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3><i class="fas fa-paw"></i> 宠物新手助手</h3>
+                    <p>让每一只宠物都能得到科学、专业的养护</p>
+                </div>
+                <div class="footer-section">
+                    <h3>快速链接</h3>
+                    <ul>
+                        <li><a href="#home">首页</a></li>
+                        <li><a href="#dashboard">每日养护</a></li>
+                        <li><a href="#guide">新手指南</a></li>
+                        <li><a href="#store">宠物商城</a></li>
+                        <li><a href="#health">健康管理</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>联系我们</h3>
+                    <p><i class="fas fa-envelope"></i> support@pethelper.com</p>
+                    <p><i class="fas fa-phone"></i> 400-123-4567</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 宠物新手助手. 版权所有.</p>
+                <p>本网站内容仅供参考，具体养护请咨询专业兽医</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 提醒通知 -->
+    <div class="notification" id="notification">
+        <div class="notification-content">
+            <i class="fas fa-bell"></i>
+            <div class="notification-text">
+                <strong>养护提醒</strong>
+                <p id="notification-message">该喂食了！</p>
+            </div>
+            <button class="notification-close" id="notification-close">&times;</button>
+        </div>
+    </div>
+
+    <!-- 脚本引入 -->
+    <script src="js/app.js"></script>
+    <script src="js/tasks.js"></script>
+    <script src="js/pets.js"></script>
+    <script src="js/store.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/payment.js"></script>
+</body>
+</html>
