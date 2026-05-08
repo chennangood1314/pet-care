@@ -1,4 +1,6 @@
 // 简单的管理后台认证模块
+import crypto from 'crypto';
+
 const AUTH_SECRET = process.env.ADMIN_SECRET || 'pet-care-admin-secret-2026';
 const ADMIN_USER = process.env.ADMIN_USER || 'admin';
 const ADMIN_PASS = process.env.ADMIN_PASS || 'admin123';
@@ -20,7 +22,7 @@ export function createToken(payload, expiresInSec = 3600) {
 
   const h = base64url(JSON.stringify(header));
   const d = base64url(JSON.stringify(data));
-  const sig = base64url(require('crypto').createHmac('sha256', AUTH_SECRET).update(`${h}.${d}`).digest('base64'));
+  const sig = base64url(crypto.createHmac('sha256', AUTH_SECRET).update(`${h}.${d}`).digest('base64'));
 
   return `${h}.${d}.${sig}`;
 }
@@ -33,7 +35,7 @@ export function verifyToken(token) {
     const data = JSON.parse(base64urlDecode(parts[1]));
     if (data.exp < Math.floor(Date.now() / 1000)) return null;
 
-    const sig = base64url(require('crypto').createHmac('sha256', AUTH_SECRET).update(`${parts[0]}.${parts[1]}`).digest('base64'));
+    const sig = base64url(crypto.createHmac('sha256', AUTH_SECRET).update(`${parts[0]}.${parts[1]}`).digest('base64'));
     if (sig !== parts[2]) return null;
 
     return data;
