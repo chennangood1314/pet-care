@@ -7,10 +7,26 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
 </head>
-<body class="bg-gray-100 min-h-screen flex">
+<body class="bg-gray-100 min-h-screen">
+
+  <!-- 顶部导航栏（移动端） -->
+  <header class="md:hidden bg-gray-900 text-white px-4 py-3 flex items-center justify-between sticky top-0 z-40">
+    <div class="flex items-center gap-2">
+      <span class="text-2xl">🐾</span>
+      <span class="font-bold">管理后台</span>
+    </div>
+    <div class="flex gap-3">
+      <a href="../index.html" target="_blank" class="text-gray-400 hover:text-white"><i class="fa fa-external-link"></i></a>
+      <button onclick="toggleSidebar()" class="text-white"><i class="fa fa-bars text-xl"></i></button>
+    </div>
+  </header>
+
+  <!-- 侧边栏遮罩 -->
+  <div id="sidebar-overlay" class="hidden fixed inset-0 bg-black/50 z-40 md:hidden" onclick="toggleSidebar()"></div>
+
   <!-- 侧边栏 -->
-  <aside class="w-64 bg-gray-900 text-white min-h-screen flex-shrink-0 hidden md:block">
-    <div class="p-6 border-b border-gray-700">
+  <aside id="sidebar" class="fixed md:static inset-y-0 left-0 w-64 bg-gray-900 text-white flex-shrink-0 transform -translate-x-full md:translate-x-0 transition-transform duration-300 z-50 overflow-y-auto">
+    <div class="p-6 border-b border-gray-700 flex items-center justify-between">
       <div class="flex items-center gap-3">
         <span class="text-3xl">🐾</span>
         <div>
@@ -18,6 +34,7 @@
           <p class="text-gray-400 text-xs" id="admin-name">管理员</p>
         </div>
       </div>
+      <button onclick="toggleSidebar()" class="md:hidden text-gray-400 hover:text-white"><i class="fa fa-times text-xl"></i></button>
     </div>
     <nav class="p-4 space-y-1">
       <a href="#" onclick="switchTab('products')" id="nav-products"
@@ -45,24 +62,8 @@
     </nav>
   </aside>
 
-  <!-- 移动端导航 -->
-  <div class="md:hidden fixed bottom-0 left-0 right-0 bg-gray-900 text-white z-50 flex">
-    <button onclick="switchTab('products')" class="flex-1 py-3 text-center text-sm nav-mobile active">
-      <i class="fa fa-cube block text-lg"></i>商品
-    </button>
-    <button onclick="switchTab('orders')" class="flex-1 py-3 text-center text-sm nav-mobile">
-      <i class="fa fa-list-alt block text-lg"></i>订单
-    </button>
-    <button onclick="switchTab('stats')" class="flex-1 py-3 text-center text-sm nav-mobile">
-      <i class="fa fa-bar-chart block text-lg"></i>概览
-    </button>
-    <button onclick="logout()" class="flex-1 py-3 text-center text-sm nav-mobile text-red-400">
-      <i class="fa fa-sign-out block text-lg"></i>退出
-    </button>
-  </div>
-
   <!-- 主内容区 -->
-  <main class="flex-1 p-4 md:p-8 mb-16 md:mb-0 overflow-auto">
+  <main class="md:ml-64 p-4 md:p-8 min-h-screen overflow-auto">
     <!-- 商品管理 -->
     <div id="tab-products" class="tab-content">
       <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
@@ -455,6 +456,15 @@
       }
     }
 
+    // 侧边栏切换（移动端）
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('sidebar-overlay');
+      sidebar.classList.toggle('-translate-x-full');
+      sidebar.classList.toggle('translate-x-0');
+      overlay.classList.toggle('hidden');
+    }
+
     // 切换面板
     function switchTab(tab) {
       document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
@@ -463,6 +473,8 @@
       document.getElementById(`nav-${tab}`)?.classList.add('bg-purple-600');
       if (tab === 'stats') loadStats();
       if (tab === 'orders') loadStats();
+      // 移动端切换后关闭侧边栏
+      if (window.innerWidth < 768) toggleSidebar();
     }
 
     function logout() {
