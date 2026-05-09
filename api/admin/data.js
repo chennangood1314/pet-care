@@ -119,7 +119,58 @@ function getPaymentMethodStats() {
 
 function getOrdersByUser(userId) { return orders.filter(o => o.userId === userId); }
 
-function syncOrderFromPayment(order) {
+function seedTestData() {
+  // 只在空数据时生成
+  if (orders.length > 0 || users.size > 0) return;
+
+  const sampleUsers = [
+    { name: '张伟', phone: '13800138001' },
+    { name: '李娜', phone: '13900139002' },
+    { name: '王芳', phone: '13700137003' },
+    { name: '赵敏', phone: '13600136004' },
+    { name: '刘洋', phone: '13500135005' },
+  ];
+  const payMethods = ['alipay', 'wechat', 'card'];
+  const sampleItems = [
+    [{ id: 1, name: '天然狗粮 2kg', price: 128, quantity: 1 }],
+    [{ id: 2, name: '猫咪营养膏', price: 88, quantity: 2 }],
+    [{ id: 3, name: '宠物玩具套装', price: 59, quantity: 1 }, { id: 5, name: '宠物尿垫 50片', price: 39, quantity: 1 }],
+    [{ id: 6, name: '猫砂 10L', price: 79, quantity: 3 }],
+    [{ id: 4, name: '狗粮储存桶', price: 149, quantity: 1 }],
+    [{ id: 7, name: '宠物洗发水', price: 68, quantity: 1 }, { id: 1, name: '天然狗粮 2kg', price: 128, quantity: 1 }],
+    [{ id: 8, name: '狗狗咬胶 3个装', price: 35, quantity: 2 }],
+  ];
+
+  const now = Date.now();
+  for (let i = 0; i < 12; i++) {
+    const user = sampleUsers[i % sampleUsers.length];
+    const items = sampleItems[i % sampleItems.length];
+    const total = items.reduce((s, it) => s + it.price * it.quantity, 0);
+    const payMethod = payMethods[i % 3];
+    const daysAgo = Math.floor(i / 2);
+    const createdAt = now - daysAgo * 86400000 - Math.floor(Math.random() * 3600000);
+
+    const seq = String(nextSeq++).padStart(4, '0');
+    const orderNo = `PET${formatDate(createdAt)}${seq}${randomStr(4)}`;
+
+    const order = {
+      orderNo, items, total,
+      status: i < 10 ? 'paid' : (i === 10 ? 'pending' : 'cancelled'),
+      payMethod, userId: user.phone, userName: user.name,
+      createdAt, paidAt: i < 10 ? createdAt + 60000 : null
+    };
+    orders.unshift(order);
+
+    if (order.status === 'paid') {
+      findOrCreateUser(user);
+      updateUserStats(user.phone, total);
+    }
+  }
+  // 确保所有用户都已创建
+  for (const u of sampleUsers) findOrCreateUser(u);
+}
+
+// ==================== 请求体解析 ====================
   // 接收 payment API 同步过来的订单数据
   const existing = orders.find(o => o.orderNo === order.orderNo);
   if (existing) {
@@ -158,8 +209,12 @@ export default async function handler(req, res) {
   const url = new URL(req.url, `http://${req.headers.host}`);
   const section = url.searchParams.get('section') || '';
 
-  // 内部同步：payment API 同步订单数据
-  if ((section === 'sync' || url.searchParams.get('sync') === '1') && req.method === 'POST') {
+  // 内部同步或生成测试数据
+  if ((section === 'sync' || url.searchParams.get('sync') === '1' || section === 'seed') && req.method === 'POST') {
+    if (section === 'seed') {
+      seedTestData();
+      return json(res, { success: true, data: { message: '测试数据已生成' } });
+    }
     const body = await parseBody(req);
     syncOrderFromPayment(body);
     return json(res, { success: true });

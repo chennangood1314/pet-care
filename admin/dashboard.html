@@ -170,6 +170,11 @@
       <div id="tab-stats" class="tab-content hidden">
         <h2 class="text-xl md:text-2xl font-bold text-gray-800 mb-6"><i class="fa fa-bar-chart mr-2 text-purple-600"></i>数据概览</h2>
         <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6" id="stats-cards"></div>
+        <div class="text-center">
+          <button onclick="seedTestData()" class="px-5 py-2.5 border-2 border-dashed border-gray-300 text-gray-500 rounded-xl hover:border-purple-400 hover:text-purple-600 transition text-sm">
+            <i class="fa fa-magic mr-1"></i> 生成演示数据（12笔订单 + 5位用户）
+          </button>
+        </div>
       </div>
 
     </div>
@@ -521,6 +526,24 @@ function showToast(msg, isError) {
   t.style.background = isError ? '#f44336' : '#333';
   t.classList.remove('hidden');
   toastTimer = setTimeout(() => t.classList.add('hidden'), 2500);
+}
+
+// ==================== 生成测试数据 ====================
+async function seedTestData() {
+  try {
+    const res = await fetch(`${API}/data?section=seed`, { method: 'POST', headers: { 'Authorization': `Bearer ${token}` } });
+    const data = await res.json();
+    if (data.success) {
+      showToast('演示数据已生成！');
+      // 刷新所有数据
+      await loadProducts();
+      await loadOrders();
+      await loadUsers();
+      await loadRevenue();
+      await loadStats();
+      switchTab('stats');
+    }
+  } catch (e) { showToast('生成失败', true); }
 }
 
 document.getElementById('product-modal').addEventListener('click', function(e) { if (e.target === this) closeProductModal(); });
