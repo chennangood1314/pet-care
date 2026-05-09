@@ -1,6 +1,9 @@
 {
   "outputDirectory": ".",
   "rewrites": [
+    { "source": "/api/admin/orders", "destination": "/api/admin/data" },
+    { "source": "/api/admin/users", "destination": "/api/admin/data" },
+    { "source": "/api/admin/revenue", "destination": "/api/admin/data" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
