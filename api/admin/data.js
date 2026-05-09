@@ -77,6 +77,16 @@ function updateUserStats(phone, orderTotal) {
   return user;
 }
 
+function deleteUser(phone) {
+  const key = phone.replace(/\s/g, '');
+  if (!users.has(key)) return false;
+  users.delete(key);
+  for (let i = orders.length - 1; i >= 0; i--) {
+    if (orders[i].userId === key) orders.splice(i, 1);
+  }
+  return true;
+}
+
 // ==================== 营收统计 ====================
 function getRevenueStats() {
   const paidOrders = orders.filter(o => o.status === 'paid');
@@ -166,7 +176,6 @@ function seedTestData() {
       updateUserStats(user.phone, total);
     }
   }
-  // 确保所有用户都已创建
   for (const u of sampleUsers) findOrCreateUser(u);
 }
 
@@ -198,7 +207,7 @@ export default async function handler(req, res) {
   // CORS
   if (req.method === 'OPTIONS') {
     res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Internal-Sync');
     res.statusCode = 200;
     return res.end();
@@ -250,6 +259,34 @@ export default async function handler(req, res) {
 
     // ========== 用户管理 ==========
     if (section === 'users') {
+      // POST — 手动创建用户
+      if (req.method === 'POST') {
+        const body = await parseBody(req);
+        const { name, phone } = body;
+        if (!name || !phone) return json(res, { success: false, error: '姓名和手机号不能为空' }, 400);
+        if (!/^1[3-9]\d{9}$/.test(phone.replace(/\s/g, ''))) return json(res, { success: false, error: '手机号格式不正确' }, 400);
+        if (getUser(phone)) return json(res, { success: false, error: '该手机号已存在' }, 409);
+        const user = findOrCreateUser({ name, phone });
+        return json(res, { success: true, data: user });
+      }
+      // PUT — 编辑用户姓名
+      if (req.method === 'PUT') {
+        const phone = url.searchParams.get('phone');
+        if (!phone) return json(res, { success: false, error: '缺少手机号参数' }, 400);
+        const u = getUser(phone);
+        if (!u) return json(res, { success: false, error: '用户不存在' }, 404);
+        const body = await parseBody(req);
+        if (body.name) u.name = body.name;
+        return json(res, { success: true, data: u });
+      }
+      // DELETE — 删除用户及关联订单
+      if (req.method === 'DELETE') {
+        const phone = url.searchParams.get('phone');
+        if (!phone) return json(res, { success: false, error: '缺少手机号参数' }, 400);
+        if (!deleteUser(phone)) return json(res, { success: false, error: '用户不存在' }, 404);
+        return json(res, { success: true, data: { message: '用户已删除' } });
+      }
+      // GET — 查询用户
       const phone = url.searchParams.get('phone');
       const withOrders = url.searchParams.get('orders') === 'true';
       if (phone) {
