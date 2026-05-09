@@ -156,83 +156,76 @@ export default async function handler(req, res) {
   }
 
   const url = new URL(req.url, `http://${req.headers.host}`);
-  const path = url.pathname;
+  const section = url.searchParams.get('section') || '';
 
   // 内部同步：payment API 同步订单数据
-  if (path === '/api/admin/data/sync' && req.method === 'POST') {
+  if ((section === 'sync' || url.searchParams.get('sync') === '1') && req.method === 'POST') {
     const body = await parseBody(req);
     syncOrderFromPayment(body);
     return json(res, { success: true });
   }
 
   // 认证检查（内部同步请求除外）
-  const isInternalSync = req.headers['x-internal-sync'] === '1';
-  if (!isInternalSync) {
+  if (req.headers['x-internal-sync'] !== '1') {
     const user = authMiddleware(req);
     if (!user) return json(res, { success: false, error: '未登录或登录已过期' }, 401);
   }
 
   try {
     // ========== 订单管理 ==========
-    if (path === '/api/admin/orders' || path === '/api/admin/data/orders') {
-      if (req.method === 'GET') {
-        const orderNo = url.searchParams.get('orderNo');
-        const userId = url.searchParams.get('userId');
-        if (orderNo) {
-          const order = getOrderByNo(orderNo);
-          if (!order) return json(res, { success: false, error: '订单不存在' }, 404);
-          return json(res, { success: true, data: order });
-        }
-        if (userId) {
-          const userOrders = getOrders({ userId });
-          return json(res, { success: true, data: { orders: userOrders, total: userOrders.length } });
-        }
-        const page = parseInt(url.searchParams.get('page')) || 1;
-        const pageSize = parseInt(url.searchParams.get('pageSize')) || 20;
-        const status = url.searchParams.get('status');
-        const filter = {};
-        if (status) filter.status = status;
-        const all = getOrders(filter);
-        const total = all.length, start = (page - 1) * pageSize;
-        return json(res, { success: true, data: { orders: all.slice(start, start + pageSize), total, page, pageSize, totalPages: Math.ceil(total / pageSize) } });
+    if (section === 'orders') {
+      const orderNo = url.searchParams.get('orderNo');
+      const userId = url.searchParams.get('userId');
+      if (orderNo) {
+        const order = getOrderByNo(orderNo);
+        if (!order) return json(res, { success: false, error: '订单不存在' }, 404);
+        return json(res, { success: true, data: order });
       }
+      if (userId) {
+        const userOrders = getOrders({ userId });
+        return json(res, { success: true, data: { orders: userOrders, total: userOrders.length } });
+      }
+      const page = parseInt(url.searchParams.get('page')) || 1;
+      const pageSize = parseInt(url.searchParams.get('pageSize')) || 20;
+      const status = url.searchParams.get('status');
+      const filter = {};
+      if (status) filter.status = status;
+      const all = getOrders(filter);
+      const total = all.length, start = (page - 1) * pageSize;
+      return json(res, { success: true, data: { orders: all.slice(start, start + pageSize), total, page, pageSize, totalPages: Math.ceil(total / pageSize) } });
     }
 
     // ========== 用户管理 ==========
-    if (path === '/api/admin/users' || path === '/api/admin/data/users') {
-      if (req.method === 'GET') {
-        const phone = url.searchParams.get('phone');
-        const withOrders = url.searchParams.get('orders') === 'true';
-        if (phone) {
-          const u = getUser(phone);
-          if (!u) return json(res, { success: false, error: '用户不存在' }, 404);
-          const data = { ...u };
-          if (withOrders) data.orders = getOrdersByUser(phone);
-          return json(res, { success: true, data });
-        }
-        const page = parseInt(url.searchParams.get('page')) || 1;
-        const pageSize = parseInt(url.searchParams.get('pageSize')) || 20;
-        const search = url.searchParams.get('search') || '';
-        return json(res, { success: true, data: getUsersList({ page, pageSize, search }) });
+    if (section === 'users') {
+      const phone = url.searchParams.get('phone');
+      const withOrders = url.searchParams.get('orders') === 'true';
+      if (phone) {
+        const u = getUser(phone);
+        if (!u) return json(res, { success: false, error: '用户不存在' }, 404);
+        const data = { ...u };
+        if (withOrders) data.orders = getOrdersByUser(phone);
+        return json(res, { success: true, data });
       }
+      const page = parseInt(url.searchParams.get('page')) || 1;
+      const pageSize = parseInt(url.searchParams.get('pageSize')) || 20;
+      const search = url.searchParams.get('search') || '';
+      return json(res, { success: true, data: getUsersList({ page, pageSize, search }) });
     }
 
     // ========== 营收分析 ==========
-    if (path === '/api/admin/revenue' || path === '/api/admin/data/revenue') {
-      if (req.method === 'GET') {
-        const type = url.searchParams.get('type') || 'summary';
-        const days = parseInt(url.searchParams.get('days')) || 7;
-        switch (type) {
-          case 'summary': return json(res, { success: true, data: getRevenueStats() });
-          case 'daily': return json(res, { success: true, data: getDailyRevenue(days) });
-          case 'payment': return json(res, { success: true, data: getPaymentMethodStats() });
-          case 'recent': {
-            const limit = parseInt(url.searchParams.get('limit')) || 10;
-            const all = getOrders({ status: 'paid' });
-            return json(res, { success: true, data: { orders: all.slice(0, limit), total: all.length } });
-          }
-          default: return json(res, { success: false, error: '未知的统计类型' }, 400);
+    if (section === 'revenue') {
+      const type = url.searchParams.get('type') || 'summary';
+      const days = parseInt(url.searchParams.get('days')) || 7;
+      switch (type) {
+        case 'summary': return json(res, { success: true, data: getRevenueStats() });
+        case 'daily': return json(res, { success: true, data: getDailyRevenue(days) });
+        case 'payment': return json(res, { success: true, data: getPaymentMethodStats() });
+        case 'recent': {
+          const limit = parseInt(url.searchParams.get('limit')) || 10;
+          const all = getOrders({ status: 'paid' });
+          return json(res, { success: true, data: { orders: all.slice(0, limit), total: all.length } });
         }
+        default: return json(res, { success: false, error: '未知的统计类型' }, 400);
       }
     }
 

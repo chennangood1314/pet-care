@@ -31,7 +31,7 @@ async function syncToAdmin(order, req) {
     const proto = req.headers['x-forwarded-proto'] || 'https';
     const host = req.headers.host;
     const base = `${proto}://${host}`;
-    await fetch(`${base}/api/admin/data/sync`, {
+    await fetch(`${base}/api/admin/data?section=sync`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'X-Internal-Sync': '1' },
       body: JSON.stringify(order)
