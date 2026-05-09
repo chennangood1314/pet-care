@@ -106,11 +106,14 @@
                     <!-- 任务卡片将通过JavaScript动态生成 -->
                 </div>
                 <div class="progress-container">
-                    <h3>今日完成进度</h3>
+                    <h3>今日打卡进度</h3>
                     <div class="progress-bar">
                         <div class="progress-fill" id="progress-fill">0%</div>
                     </div>
                     <p class="progress-text">已完成 <span id="completed-tasks">0</span> / <span id="total-tasks">0</span> 项任务</p>
+                    <p class="progress-streak" id="streak-info" style="text-align:center;color:#ff9800;margin-top:8px;font-weight:500;display:none;">
+                        🔥 连续打卡 <span id="streak-days">0</span> 天
+                    </p>
                 </div>
             </div>
         </section>
@@ -184,15 +187,15 @@
                     <div class="health-card">
                         <h3><i class="fas fa-thermometer"></i> 常见症状识别</h3>
                         <div class="symptom-list">
-                            <div class="symptom-item">
+                            <div class="symptom-item" onclick="openSymptomDetail('呕吐/腹泻','mild','消化不良或误食。先禁食6-12小时，少量喂水。如持续超过24小时或便血，立即就医。')">
                                 <span class="symptom-name">呕吐/腹泻</span>
                                 <span class="symptom-level mild">轻微</span>
                             </div>
-                            <div class="symptom-item">
+                            <div class="symptom-item" onclick="openSymptomDetail('食欲不振','moderate','观察精神状态和饮水情况。可尝试加热食物增加香味。持续超过48小时需就医，可能是潜在疾病信号。')">
                                 <span class="symptom-name">食欲不振</span>
                                 <span class="symptom-level moderate">中等</span>
                             </div>
-                            <div class="symptom-item">
+                            <div class="symptom-item" onclick="openSymptomDetail('呼吸困难','severe','立即就医！可能原因：中暑、异物卡喉、心脏病。途中保持宠物通风，避免剧烈移动。')">
                                 <span class="symptom-name">呼吸困难</span>
                                 <span class="symptom-level severe">紧急</span>
                             </div>
@@ -278,7 +281,7 @@
                         </div>
                         <h3>如厕训练</h3>
                         <p>固定地点、定时引导、及时奖励，7天养成良好排便习惯</p>
-                        <a href="#" class="training-link">查看详细教程 <i class="fas fa-arrow-right"></i></a>
+                        <button class="training-link" onclick="openTrainingDetail('toilet')">查看详细教程 <i class="fas fa-arrow-right"></i></button>
                     </div>
                     <div class="training-card">
                         <div class="training-icon">
@@ -286,7 +289,7 @@
                         </div>
                         <h3>进食训练</h3>
                         <p>定时定量、不随意喂食、建立正确的进食礼仪</p>
-                        <a href="#" class="training-link">查看详细教程 <i class="fas fa-arrow-right"></i></a>
+                        <button class="training-link" onclick="openTrainingDetail('feeding')">查看详细教程 <i class="fas fa-arrow-right"></i></button>
                     </div>
                     <div class="training-card">
                         <div class="training-icon">
@@ -294,7 +297,7 @@
                         </div>
                         <h3>社交训练</h3>
                         <p>接触不同环境、人和其他动物，培养友好性格</p>
-                        <a href="#" class="training-link">查看详细教程 <i class="fas fa-arrow-right"></i></a>
+                        <button class="training-link" onclick="openTrainingDetail('social')">查看详细教程 <i class="fas fa-arrow-right"></i></button>
                     </div>
                 </div>
             </div>
@@ -456,6 +459,25 @@
             </div>
         </section>
     </main>
+
+    <!-- 训练详情弹窗 -->
+    <div class="modal-overlay" id="training-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:1000; align-items:center; justify-content:center;">
+      <div style="background:white; border-radius:16px; max-width:560px; width:90%; max-height:80vh; overflow-y:auto; padding:30px; position:relative;">
+        <button onclick="document.getElementById('training-modal').style.display='none'" style="position:absolute; top:12px; right:16px; background:none; border:none; font-size:24px; cursor:pointer; color:#999;">&times;</button>
+        <h3 id="training-title" style="font-size:22px; margin-bottom:16px; color:#333;"></h3>
+        <div id="training-body"></div>
+      </div>
+    </div>
+
+    <!-- 症状详情弹窗 -->
+    <div class="modal-overlay" id="symptom-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:1000; align-items:center; justify-content:center;">
+      <div style="background:white; border-radius:16px; max-width:500px; width:90%; padding:30px; position:relative;">
+        <button onclick="document.getElementById('symptom-modal').style.display='none'" style="position:absolute; top:12px; right:16px; background:none; border:none; font-size:24px; cursor:pointer; color:#999;">&times;</button>
+        <h3 id="symptom-title" style="font-size:20px; margin-bottom:12px; color:#333;"></h3>
+        <span id="symptom-badge" style="display:inline-block; padding:3px 12px; border-radius:12px; font-size:13px; font-weight:500; margin-bottom:14px;"></span>
+        <p id="symptom-advice" style="color:#555; line-height:1.8; font-size:15px;"></p>
+      </div>
+    </div>
 
     <!-- 页脚 -->
     <footer class="footer">

@@ -655,7 +655,14 @@ main {
     text-decoration: none;
     font-weight: 500;
     margin-top: 15px;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    font-size: inherit;
+    font-family: inherit;
 }
+.training-link:hover { color: #388E3C; }
 
 /* 宠物商城 */
 .store {

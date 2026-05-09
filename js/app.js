@@ -1,3 +1,70 @@
+
+
+// 训练详情弹窗
+function openTrainingDetail(type) {
+  const data = {
+    toilet: {
+      title: '如厕训练 — 7天养成好习惯',
+      steps: [
+        '<strong>第1-2天：固定地点</strong> — 在指定位置铺尿垫或报纸，饭后/睡醒后立即带去。每次正确排便后给予零食奖励和表扬。',
+        '<strong>第3-4天：定时引导</strong> — 建立固定排便时间（早晨起床后、饭后15分钟、睡前），用口令"上厕所"建立条件反射。',
+        '<strong>第5-6天：减少引导</strong> — 逐渐让宠物自己去找排便点，只在旁观察。成功后加大奖励力度。',
+        '<strong>第7天+：巩固习惯</strong> — 大多数宠物已形成习惯。若还有意外，不要惩罚，回到第3天重新训练。',
+        '<strong>关键提示：</strong>幼犬忍耐时间=月龄+1小时；猫咪通常不需要训练，会自动使用猫砂盆。'
+      ]
+    },
+    feeding: {
+      title: '进食训练 — 建立正确用餐礼仪',
+      steps: [
+        '<strong>定时定量</strong> — 每天固定2-3次喂食，每次15-20分钟。没吃完的食物收走，不要一直放在碗里。',
+        '<strong>餐前冷静</strong> — 准备食物时要求宠物坐下等待，食物放好并说"吃"才允许进食。扑人或吠叫时不给予食物。',
+        '<strong>不随意喂食</strong> — 人类食物（尤其是巧克力、葡萄、洋葱、大蒜）对宠物有毒。零食不超过每日总食量的10%。',
+        '<strong>防抢食训练</strong> — 进食时可轻碰食盆、轻声说话，让宠物习惯有人靠近。若有护食行为，请咨询专业训犬师。',
+        '<strong>关键提示：</strong>幼犬每日3-4餐，成犬2餐；猫咪少食多餐更健康。'
+      ]
+    },
+    social: {
+      title: '社交训练 — 培养友好性格',
+      steps: [
+        '<strong>黄金窗口期</strong> — 狗狗3-16周龄是社交关键期。此阶段温和接触不同人、动物、环境，能极大减少成年后的恐惧和攻击行为。',
+        '<strong>循序渐进</strong> — 先从安静环境开始，一次只引入一个新元素（陌生人→陌生狗→人多的地方）。每次15-20分钟，观察宠物反应。',
+        '<strong>正面关联</strong> — 遇到新事物时给予零食奖励，让宠物形成"新东西=好事"的印象。如果宠物表现出恐惧，带离现场，下次从更远距离重新开始。',
+        '<strong>读懂信号</strong> — 夹尾巴、飞机耳、打哈欠、舔嘴唇都是紧张信号。立即减少刺激强度。',
+        '<strong>关键提示：</strong>没打完疫苗的幼犬不要接触陌生犬只和不洁地面。可选择安全环境进行社交。'
+      ]
+    }
+  };
+  const d = data[type];
+  if (!d) return;
+  document.getElementById('training-title').textContent = d.title;
+  document.getElementById('training-body').innerHTML = d.steps.map(s => `<div style="background:#f8f9fa; border-radius:10px; padding:14px; margin-bottom:10px; font-size:14px; color:#444; line-height:1.7;">${s}</div>`).join('');
+  const modal = document.getElementById('training-modal');
+  modal.style.display = 'flex';
+  modal.onclick = function(e) { if (e.target === modal) modal.style.display = 'none'; };
+}
+
+// 症状应对弹窗
+function openSymptomDetail(name, level, advice) {
+  document.getElementById('symptom-title').textContent = name;
+  document.getElementById('symptom-advice').textContent = advice;
+  const badge = document.getElementById('symptom-badge');
+  const config = {
+    mild: { text: '轻微', bg: '#e8f5e9', color: '#2e7d32' },
+    moderate: { text: '中等', bg: '#fff3e0', color: '#e65100' },
+    severe: { text: '紧急', bg: '#ffebee', color: '#c62828' }
+  };
+  const c = config[level] || config.mild;
+  badge.textContent = c.text;
+  badge.style.background = c.bg;
+  badge.style.color = c.color;
+  const modal = document.getElementById('symptom-modal');
+  modal.style.display = 'flex';
+  modal.onclick = function(e) { if (e.target === modal) modal.style.display = 'none'; };
+}
+
+window.openTrainingDetail = openTrainingDetail;
+window.openSymptomDetail = openSymptomDetail;
+
 // 主应用JavaScript文件
 document.addEventListener('DOMContentLoaded', function() {
     // 初始化日期显示
@@ -16,9 +83,13 @@ document.addEventListener('DOMContentLoaded', function() {
     initMobileMenu();
     
     // 显示欢迎通知
-    setTimeout(() => {
-        showNotification('欢迎使用宠物新手助手！开始您的科学养宠之旅吧～');
-    }, 1000);
+    const hasVisited = storage.get('hasVisited', false);
+    if (!hasVisited) {
+        storage.set('hasVisited', true);
+        setTimeout(() => {
+            showNotification('欢迎使用宠物新手助手！开始您的科学养宠之旅吧～');
+        }, 1000);
+    }
 });
 
 // 更新当前日期显示
@@ -97,7 +168,8 @@ function initPetTypeSelection() {
             // 显示选择通知
             showNotification(`已选择${this.querySelector('h3').textContent}养护模式`);
             
-            // 这里可以添加根据宠物类型加载不同数据的逻辑
+            // 保存宠物类型偏好
+            storage.set('preferredPetType', petType);
             updateTasksByPetType(petType);
         });
     });

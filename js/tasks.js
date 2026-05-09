@@ -137,16 +137,26 @@ const tasksData = {
 
 // 初始化任务系统
 function initTaskSystem() {
-    // 加载默认任务（狗狗）
-    loadTasks('dog');
-    
+    // 恢复上次选择的宠物类型
+    const preferredType = storage.get('preferredPetType', 'dog');
+    loadTasks(preferredType);
+
+    // 恢复宠物选项的 active 状态
+    document.querySelectorAll('.pet-option').forEach(opt => {
+        opt.classList.toggle('active', opt.dataset.pet === preferredType);
+    });
+
     // 监听宠物类型变化
     document.querySelectorAll('.pet-option').forEach(option => {
         option.addEventListener('click', function() {
             const petType = this.dataset.pet;
+            storage.set('preferredPetType', petType);
             loadTasks(petType);
         });
     });
+
+    // 更新连续打卡
+    updateStreak();
 }
 
 // 加载任务
@@ -261,11 +271,12 @@ function updateProgress() {
         totalTasksElement.textContent = totalTasks;
     }
     
-    // 如果全部完成，显示庆祝消息
+    // 如果全部完成，显示庆祝消息和更新连续打卡
     if (completedTasks === totalTasks && totalTasks > 0) {
         setTimeout(() => {
             showNotification('🎉 太棒了！今日所有养护任务已完成！', 'info');
         }, 500);
+        updateStreak(true);
     }
 }
 
@@ -380,5 +391,32 @@ function checkReminders() {
 }
 
 // 导出函数
+
+
+// 连续打卡管理
+function updateStreak(todayCompleted) {
+    const today = new Date().toDateString();
+    const streakData = storage.get('streakData', { lastDate: '', count: 0 });
+
+    if (todayCompleted) {
+        if (streakData.lastDate === today) return; // 今天已记录
+        const yesterday = new Date(Date.now() - 86400000).toDateString();
+        if (streakData.lastDate === yesterday) {
+            streakData.count += 1;
+        } else if (streakData.lastDate !== today) {
+            streakData.count = 1;
+        }
+        streakData.lastDate = today;
+        storage.set('streakData', streakData);
+    }
+
+    const streakInfo = document.getElementById('streak-info');
+    const streakDays = document.getElementById('streak-days');
+    if (streakInfo && streakDays && streakData.count > 0) {
+        streakDays.textContent = streakData.count;
+        streakInfo.style.display = 'block';
+    }
+}
+
 window.loadTasks = loadTasks;
 window.updateProgress = updateProgress;
