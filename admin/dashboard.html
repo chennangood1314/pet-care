@@ -10,6 +10,11 @@
     * { -webkit-tap-highlight-color: transparent; }
     body { background: #f0f2f5; }
     input, select, textarea { font-size: 16px !important; }
+    .chart-bar { transition: height 0.6s ease; }
+    .pie-chart { width: 160px; height: 160px; border-radius: 50%; position: relative; }
+    .pie-chart::after { content: ''; position: absolute; inset: 32px; background: white; border-radius: 50%; }
+    .user-detail-panel { animation: slideDown 0.3s ease; }
+    @keyframes slideDown { from { opacity: 0; max-height: 0; } to { opacity: 1; max-height: 600px; } }
   </style>
 </head>
 <body class="min-h-screen">
@@ -26,10 +31,9 @@
   </div>
 </header>
 
-<!-- 整体布局容器 -->
 <div class="flex min-h-screen">
 
-  <!-- 侧边栏遮罩（仅移动端） -->
+  <!-- 侧边栏遮罩 -->
   <div id="sidebar-overlay" class="hidden fixed inset-0 bg-black/50 z-40 md:hidden" onclick="toggleSidebar()"></div>
 
   <!-- 侧边栏 -->
@@ -37,7 +41,6 @@
     class="fixed md:relative inset-y-0 left-0 w-64 bg-gray-900 text-white flex-shrink-0
            transform -translate-x-full md:translate-x-0 transition-transform duration-300
            z-50 overflow-y-auto flex flex-col shadow-xl md:shadow-none">
-    <!-- 侧边栏头部 -->
     <div class="p-5 border-b border-gray-700 flex items-center justify-between">
       <div class="flex items-center gap-3">
         <span class="text-2xl">🐾</span>
@@ -48,33 +51,16 @@
       </div>
       <button onclick="toggleSidebar()" class="md:hidden text-gray-400 hover:text-white p-1"><i class="fa fa-times text-xl"></i></button>
     </div>
-
-    <!-- 导航菜单 -->
     <nav class="p-4 space-y-1 flex-1">
-      <a href="#" onclick="switchTab('products')" id="nav-products"
-        class="flex items-center gap-3 px-4 py-3 rounded-lg bg-purple-600 transition">
-        <i class="fa fa-cube w-5 text-center"></i> 商品管理
-      </a>
-      <a href="#" onclick="switchTab('orders')" id="nav-orders"
-        class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-800 transition">
-        <i class="fa fa-list-alt w-5 text-center"></i> 订单管理
-      </a>
-      <a href="#" onclick="switchTab('stats')" id="nav-stats"
-        class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-800 transition">
-        <i class="fa fa-bar-chart w-5 text-center"></i> 数据概览
-      </a>
+      <a href="#" onclick="switchTab('products')" id="nav-products" class="flex items-center gap-3 px-4 py-3 rounded-lg bg-purple-600 transition"><i class="fa fa-cube w-5 text-center"></i> 商品管理</a>
+      <a href="#" onclick="switchTab('orders')" id="nav-orders" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-800 transition"><i class="fa fa-list-alt w-5 text-center"></i> 订单管理</a>
+      <a href="#" onclick="switchTab('users')" id="nav-users" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-800 transition"><i class="fa fa-users w-5 text-center"></i> 用户管理</a>
+      <a href="#" onclick="switchTab('revenue')" id="nav-revenue" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-800 transition"><i class="fa fa-line-chart w-5 text-center"></i> 营收分析</a>
+      <a href="#" onclick="switchTab('stats')" id="nav-stats" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-800 transition"><i class="fa fa-bar-chart w-5 text-center"></i> 数据概览</a>
     </nav>
-
-    <!-- 底部操作 -->
     <div class="p-4 border-t border-gray-700 space-y-1">
-      <a href="../index.html" target="_blank"
-        class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-800 transition text-gray-400 text-sm">
-        <i class="fa fa-external-link w-5 text-center"></i> 打开前台
-      </a>
-      <a href="#" onclick="logout()"
-        class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-red-900 transition text-red-400 text-sm">
-        <i class="fa fa-sign-out w-5 text-center"></i> 退出登录
-      </a>
+      <a href="../index.html" target="_blank" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-800 transition text-gray-400 text-sm"><i class="fa fa-external-link w-5 text-center"></i> 打开前台</a>
+      <a href="#" onclick="logout()" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-red-900 transition text-red-400 text-sm"><i class="fa fa-sign-out w-5 text-center"></i> 退出登录</a>
     </div>
   </aside>
 
@@ -82,535 +68,464 @@
   <main class="flex-1 min-w-0 pt-14 md:pt-0 overflow-auto">
     <div class="p-4 md:p-8 max-w-7xl mx-auto">
 
-      <!-- ==================== 商品管理 ==================== -->
+      <!-- ========== 商品管理 ========== -->
       <div id="tab-products" class="tab-content">
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
-          <h2 class="text-xl md:text-2xl font-bold text-gray-800">
-            <i class="fa fa-cube mr-2 text-purple-600"></i>商品管理
-          </h2>
-          <button onclick="openProductModal()"
-            class="inline-flex items-center justify-center px-5 py-2.5 bg-purple-600 hover:bg-purple-700 active:bg-purple-800 text-white rounded-lg transition font-medium text-sm">
-            <i class="fa fa-plus mr-1"></i> 添加商品
-          </button>
+          <h2 class="text-xl md:text-2xl font-bold text-gray-800"><i class="fa fa-cube mr-2 text-purple-600"></i>商品管理</h2>
+          <button onclick="openProductModal()" class="inline-flex items-center justify-center px-5 py-2.5 bg-purple-600 hover:bg-purple-700 active:bg-purple-800 text-white rounded-lg transition font-medium text-sm"><i class="fa fa-plus mr-1"></i> 添加商品</button>
         </div>
-
-        <!-- 搜索栏 -->
         <div class="bg-white rounded-xl p-4 mb-4 shadow-sm flex flex-col sm:flex-row gap-3">
-          <input type="text" id="product-search" oninput="renderProductList()"
-            placeholder="搜索商品名称..." class="flex-1 px-4 py-2.5 border rounded-lg outline-none focus:border-purple-500">
-          <select id="product-category" onchange="renderProductList()"
-            class="px-4 py-2.5 border rounded-lg outline-none bg-white">
-            <option value="">全部分类</option>
-            <option value="food">宠物食品</option>
-            <option value="health">健康护理</option>
-            <option value="toy">玩具用品</option>
-            <option value="home">家居用品</option>
-          </select>
+          <input type="text" id="product-search" oninput="renderProductList()" placeholder="搜索商品名称..." class="flex-1 px-4 py-2.5 border rounded-lg outline-none focus:border-purple-500">
+          <select id="product-category" onchange="renderProductList()" class="px-4 py-2.5 border rounded-lg outline-none bg-white"><option value="">全部分类</option><option value="food">宠物食品</option><option value="health">健康护理</option><option value="toy">玩具用品</option><option value="home">家居用品</option></select>
         </div>
-
-        <!-- 桌面端：表格；移动端：卡片 -->
-        <!-- 表格（桌面端显示） -->
         <div class="hidden md:block bg-white rounded-xl shadow-sm overflow-hidden">
           <div class="overflow-x-auto">
-            <table class="w-full">
-              <thead class="bg-gray-50">
-                <tr>
-                  <th class="px-4 py-3 text-left text-sm font-medium text-gray-600">商品</th>
-                  <th class="px-4 py-3 text-left text-sm font-medium text-gray-600">分类</th>
-                  <th class="px-4 py-3 text-left text-sm font-medium text-gray-600">价格</th>
-                  <th class="px-4 py-3 text-left text-sm font-medium text-gray-600 hidden lg:table-cell">销量</th>
-                  <th class="px-4 py-3 text-left text-sm font-medium text-gray-600">操作</th>
-                </tr>
-              </thead>
-              <tbody id="product-table-body" class="divide-y divide-gray-100"></tbody>
-            </table>
+            <table class="w-full"><thead class="bg-gray-50"><tr><th class="px-4 py-3 text-left text-sm font-medium text-gray-600">商品</th><th class="px-4 py-3 text-left text-sm font-medium text-gray-600">分类</th><th class="px-4 py-3 text-left text-sm font-medium text-gray-600">价格</th><th class="px-4 py-3 text-left text-sm font-medium text-gray-600 hidden lg:table-cell">销量</th><th class="px-4 py-3 text-left text-sm font-medium text-gray-600">操作</th></tr></thead><tbody id="product-table-body" class="divide-y divide-gray-100"></tbody></table>
           </div>
-          <div id="product-empty-desktop" class="hidden text-center py-16 text-gray-400">
-            <i class="fa fa-inbox text-5xl block mb-4"></i>暂无商品
-          </div>
+          <div id="product-empty-desktop" class="hidden text-center py-16 text-gray-400"><i class="fa fa-inbox text-5xl block mb-4"></i>暂无商品</div>
         </div>
-
-        <!-- 卡片列表（移动端显示） -->
         <div id="product-cards" class="md:hidden space-y-3"></div>
-        <div id="product-empty-mobile" class="hidden md:hidden text-center py-16 text-gray-400">
-          <i class="fa fa-inbox text-5xl block mb-4"></i>暂无商品
-        </div>
+        <div id="product-empty-mobile" class="hidden md:hidden text-center py-16 text-gray-400"><i class="fa fa-inbox text-5xl block mb-4"></i>暂无商品</div>
       </div>
 
-      <!-- ==================== 订单管理 ==================== -->
+      <!-- ========== 订单管理 ========== -->
       <div id="tab-orders" class="tab-content hidden">
-        <h2 class="text-xl md:text-2xl font-bold text-gray-800 mb-6">
-          <i class="fa fa-list-alt mr-2 text-purple-600"></i>订单管理
-        </h2>
-        <div class="bg-white rounded-xl shadow-sm p-4 md:p-6 text-center text-gray-400 mb-6">
-          <i class="fa fa-info-circle text-4xl md:text-5xl block mb-4"></i>
-          <p class="text-base md:text-lg font-medium text-gray-600 mb-2">Demo 模式说明</p>
-          <p class="max-w-md mx-auto text-sm">订单数据存储在 Vercel 实例内存中，不同函数实例间数据不互通。生产环境建议接入 Vercel KV 或数据库实现持久化存储。</p>
+        <h2 class="text-xl md:text-2xl font-bold text-gray-800 mb-6"><i class="fa fa-list-alt mr-2 text-purple-600"></i>订单管理</h2>
+        <div class="flex flex-col sm:flex-row gap-3 mb-4">
+          <select id="order-status-filter" onchange="renderOrderPanel()" class="px-4 py-2.5 border rounded-lg outline-none bg-white"><option value="">全部状态</option><option value="pending">待支付</option><option value="paid">已支付</option><option value="cancelled">已取消</option><option value="expired">已过期</option></select>
         </div>
-
-        <!-- 订单表格（桌面端） -->
         <div class="hidden md:block bg-white rounded-xl shadow-sm overflow-hidden">
           <div class="overflow-x-auto">
-            <table class="w-full">
-              <thead class="bg-gray-50">
-                <tr>
-                  <th class="px-4 py-3 text-left text-sm font-medium text-gray-600">订单号</th>
-                  <th class="px-4 py-3 text-left text-sm font-medium text-gray-600">时间</th>
-                  <th class="px-4 py-3 text-left text-sm font-medium text-gray-600">金额</th>
-                  <th class="px-4 py-3 text-left text-sm font-medium text-gray-600">状态</th>
-                </tr>
-              </thead>
-              <tbody id="order-table-body" class="divide-y divide-gray-100"></tbody>
-            </table>
+            <table class="w-full"><thead class="bg-gray-50"><tr><th class="px-4 py-3 text-left text-sm font-medium text-gray-600">订单号</th><th class="px-4 py-3 text-left text-sm font-medium text-gray-600">用户</th><th class="px-4 py-3 text-left text-sm font-medium text-gray-600">金额</th><th class="px-4 py-3 text-left text-sm font-medium text-gray-600">支付方式</th><th class="px-4 py-3 text-left text-sm font-medium text-gray-600">状态</th><th class="px-4 py-3 text-left text-sm font-medium text-gray-600 hidden lg:table-cell">时间</th></tr></thead><tbody id="order-table-body" class="divide-y divide-gray-100"></tbody></table>
           </div>
-          <div id="order-empty" class="text-center py-16 text-gray-400">
-            <i class="fa fa-inbox text-5xl block mb-4"></i>暂无订单
+          <div id="order-empty" class="text-center py-16 text-gray-400"><i class="fa fa-inbox text-5xl block mb-4"></i>暂无订单</div>
+        </div>
+        <div id="order-cards" class="md:hidden space-y-3"></div>
+        <div id="order-empty-mobile" class="hidden md:hidden text-center py-16 text-gray-400"><i class="fa fa-inbox text-5xl block mb-4"></i>暂无订单</div>
+      </div>
+
+      <!-- ========== 用户管理 ========== -->
+      <div id="tab-users" class="tab-content hidden">
+        <h2 class="text-xl md:text-2xl font-bold text-gray-800 mb-6"><i class="fa fa-users mr-2 text-purple-600"></i>用户管理</h2>
+        <!-- 用户统计卡片 -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6" id="user-stats-cards"></div>
+        <!-- 搜索 -->
+        <div class="bg-white rounded-xl p-4 mb-4 shadow-sm">
+          <input type="text" id="user-search" oninput="renderUserList()" placeholder="搜索用户名或手机号..." class="w-full md:w-80 px-4 py-2.5 border rounded-lg outline-none focus:border-purple-500">
+        </div>
+        <!-- 用户表格（桌面端） -->
+        <div class="hidden md:block bg-white rounded-xl shadow-sm overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full"><thead class="bg-gray-50"><tr><th class="px-4 py-3 text-left text-sm font-medium text-gray-600">用户</th><th class="px-4 py-3 text-left text-sm font-medium text-gray-600">手机号</th><th class="px-4 py-3 text-center text-sm font-medium text-gray-600">订单数</th><th class="px-4 py-3 text-right text-sm font-medium text-gray-600">消费总额</th><th class="px-4 py-3 text-left text-sm font-medium text-gray-600 hidden lg:table-cell">最近下单</th><th class="px-4 py-3 text-center text-sm font-medium text-gray-600">操作</th></tr></thead><tbody id="user-table-body" class="divide-y divide-gray-100"></tbody></table>
+          </div>
+          <div id="user-empty" class="text-center py-16 text-gray-400"><i class="fa fa-users text-5xl block mb-4"></i>暂无用户</div>
+        </div>
+        <!-- 用户卡片（移动端） -->
+        <div id="user-cards" class="md:hidden space-y-3"></div>
+        <div id="user-empty-mobile" class="hidden md:hidden text-center py-16 text-gray-400"><i class="fa fa-users text-5xl block mb-4"></i>暂无用户</div>
+        <!-- 用户详情面板（展开时显示） -->
+        <div id="user-detail-panel" class="hidden mt-4 bg-white rounded-xl shadow-sm overflow-hidden user-detail-panel"></div>
+      </div>
+
+      <!-- ========== 营收分析 ========== -->
+      <div id="tab-revenue" class="tab-content hidden">
+        <h2 class="text-xl md:text-2xl font-bold text-gray-800 mb-6"><i class="fa fa-line-chart mr-2 text-purple-600"></i>营收分析</h2>
+        <!-- 营收概览卡片 -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6" id="revenue-cards"></div>
+        <!-- 图表区 -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+          <!-- 近7天营收趋势 -->
+          <div class="bg-white rounded-xl shadow-sm p-5 md:p-6">
+            <h3 class="font-bold text-gray-800 mb-1">近7天营收趋势</h3>
+            <p class="text-xs text-gray-400 mb-4">每日已支付订单金额</p>
+            <div id="revenue-bar-chart" class="flex items-end gap-2 md:gap-3" style="height:200px; padding:0 4px;"></div>
+            <div id="revenue-bar-labels" class="flex gap-2 md:gap-3 mt-2" style="padding:0 4px;"></div>
+          </div>
+          <!-- 近7天订单量 -->
+          <div class="bg-white rounded-xl shadow-sm p-5 md:p-6">
+            <h3 class="font-bold text-gray-800 mb-1">近7天订单量</h3>
+            <p class="text-xs text-gray-400 mb-4">每日已支付订单数</p>
+            <div id="order-count-chart" class="flex items-end gap-2 md:gap-3" style="height:200px; padding:0 4px;"></div>
+            <div id="order-count-labels" class="flex gap-2 md:gap-3 mt-2" style="padding:0 4px;"></div>
           </div>
         </div>
-
-        <!-- 订单卡片（移动端） -->
-        <div id="order-cards" class="md:hidden space-y-3"></div>
-        <div id="order-empty-mobile" class="hidden md:hidden text-center py-16 text-gray-400">
-          <i class="fa fa-inbox text-5xl block mb-4"></i>暂无订单
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+          <!-- 支付方式分布 -->
+          <div class="bg-white rounded-xl shadow-sm p-5 md:p-6">
+            <h3 class="font-bold text-gray-800 mb-4">支付方式分布</h3>
+            <div class="flex flex-col items-center">
+              <div id="payment-pie" class="pie-chart mb-4"></div>
+              <div id="payment-legend" class="flex flex-wrap justify-center gap-4"></div>
+            </div>
+          </div>
+          <!-- 最新订单 -->
+          <div class="bg-white rounded-xl shadow-sm p-5 md:p-6">
+            <h3 class="font-bold text-gray-800 mb-4">最近已支付订单</h3>
+            <div id="recent-orders-list" class="space-y-3 max-h-80 overflow-y-auto"></div>
+          </div>
         </div>
       </div>
 
-      <!-- ==================== 数据概览 ==================== -->
+      <!-- ========== 数据概览 ========== -->
       <div id="tab-stats" class="tab-content hidden">
-        <h2 class="text-xl md:text-2xl font-bold text-gray-800 mb-6">
-          <i class="fa fa-bar-chart mr-2 text-purple-600"></i>数据概览
-        </h2>
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6 mb-8">
-          <div class="bg-white rounded-xl shadow-sm p-5 md:p-6">
-            <div class="flex items-center justify-between">
-              <div>
-                <p class="text-gray-500 text-sm">商品总数</p>
-                <p class="text-3xl font-bold text-gray-800" id="stat-products">0</p>
-              </div>
-              <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center text-2xl">📦</div>
-            </div>
-          </div>
-          <div class="bg-white rounded-xl shadow-sm p-5 md:p-6">
-            <div class="flex items-center justify-between">
-              <div>
-                <p class="text-gray-500 text-sm">订单总数</p>
-                <p class="text-3xl font-bold text-gray-800" id="stat-orders">0</p>
-              </div>
-              <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center text-2xl">📋</div>
-            </div>
-          </div>
-          <div class="bg-white rounded-xl shadow-sm p-5 md:p-6">
-            <div class="flex items-center justify-between">
-              <div>
-                <p class="text-gray-500 text-sm">当前模式</p>
-                <p class="text-xl font-bold text-orange-600">Demo</p>
-              </div>
-              <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center text-2xl">🔧</div>
-            </div>
-          </div>
-        </div>
+        <h2 class="text-xl md:text-2xl font-bold text-gray-800 mb-6"><i class="fa fa-bar-chart mr-2 text-purple-600"></i>数据概览</h2>
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6" id="stats-cards"></div>
       </div>
 
     </div>
   </main>
 </div>
 
-<!-- ==================== 商品编辑弹窗 ==================== -->
+<!-- 商品编辑弹窗 -->
 <div id="product-modal" class="hidden fixed inset-0 z-[60]">
   <div class="absolute inset-0 bg-black/50" onclick="closeProductModal()"></div>
   <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-2xl shadow-2xl w-[calc(100%-2rem)] max-w-lg max-h-[90vh] overflow-y-auto p-5 md:p-6">
     <h3 class="text-lg md:text-xl font-bold mb-5" id="modal-title">添加商品</h3>
     <form id="product-form" class="space-y-4">
       <input type="hidden" id="prod-id">
-      <div>
-        <label class="block text-sm font-medium text-gray-700 mb-1">商品名称 *</label>
-        <input type="text" id="prod-name" required class="w-full px-3 py-2.5 border rounded-lg outline-none focus:border-purple-500">
+      <div><label class="block text-sm font-medium text-gray-700 mb-1">商品名称 *</label><input type="text" id="prod-name" required class="w-full px-3 py-2.5 border rounded-lg outline-none focus:border-purple-500"></div>
+      <div class="grid grid-cols-2 gap-4">
+        <div><label class="block text-sm font-medium text-gray-700 mb-1">分类 *</label><select id="prod-category" required class="w-full px-3 py-2.5 border rounded-lg outline-none bg-white"><option value="food">宠物食品</option><option value="health">健康护理</option><option value="toy">玩具用品</option><option value="home">家居用品</option></select></div>
+        <div><label class="block text-sm font-medium text-gray-700 mb-1">适用宠物</label><select id="prod-petType" class="w-full px-3 py-2.5 border rounded-lg outline-none bg-white"><option value="both">通用</option><option value="dog">狗狗</option><option value="cat">猫咪</option></select></div>
       </div>
       <div class="grid grid-cols-2 gap-4">
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">分类 *</label>
-          <select id="prod-category" required class="w-full px-3 py-2.5 border rounded-lg outline-none bg-white">
-            <option value="food">宠物食品</option>
-            <option value="health">健康护理</option>
-            <option value="toy">玩具用品</option>
-            <option value="home">家居用品</option>
-          </select>
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">适用宠物</label>
-          <select id="prod-petType" class="w-full px-3 py-2.5 border rounded-lg outline-none bg-white">
-            <option value="both">通用</option>
-            <option value="dog">狗狗</option>
-            <option value="cat">猫咪</option>
-          </select>
-        </div>
+        <div><label class="block text-sm font-medium text-gray-700 mb-1">售价 *</label><input type="number" id="prod-price" required min="1" step="0.01" class="w-full px-3 py-2.5 border rounded-lg outline-none focus:border-purple-500"></div>
+        <div><label class="block text-sm font-medium text-gray-700 mb-1">原价</label><input type="number" id="prod-originalPrice" min="1" step="0.01" class="w-full px-3 py-2.5 border rounded-lg outline-none"></div>
       </div>
+      <div><label class="block text-sm font-medium text-gray-700 mb-1">描述</label><input type="text" id="prod-desc" class="w-full px-3 py-2.5 border rounded-lg outline-none focus:border-purple-500"></div>
       <div class="grid grid-cols-2 gap-4">
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">售价 *</label>
-          <input type="number" id="prod-price" required min="1" step="0.01" class="w-full px-3 py-2.5 border rounded-lg outline-none focus:border-purple-500">
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">原价</label>
-          <input type="number" id="prod-originalPrice" min="1" step="0.01" class="w-full px-3 py-2.5 border rounded-lg outline-none">
-        </div>
+        <div><label class="block text-sm font-medium text-gray-700 mb-1">图标 (emoji)</label><input type="text" id="prod-img" placeholder="📦" class="w-full px-3 py-2.5 border rounded-lg outline-none"></div>
+        <div><label class="block text-sm font-medium text-gray-700 mb-1">标签 (逗号分隔)</label><input type="text" id="prod-tags" placeholder="进口, 天然" class="w-full px-3 py-2.5 border rounded-lg outline-none"></div>
       </div>
-      <div>
-        <label class="block text-sm font-medium text-gray-700 mb-1">描述</label>
-        <input type="text" id="prod-desc" class="w-full px-3 py-2.5 border rounded-lg outline-none focus:border-purple-500">
-      </div>
-      <div class="grid grid-cols-2 gap-4">
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">图标 (emoji)</label>
-          <input type="text" id="prod-img" placeholder="📦" class="w-full px-3 py-2.5 border rounded-lg outline-none">
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">标签 (逗号分隔)</label>
-          <input type="text" id="prod-tags" placeholder="进口, 天然" class="w-full px-3 py-2.5 border rounded-lg outline-none">
-        </div>
-      </div>
-      <div>
-        <label class="block text-sm font-medium text-gray-700 mb-1">角标</label>
-        <input type="text" id="prod-badge" placeholder="热销 / 推荐 / 爆款" class="w-full px-3 py-2.5 border rounded-lg outline-none">
-      </div>
+      <div><label class="block text-sm font-medium text-gray-700 mb-1">角标</label><input type="text" id="prod-badge" placeholder="热销 / 推荐 / 爆款" class="w-full px-3 py-2.5 border rounded-lg outline-none"></div>
       <div class="flex gap-3 pt-2">
-        <button type="submit"
-          class="flex-1 py-2.5 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium transition text-sm">
-          <i class="fa fa-check mr-1"></i> 保存
-        </button>
-        <button type="button" onclick="closeProductModal()"
-          class="flex-1 py-2.5 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg font-medium transition text-sm">
-          取消
-        </button>
+        <button type="submit" class="flex-1 py-2.5 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium transition text-sm"><i class="fa fa-check mr-1"></i> 保存</button>
+        <button type="button" onclick="closeProductModal()" class="flex-1 py-2.5 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg font-medium transition text-sm">取消</button>
       </div>
     </form>
   </div>
 </div>
 
-<!-- Toast -->
 <div id="toast" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] px-6 py-3 rounded-full text-white text-sm shadow-lg"></div>
 
 <script>
-  const API = '/api/admin';
-  let token, products = [];
+const API = '/api/admin';
+let token, products = [], usersData = [], revenueData = null;
 
-  // ==================== 初始化 ====================
-  async function init() {
-    token = localStorage.getItem('admin_token');
-    if (!token) { window.location.href = 'index.html'; return; }
+// ==================== 初始化 ====================
+async function init() {
+  token = localStorage.getItem('admin_token');
+  if (!token) { window.location.href = 'index.html'; return; }
+  document.getElementById('admin-name').textContent = localStorage.getItem('admin_user') || '管理员';
+  await loadProducts();
+  switchTab('products');
+}
 
-    document.getElementById('admin-name').textContent = localStorage.getItem('admin_user') || '管理员';
-    await loadProducts();
-    await loadStats();
-    switchTab('products');
+// ==================== 商品管理 ====================
+async function loadProducts() {
+  try {
+    const res = await fetch(`${API}/products`, { headers: { 'Authorization': `Bearer ${token}` } });
+    if (res.status === 401) { logout(); return; }
+    const data = await res.json();
+    if (data.success) products = data.data.products || [];
+  } catch (e) { console.error(e); }
+  renderProductList();
+}
+
+function renderProductList() {
+  const search = (document.getElementById('product-search')?.value || '').toLowerCase();
+  const cat = document.getElementById('product-category')?.value || '';
+  let filtered = products;
+  if (search) filtered = filtered.filter(p => p.name.toLowerCase().includes(search));
+  if (cat) filtered = filtered.filter(p => p.category === cat);
+  renderProductTable(filtered);
+  renderProductCards(filtered);
+}
+
+function renderProductTable(filtered) {
+  const tbody = document.getElementById('product-table-body');
+  const empty = document.getElementById('product-empty-desktop');
+  if (filtered.length === 0) { tbody.innerHTML = ''; empty.classList.remove('hidden'); return; }
+  empty.classList.add('hidden');
+  tbody.innerHTML = filtered.map(p => `<tr class="hover:bg-gray-50"><td class="px-4 py-3"><div class="flex items-center gap-3"><span class="text-2xl">${p.img}</span><div><p class="font-medium text-gray-800">${p.name}</p><p class="text-xs text-gray-400">${p.desc||''}</p></div>${p.badge?`<span class="ml-1 px-2 py-0.5 bg-red-100 text-red-600 rounded-full text-xs">${p.badge}</span>`:''}</div></td><td class="px-4 py-3 text-gray-600 text-sm">${catLabel(p.category)}</td><td class="px-4 py-3"><span class="font-bold text-red-500">¥${p.price}</span>${p.originalPrice>p.price?`<span class="text-gray-400 line-through text-xs ml-1">¥${p.originalPrice}</span>`:''}</td><td class="px-4 py-3 text-gray-600 text-sm hidden lg:table-cell">${p.sales||0}</td><td class="px-4 py-3"><div class="flex gap-2"><button onclick="editProduct(${p.id})" class="text-blue-600 hover:text-blue-800 p-1"><i class="fa fa-edit"></i></button><button onclick="deleteProduct(${p.id})" class="text-red-500 hover:text-red-700 p-1"><i class="fa fa-trash"></i></button></div></td></tr>`).join('');
+}
+
+function renderProductCards(filtered) {
+  const cards = document.getElementById('product-cards');
+  const empty = document.getElementById('product-empty-mobile');
+  if (filtered.length === 0) { cards.innerHTML = ''; empty.classList.remove('hidden'); return; }
+  empty.classList.add('hidden');
+  cards.innerHTML = filtered.map(p => `<div class="bg-white rounded-xl shadow-sm p-4 flex items-center gap-4"><span class="text-3xl flex-shrink-0">${p.img}</span><div class="flex-1 min-w-0"><div class="flex items-center gap-2 mb-0.5"><p class="font-medium text-gray-800 truncate">${p.name}</p>${p.badge?`<span class="px-2 py-0.5 bg-red-100 text-red-600 rounded-full text-xs flex-shrink-0">${p.badge}</span>`:''}</div><p class="text-xs text-gray-400 mb-1">${catLabel(p.category)}</p><p class="font-bold text-red-500">¥${p.price}${p.originalPrice>p.price?`<span class="text-gray-400 line-through text-xs ml-1 font-normal">¥${p.originalPrice}</span>`:''}</p></div><div class="flex flex-col gap-2 flex-shrink-0"><button onclick="editProduct(${p.id})" class="w-9 h-9 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center"><i class="fa fa-edit"></i></button><button onclick="deleteProduct(${p.id})" class="w-9 h-9 bg-red-50 text-red-500 rounded-lg flex items-center justify-center"><i class="fa fa-trash"></i></button></div></div>`).join('');
+}
+
+function catLabel(c) { const m={food:'宠物食品',health:'健康护理',toy:'玩具用品',home:'家居用品'}; return m[c]||c; }
+
+function openProductModal(product) {
+  document.getElementById('prod-id').value=product?.id||''; document.getElementById('prod-name').value=product?.name||''; document.getElementById('prod-category').value=product?.category||'food'; document.getElementById('prod-petType').value=product?.petType||'both'; document.getElementById('prod-price').value=product?.price||''; document.getElementById('prod-originalPrice').value=product?.originalPrice||''; document.getElementById('prod-desc').value=product?.desc||''; document.getElementById('prod-img').value=product?.img||''; document.getElementById('prod-tags').value=product?.tags?.join(', ')||''; document.getElementById('prod-badge').value=product?.badge||''; document.getElementById('modal-title').textContent=product?'编辑商品':'添加商品'; document.getElementById('product-modal').classList.remove('hidden');
+}
+function closeProductModal() { document.getElementById('product-modal').classList.add('hidden'); }
+function editProduct(id) { const p=products.find(x=>x.id===id); if(p) openProductModal(p); }
+async function deleteProduct(id) {
+  if(!confirm('确定要删除该商品吗？')) return;
+  try {
+    const res=await fetch(`${API}/products/${id}`,{method:'DELETE',headers:{'Authorization':`Bearer ${token}`}});
+    const data=await res.json();
+    if(data.success){products=products.filter(p=>p.id!==id);renderProductList();showToast('商品已删除');}
+  } catch(e){showToast('删除失败',true);}
+}
+
+document.getElementById('product-form').addEventListener('submit',async(e)=>{
+  e.preventDefault();
+  const id=document.getElementById('prod-id').value;
+  const body={name:document.getElementById('prod-name').value.trim(),category:document.getElementById('prod-category').value,petType:document.getElementById('prod-petType').value,price:parseFloat(document.getElementById('prod-price').value),originalPrice:parseFloat(document.getElementById('prod-originalPrice').value)||null,desc:document.getElementById('prod-desc').value.trim(),img:document.getElementById('prod-img').value||'📦',tags:document.getElementById('prod-tags').value.split(',').map(t=>t.trim()).filter(Boolean),badge:document.getElementById('prod-badge').value.trim()};
+  try {
+    const method=id?'PUT':'POST',url=id?`${API}/products/${id}`:`${API}/products`;
+    const res=await fetch(url,{method,headers:{'Content-Type':'application/json','Authorization':`Bearer ${token}`},body:JSON.stringify(body)});
+    const data=await res.json();
+    if(data.success){if(id){const idx=products.findIndex(p=>p.id===parseInt(id));if(idx!==-1)products[idx]=data.data;}else{products.push(data.data);}renderProductList();closeProductModal();showToast(id?'商品已更新':'商品已添加');}else{showToast(data.error||'操作失败',true);}
+  } catch(e){showToast('操作失败',true);}
+});
+
+// ==================== 订单管理 ====================
+function renderOrderPanel() { loadOrders(); }
+
+async function loadOrders() {
+  const status = document.getElementById('order-status-filter')?.value || '';
+  const query = status ? `?status=${status}` : '';
+  try {
+    const res = await fetch(`${API}/orders${query}`, { headers: { 'Authorization': `Bearer ${token}` } });
+    const data = await res.json();
+    if (data.success) renderOrders(data.data.orders || []);
+  } catch (e) {}
+}
+
+function renderOrders(orders) {
+  // 桌面表格
+  const tbody = document.getElementById('order-table-body');
+  const empty = document.getElementById('order-empty');
+  if (!orders.length) { tbody.innerHTML = ''; empty.classList.remove('hidden'); } else {
+    empty.classList.add('hidden');
+    tbody.innerHTML = orders.map(o => `<tr class="hover:bg-gray-50"><td class="px-4 py-3 font-mono text-sm text-gray-800">${o.orderNo}</td><td class="px-4 py-3 text-sm text-gray-600">${o.userName||'匿名'}<br><span class="text-xs text-gray-400">${o.userId||''}</span></td><td class="px-4 py-3 font-bold text-red-500">¥${o.total?.toFixed(2)||'0.00'}</td><td class="px-4 py-3 text-sm text-gray-600">${payLabel(o.payMethod)}</td><td class="px-4 py-3"><span class="px-2.5 py-1 rounded-full text-xs font-medium ${statusClass(o.status)}">${statusLabel(o.status)}</span></td><td class="px-4 py-3 text-xs text-gray-400 hidden lg:table-cell">${o.createdAt?new Date(o.createdAt).toLocaleString('zh-CN'):'-'}</td></tr>`).join('');
   }
-
-  // ==================== 商品加载与渲染 ====================
-  async function loadProducts() {
-    try {
-      const res = await fetch(`${API}/products`, {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      if (res.status === 401) { logout(); return; }
-      const data = await res.json();
-      if (data.success) products = data.data.products || [];
-    } catch (e) { console.error('加载商品失败:', e); }
-    renderProductList();
+  // 移动端卡片
+  const cards = document.getElementById('order-cards');
+  const emptyM = document.getElementById('order-empty-mobile');
+  if (!orders.length) { cards.innerHTML = ''; emptyM.classList.remove('hidden'); } else {
+    emptyM.classList.add('hidden');
+    cards.innerHTML = orders.map(o => `<div class="bg-white rounded-xl shadow-sm p-4"><div class="flex justify-between items-start mb-2"><div><p class="font-mono text-sm text-gray-800">${o.orderNo}</p><p class="text-xs text-gray-400">${o.userName||'匿名'} ${o.userId||''}</p></div><span class="px-2 py-0.5 rounded-full text-xs font-medium ${statusClass(o.status)}">${statusLabel(o.status)}</span></div><div class="flex justify-between items-center"><span class="text-xs text-gray-500">${payLabel(o.payMethod)}</span><span class="font-bold text-red-500">¥${o.total?.toFixed(2)||'0.00'}</span></div></div>`).join('');
   }
+}
 
-  function renderProductList() {
-    const search = (document.getElementById('product-search')?.value || '').toLowerCase();
-    const cat = document.getElementById('product-category')?.value || '';
+function payLabel(m) { const map={alipay:'支付宝',wechat:'微信支付',card:'银行卡'}; return map[m]||m||'未选择'; }
+function statusClass(s) { return s==='paid'?'bg-green-100 text-green-700':s==='pending'?'bg-yellow-100 text-yellow-700':s==='cancelled'?'bg-gray-100 text-gray-500':'bg-red-100 text-red-600'; }
+function statusLabel(s) { return s==='paid'?'已支付':s==='pending'?'待支付':s==='cancelled'?'已取消':s==='expired'?'已过期':(s||'-'); }
 
-    let filtered = products;
-    if (search) filtered = filtered.filter(p => p.name.toLowerCase().includes(search));
-    if (cat) filtered = filtered.filter(p => p.category === cat);
+// ==================== 用户管理 ====================
+async function loadUsers() {
+  try {
+    const search = document.getElementById('user-search')?.value || '';
+    const query = search ? `?search=${encodeURIComponent(search)}` : '';
+    const res = await fetch(`${API}/users${query}`, { headers: { 'Authorization': `Bearer ${token}` } });
+    const data = await res.json();
+    if (data.success) { usersData = data.data; renderUserList(); renderUserStats(); }
+  } catch (e) {}
+}
 
-    renderProductTable(filtered);
-    renderProductCards(filtered);
+function renderUserStats() {
+  const total = usersData.total || 0;
+  const allUsers = usersData.users || [];
+  const totalOrders = allUsers.reduce((s,u) => s + u.orderCount, 0);
+  const totalSpent = allUsers.reduce((s,u) => s + u.totalSpent, 0);
+  document.getElementById('user-stats-cards').innerHTML = [
+    { label: '总用户数', value: total, color: 'purple', icon: '👥' },
+    { label: '总订单数', value: totalOrders, color: 'blue', icon: '📋' },
+    { label: '总消费金额', value: `¥${totalSpent.toFixed(0)}`, color: 'green', icon: '💰' },
+    { label: '客单价', value: totalOrders > 0 ? `¥${(totalSpent/totalOrders).toFixed(0)}` : '¥0', color: 'orange', icon: '📊' }
+  ].map(c => `<div class="bg-white rounded-xl shadow-sm p-4 md:p-5"><p class="text-gray-500 text-xs mb-1">${c.label}</p><div class="flex items-center justify-between"><span class="text-xl md:text-2xl font-bold text-gray-800">${c.value}</span><span class="text-2xl">${c.icon}</span></div></div>`).join('');
+}
+
+function renderUserList() {
+  const users = usersData.users || [];
+  // 桌面表格
+  const tbody = document.getElementById('user-table-body');
+  const empty = document.getElementById('user-empty');
+  if (!users.length) { tbody.innerHTML = ''; empty.classList.remove('hidden'); } else {
+    empty.classList.add('hidden');
+    tbody.innerHTML = users.map(u => `<tr class="hover:bg-gray-50 cursor-pointer" onclick="showUserDetail('${u.phone}')"><td class="px-4 py-3"><div class="flex items-center gap-3"><div class="w-9 h-9 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 font-bold text-sm">${u.name.charAt(0)}</div><span class="font-medium text-gray-800">${u.name}</span></div></td><td class="px-4 py-3 text-gray-600 text-sm">${u.phone}</td><td class="px-4 py-3 text-center font-medium">${u.orderCount}</td><td class="px-4 py-3 text-right font-bold text-red-500">¥${u.totalSpent.toFixed(2)}</td><td class="px-4 py-3 text-xs text-gray-400 hidden lg:table-cell">${u.lastOrderAt?new Date(u.lastOrderAt).toLocaleString('zh-CN'):'-'}</td><td class="px-4 py-3 text-center"><button onclick="event.stopPropagation();showUserDetail('${u.phone}')" class="text-purple-600 hover:text-purple-800 text-sm"><i class="fa fa-eye mr-1"></i>详情</button></td></tr>`).join('');
   }
-
-  function renderProductTable(filtered) {
-    const tbody = document.getElementById('product-table-body');
-    const empty = document.getElementById('product-empty-desktop');
-
-    if (filtered.length === 0) {
-      tbody.innerHTML = '';
-      empty.classList.remove('hidden');
-    } else {
-      empty.classList.add('hidden');
-      tbody.innerHTML = filtered.map(p => `
-        <tr class="hover:bg-gray-50">
-          <td class="px-4 py-3">
-            <div class="flex items-center gap-3">
-              <span class="text-2xl">${p.img}</span>
-              <div>
-                <p class="font-medium text-gray-800">${p.name}</p>
-                <p class="text-xs text-gray-400">${p.desc || ''}</p>
-              </div>
-              ${p.badge ? `<span class="ml-1 px-2 py-0.5 bg-red-100 text-red-600 rounded-full text-xs">${p.badge}</span>` : ''}
-            </div>
-          </td>
-          <td class="px-4 py-3 text-gray-600 text-sm">${catLabel(p.category)}</td>
-          <td class="px-4 py-3">
-            <span class="font-bold text-red-500">¥${p.price}</span>
-            ${p.originalPrice > p.price ? `<span class="text-gray-400 line-through text-xs ml-1">¥${p.originalPrice}</span>` : ''}
-          </td>
-          <td class="px-4 py-3 text-gray-600 text-sm hidden lg:table-cell">${p.sales || 0}</td>
-          <td class="px-4 py-3">
-            <div class="flex gap-2">
-              <button onclick="editProduct(${p.id})" class="text-blue-600 hover:text-blue-800 p-1" title="编辑">
-                <i class="fa fa-edit"></i>
-              </button>
-              <button onclick="deleteProduct(${p.id})" class="text-red-500 hover:text-red-700 p-1" title="删除">
-                <i class="fa fa-trash"></i>
-              </button>
-            </div>
-          </td>
-        </tr>
-      `).join('');
-    }
+  // 移动端卡片
+  const cards = document.getElementById('user-cards');
+  const emptyM = document.getElementById('user-empty-mobile');
+  if (!users.length) { cards.innerHTML = ''; emptyM.classList.remove('hidden'); } else {
+    emptyM.classList.add('hidden');
+    cards.innerHTML = users.map(u => `<div class="bg-white rounded-xl shadow-sm p-4 flex items-center justify-between cursor-pointer" onclick="showUserDetail('${u.phone}')"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 font-bold">${u.name.charAt(0)}</div><div><p class="font-medium text-gray-800">${u.name}</p><p class="text-xs text-gray-400">${u.phone}</p></div></div><div class="text-right"><p class="font-bold text-red-500">¥${u.totalSpent.toFixed(2)}</p><p class="text-xs text-gray-400">${u.orderCount}单</p></div></div>`).join('');
   }
+}
 
-  function renderProductCards(filtered) {
-    const cards = document.getElementById('product-cards');
-    const empty = document.getElementById('product-empty-mobile');
-
-    if (filtered.length === 0) {
-      cards.innerHTML = '';
-      empty.classList.remove('hidden');
-    } else {
-      empty.classList.add('hidden');
-      cards.innerHTML = filtered.map(p => `
-        <div class="bg-white rounded-xl shadow-sm p-4 flex items-center gap-4">
-          <span class="text-3xl flex-shrink-0">${p.img}</span>
-          <div class="flex-1 min-w-0">
-            <div class="flex items-center gap-2 mb-0.5">
-              <p class="font-medium text-gray-800 truncate">${p.name}</p>
-              ${p.badge ? `<span class="px-2 py-0.5 bg-red-100 text-red-600 rounded-full text-xs flex-shrink-0">${p.badge}</span>` : ''}
-            </div>
-            <p class="text-xs text-gray-400 mb-1">${catLabel(p.category)}</p>
-            <p class="font-bold text-red-500">¥${p.price}
-              ${p.originalPrice > p.price ? `<span class="text-gray-400 line-through text-xs ml-1 font-normal">¥${p.originalPrice}</span>` : ''}
-            </p>
+async function showUserDetail(phone) {
+  const panel = document.getElementById('user-detail-panel');
+  try {
+    const res = await fetch(`${API}/users?phone=${encodeURIComponent(phone)}&orders=true`, { headers: { 'Authorization': `Bearer ${token}` } });
+    const data = await res.json();
+    if (!data.success) return;
+    const u = data.data;
+    const orders = u.orders || [];
+    panel.innerHTML = `
+      <div class="p-5 md:p-6 border-b">
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 font-bold text-lg">${u.name.charAt(0)}</div>
+            <div><h3 class="font-bold text-lg">${u.name}</h3><p class="text-gray-500 text-sm">${u.phone}</p></div>
           </div>
-          <div class="flex flex-col gap-2 flex-shrink-0">
-            <button onclick="editProduct(${p.id})" class="w-9 h-9 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center hover:bg-blue-100">
-              <i class="fa fa-edit"></i>
-            </button>
-            <button onclick="deleteProduct(${p.id})" class="w-9 h-9 bg-red-50 text-red-500 rounded-lg flex items-center justify-center hover:bg-red-100">
-              <i class="fa fa-trash"></i>
-            </button>
-          </div>
+          <button onclick="document.getElementById('user-detail-panel').classList.add('hidden')" class="text-gray-400 hover:text-gray-600 p-2"><i class="fa fa-times"></i></button>
         </div>
-      `).join('');
-    }
-  }
+        <div class="grid grid-cols-3 gap-4 text-center">
+          <div><p class="text-2xl font-bold text-gray-800">${u.orderCount}</p><p class="text-xs text-gray-500">累计订单</p></div>
+          <div><p class="text-2xl font-bold text-red-500">¥${u.totalSpent.toFixed(2)}</p><p class="text-xs text-gray-500">消费总额</p></div>
+          <div><p class="text-2xl font-bold text-gray-800">${u.orderCount>0?'¥'+(u.totalSpent/u.orderCount).toFixed(0):'-'}</p><p class="text-xs text-gray-500">客单价</p></div>
+        </div>
+      </div>
+      <div class="p-5 md:p-6">
+        <h4 class="font-bold text-gray-800 mb-3">订单记录（${orders.length}）</h4>
+        ${orders.length === 0 ? '<p class="text-gray-400 text-center py-8">暂无订单</p>' : `
+          <div class="space-y-3 max-h-96 overflow-y-auto">
+            ${orders.map(o => `<div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg"><div><p class="font-mono text-sm text-gray-800">${o.orderNo}</p><p class="text-xs text-gray-400">${new Date(o.createdAt).toLocaleString('zh-CN')}</p><p class="text-xs text-gray-400">${payLabel(o.payMethod)}</p></div><div class="text-right"><p class="font-bold text-red-500">¥${o.total.toFixed(2)}</p><span class="px-2 py-0.5 rounded-full text-xs ${statusClass(o.status)}">${statusLabel(o.status)}</span></div></div>`).join('')}
+          </div>
+        `}
+      </div>`;
+    panel.classList.remove('hidden');
+    panel.scrollIntoView({ behavior: 'smooth' });
+  } catch (e) {}
+}
 
-  function catLabel(c) {
-    const map = { food: '宠物食品', health: '健康护理', toy: '玩具用品', home: '家居用品' };
-    return map[c] || c;
-  }
-
-  // ==================== 商品 CRUD ====================
-  function openProductModal(product) {
-    document.getElementById('prod-id').value = product?.id || '';
-    document.getElementById('prod-name').value = product?.name || '';
-    document.getElementById('prod-category').value = product?.category || 'food';
-    document.getElementById('prod-petType').value = product?.petType || 'both';
-    document.getElementById('prod-price').value = product?.price || '';
-    document.getElementById('prod-originalPrice').value = product?.originalPrice || '';
-    document.getElementById('prod-desc').value = product?.desc || '';
-    document.getElementById('prod-img').value = product?.img || '';
-    document.getElementById('prod-tags').value = product?.tags?.join(', ') || '';
-    document.getElementById('prod-badge').value = product?.badge || '';
-    document.getElementById('modal-title').textContent = product ? '编辑商品' : '添加商品';
-    document.getElementById('product-modal').classList.remove('hidden');
-  }
-
-  function closeProductModal() {
-    document.getElementById('product-modal').classList.add('hidden');
-  }
-
-  function editProduct(id) {
-    const p = products.find(x => x.id === id);
-    if (p) openProductModal(p);
-  }
-
-  async function deleteProduct(id) {
-    if (!confirm('确定要删除该商品吗？')) return;
-    try {
-      const res = await fetch(`${API}/products/${id}`, {
-        method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      const data = await res.json();
-      if (data.success) {
-        products = products.filter(p => p.id !== id);
-        renderProductList();
-        showToast('商品已删除');
-      }
-    } catch (e) { showToast('删除失败', true); }
-  }
-
-  document.getElementById('product-form').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const id = document.getElementById('prod-id').value;
-    const body = {
-      name: document.getElementById('prod-name').value.trim(),
-      category: document.getElementById('prod-category').value,
-      petType: document.getElementById('prod-petType').value,
-      price: parseFloat(document.getElementById('prod-price').value),
-      originalPrice: parseFloat(document.getElementById('prod-originalPrice').value) || null,
-      desc: document.getElementById('prod-desc').value.trim(),
-      img: document.getElementById('prod-img').value || '📦',
-      tags: document.getElementById('prod-tags').value.split(',').map(t => t.trim()).filter(Boolean),
-      badge: document.getElementById('prod-badge').value.trim()
+// ==================== 营收分析 ====================
+async function loadRevenue() {
+  try {
+    const [summaryRes, dailyRes, paymentRes, recentRes] = await Promise.all([
+      fetch(`${API}/revenue`, { headers: { 'Authorization': `Bearer ${token}` } }),
+      fetch(`${API}/revenue?type=daily&days=7`, { headers: { 'Authorization': `Bearer ${token}` } }),
+      fetch(`${API}/revenue?type=payment`, { headers: { 'Authorization': `Bearer ${token}` } }),
+      fetch(`${API}/revenue?type=recent&limit=10`, { headers: { 'Authorization': `Bearer ${token}` } })
+    ]);
+    const [summary, daily, payment, recent] = await Promise.all([
+      summaryRes.json(), dailyRes.json(), paymentRes.json(), recentRes.json()
+    ]);
+    revenueData = {
+      summary: summary.success ? summary.data : null,
+      daily: daily.success ? daily.data : [],
+      payment: payment.success ? payment.data : null,
+      recent: recent.success ? recent.data : { orders: [] }
     };
+    renderRevenue();
+  } catch (e) { console.error(e); }
+}
 
-    try {
-      const method = id ? 'PUT' : 'POST';
-      const url = id ? `${API}/products/${id}` : `${API}/products`;
-      const res = await fetch(url, {
-        method,
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-        body: JSON.stringify(body)
-      });
-      const data = await res.json();
-      if (data.success) {
-        if (id) {
-          const idx = products.findIndex(p => p.id === parseInt(id));
-          if (idx !== -1) products[idx] = data.data;
-        } else {
-          products.push(data.data);
-        }
-        renderProductList();
-        closeProductModal();
-        showToast(id ? '商品已更新' : '商品已添加');
-      } else {
-        showToast(data.error || '操作失败', true);
-      }
-    } catch (e) { showToast('操作失败', true); }
-  });
+function renderRevenue() {
+  if (!revenueData) return;
+  const { summary, daily, payment, recent } = revenueData;
 
-  // ==================== 订单与统计 ====================
-  async function loadStats() {
-    document.getElementById('stat-products').textContent = products.length;
-    try {
-      const res = await fetch(`${API}/orders`, {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      const data = await res.json();
-      if (data.success) {
-        document.getElementById('stat-orders').textContent = data.data.total || 0;
-        renderOrderList(data.data.orders || []);
-      }
-    } catch (e) {}
-  }
+  // 概览卡片
+  document.getElementById('revenue-cards').innerHTML = [
+    { label: '总营收', value: `¥${(summary?.totalRevenue||0).toFixed(0)}`, color: 'purple', icon: '💰' },
+    { label: '今日营收', value: `¥${(summary?.todayRevenue||0).toFixed(0)}`, color: 'blue', icon: '📅' },
+    { label: '本月营收', value: `¥${(summary?.monthRevenue||0).toFixed(0)}`, color: 'green', icon: '📈' },
+    { label: '平均客单价', value: `¥${(summary?.avgOrder||0).toFixed(0)}`, color: 'orange', icon: '🛒' }
+  ].map(c => `<div class="bg-white rounded-xl shadow-sm p-4 md:p-5"><p class="text-gray-500 text-xs mb-1">${c.label}</p><div class="flex items-center justify-between"><span class="text-xl md:text-2xl font-bold text-gray-800">${c.value}</span><span class="text-2xl">${c.icon}</span></div></div>`).join('');
 
-  function renderOrderList(orders) {
-    // 桌面表格
-    const tbody = document.getElementById('order-table-body');
-    const empty = document.getElementById('order-empty');
-    if (!orders || orders.length === 0) {
-      tbody.innerHTML = '';
-      empty.classList.remove('hidden');
+  // 营收柱状图
+  const maxAmount = Math.max(...daily.map(d => d.amount), 1);
+  const colors = ['#e9d5ff','#d8b4fe','#c084fc','#a855f7','#9333ea','#7e22ce','#6b21a8'];
+  document.getElementById('revenue-bar-chart').innerHTML = daily.map((d,i) => {
+    const h = Math.max((d.amount / maxAmount) * 180, 4);
+    return `<div class="flex-1 flex flex-col items-center justify-end" style="height:100%"><span class="text-xs text-gray-500 mb-1">¥${d.amount||0}</span><div class="chart-bar w-full rounded-t-md" style="height:${h}px; background:${colors[i]||colors[0]}; max-width:48px;"></div></div>`;
+  }).join('');
+  document.getElementById('revenue-bar-labels').innerHTML = daily.map(d => `<div class="flex-1 text-center"><span class="text-xs text-gray-400">${d.date}</span></div>`).join('');
+
+  // 订单量柱状图
+  const maxCount = Math.max(...daily.map(d => d.count), 1);
+  document.getElementById('order-count-chart').innerHTML = daily.map((d,i) => {
+    const h = Math.max((d.count / maxCount) * 180, 4);
+    return `<div class="flex-1 flex flex-col items-center justify-end" style="height:100%"><span class="text-xs text-gray-500 mb-1">${d.count}</span><div class="chart-bar w-full rounded-t-md" style="height:${h}px; background:${colors[i]||colors[0]}; max-width:48px;"></div></div>`;
+  }).join('');
+  document.getElementById('order-count-labels').innerHTML = daily.map(d => `<div class="flex-1 text-center"><span class="text-xs text-gray-400">${d.date}</span></div>`).join('');
+
+  // 支付方式饼图
+  if (payment) {
+    const pieColors = { alipay: '#1677FF', wechat: '#07C160', card: '#FF6B35', unknown: '#999' };
+    if (payment.items.length === 0) {
+      document.getElementById('payment-pie').style.background = '#f0f0f0';
+      document.getElementById('payment-legend').innerHTML = '<span class="text-gray-400 text-sm">暂无支付数据</span>';
     } else {
-      empty.classList.add('hidden');
-      tbody.innerHTML = orders.map(o => `
-        <tr class="hover:bg-gray-50">
-          <td class="px-4 py-3 font-mono text-sm text-gray-800">${o.orderNo}</td>
-          <td class="px-4 py-3 text-gray-600 text-sm">${o.createdAt ? new Date(o.createdAt).toLocaleString('zh-CN') : '-'}</td>
-          <td class="px-4 py-3 font-bold text-red-500">¥${o.total?.toFixed(2) || '0.00'}</td>
-          <td class="px-4 py-3">
-            <span class="px-2.5 py-1 rounded-full text-xs font-medium ${statusClass(o.status)}">${statusLabel(o.status)}</span>
-          </td>
-        </tr>
-      `).join('');
-    }
-
-    // 移动端卡片
-    const cards = document.getElementById('order-cards');
-    const emptyM = document.getElementById('order-empty-mobile');
-    if (!orders || orders.length === 0) {
-      cards.innerHTML = '';
-      emptyM.classList.remove('hidden');
-    } else {
-      emptyM.classList.add('hidden');
-      cards.innerHTML = orders.map(o => `
-        <div class="bg-white rounded-xl shadow-sm p-4 flex items-center justify-between">
-          <div>
-            <p class="font-mono text-sm text-gray-800 mb-1">${o.orderNo}</p>
-            <p class="text-xs text-gray-400">${o.createdAt ? new Date(o.createdAt).toLocaleString('zh-CN') : '-'}</p>
-          </div>
-          <div class="text-right">
-            <p class="font-bold text-red-500">¥${o.total?.toFixed(2) || '0.00'}</p>
-            <span class="px-2 py-0.5 rounded-full text-xs font-medium mt-1 inline-block ${statusClass(o.status)}">${statusLabel(o.status)}</span>
-          </div>
-        </div>
-      `).join('');
+      const segments = payment.items.map(p => `${pieColors[p.method]||'#999'} ${p.amount/payment.total*360}deg`).join(', ');
+      document.getElementById('payment-pie').style.background = `conic-gradient(${segments})`;
+      document.getElementById('payment-legend').innerHTML = payment.items.map(p => `<div class="flex items-center gap-2 text-sm"><span class="w-3 h-3 rounded-full" style="background:${pieColors[p.method]||'#999'}"></span>${payLabel(p.method)}<span class="font-bold text-gray-700">${p.percentage}%</span></div>`).join('');
     }
   }
 
-  function statusClass(s) {
-    return s === 'paid' ? 'bg-green-100 text-green-700' : s === 'pending' ? 'bg-yellow-100 text-yellow-700' : 'bg-gray-100 text-gray-600';
-  }
-  function statusLabel(s) {
-    return s === 'paid' ? '已支付' : s === 'pending' ? '待支付' : (s || '-');
-  }
+  // 最近订单
+  const orders = recent.orders || [];
+  document.getElementById('recent-orders-list').innerHTML = orders.length === 0
+    ? '<p class="text-gray-400 text-center py-8">暂无已支付订单</p>'
+    : orders.map(o => `<div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg"><div><p class="font-mono text-sm text-gray-800">${o.orderNo}</p><p class="text-xs text-gray-400">${o.userName||'匿名'} · ${payLabel(o.payMethod)}</p></div><div class="text-right"><p class="font-bold text-red-500">¥${o.total.toFixed(2)}</p><p class="text-xs text-gray-400">${new Date(o.createdAt).toLocaleDateString('zh-CN')}</p></div></div>`).join('');
+}
 
-  // ==================== 导航与布局 ====================
-  function toggleSidebar() {
-    const sidebar = document.getElementById('sidebar');
-    const overlay = document.getElementById('sidebar-overlay');
-    sidebar.classList.toggle('-translate-x-full');
-    overlay.classList.toggle('hidden');
-  }
+// ==================== 数据概览 ====================
+async function loadStats() {
+  try {
+    const [prodRes, orderRes, userRes, revRes] = await Promise.all([
+      fetch(`${API}/products`, { headers: { 'Authorization': `Bearer ${token}` } }),
+      fetch(`${API}/orders`, { headers: { 'Authorization': `Bearer ${token}` } }),
+      fetch(`${API}/users`, { headers: { 'Authorization': `Bearer ${token}` } }),
+      fetch(`${API}/revenue`, { headers: { 'Authorization': `Bearer ${token}` } })
+    ]);
+    const [prodData, orderData, userData, revData] = await Promise.all([
+      prodRes.json(), orderRes.json(), userRes.json(), revRes.json()
+    ]);
+    document.getElementById('stats-cards').innerHTML = [
+      { label: '商品总数', value: (prodData.success ? prodData.data.products?.length : 0) || 0, icon: '📦', color: 'purple' },
+      { label: '订单总数', value: (orderData.success ? orderData.data.total : 0) || 0, icon: '📋', color: 'blue' },
+      { label: '用户总数', value: (userData.success ? userData.data.total : 0) || 0, icon: '👥', color: 'green' },
+      { label: '总营收', value: '¥' + ((revData.success ? revData.data.totalRevenue : 0) || 0).toFixed(0), icon: '💰', color: 'orange' },
+      { label: '当前模式', value: 'Demo', icon: '🔧', color: 'red' }
+    ].map(c => `<div class="bg-white rounded-xl shadow-sm p-4 md:p-5"><p class="text-gray-500 text-xs mb-1">${c.label}</p><div class="flex items-center justify-between"><span class="text-xl md:text-2xl font-bold text-gray-800">${c.value}</span><span class="text-2xl">${c.icon}</span></div></div>`).join('');
+  } catch (e) {}
+}
 
-  function switchTab(tab) {
-    document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-    document.getElementById(`tab-${tab}`).classList.remove('hidden');
+// ==================== 导航 ====================
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('-translate-x-full');
+  document.getElementById('sidebar-overlay').classList.toggle('hidden');
+}
 
-    document.querySelectorAll('aside nav a').forEach(a => {
-      a.classList.remove('bg-purple-600');
-      a.classList.add('hover:bg-gray-800');
-    });
-    const navItem = document.getElementById(`nav-${tab}`);
-    if (navItem) {
-      navItem.classList.add('bg-purple-600');
-      navItem.classList.remove('hover:bg-gray-800');
-    }
+function switchTab(tab) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+  document.getElementById(`tab-${tab}`).classList.remove('hidden');
+  document.querySelectorAll('aside nav a').forEach(a => { a.classList.remove('bg-purple-600'); a.classList.add('hover:bg-gray-800'); });
+  const navItem = document.getElementById(`nav-${tab}`);
+  if (navItem) { navItem.classList.add('bg-purple-600'); navItem.classList.remove('hover:bg-gray-800'); }
+  if (tab === 'orders') loadOrders();
+  if (tab === 'users') loadUsers();
+  if (tab === 'revenue') loadRevenue();
+  if (tab === 'stats') loadStats();
+  if (window.innerWidth < 768) toggleSidebar();
+}
 
-    if (tab === 'stats') loadStats();
-    if (tab === 'orders') loadStats();
+function logout() { localStorage.removeItem('admin_token'); localStorage.removeItem('admin_user'); window.location.href = 'index.html'; }
 
-    // 移动端切换后面关闭侧边栏
-    if (window.innerWidth < 768) toggleSidebar();
-  }
+// ==================== Toast ====================
+let toastTimer;
+function showToast(msg, isError) {
+  clearTimeout(toastTimer);
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.background = isError ? '#f44336' : '#333';
+  t.classList.remove('hidden');
+  toastTimer = setTimeout(() => t.classList.add('hidden'), 2500);
+}
 
-  function logout() {
-    localStorage.removeItem('admin_token');
-    localStorage.removeItem('admin_user');
-    window.location.href = 'index.html';
-  }
+document.getElementById('product-modal').addEventListener('click', function(e) { if (e.target === this) closeProductModal(); });
 
-  // ==================== Toast ====================
-  let toastTimer;
-  function showToast(msg, isError) {
-    clearTimeout(toastTimer);
-    const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.style.background = isError ? '#f44336' : '#333';
-    t.classList.remove('hidden');
-    toastTimer = setTimeout(() => t.classList.add('hidden'), 2500);
-  }
-
-  // 点击弹窗外部关闭（弹窗背景）
-  document.getElementById('product-modal').addEventListener('click', function(e) {
-    if (e.target === this) closeProductModal();
-  });
-
-  init();
+init();
 </script>
 </body>
 </html>

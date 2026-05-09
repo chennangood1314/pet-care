@@ -1,35 +1,11 @@
 // 订单管理 API
 import { json, authMiddleware } from './auth.js';
-
-// 与 payment.js 共享的订单存储
-// 在生产环境中应使用数据库/Redis
-let orders = [];
-
-export function addOrder(order) {
-  orders.unshift(order);
-}
-
-export function getOrders() {
-  return orders;
-}
-
-export function getOrderByNo(orderNo) {
-  return orders.find(o => o.orderNo === orderNo);
-}
-
-export function updateOrderStatus(orderNo, status) {
-  const order = orders.find(o => o.orderNo === orderNo);
-  if (order) {
-    order.status = status;
-    return order;
-  }
-  return null;
-}
+import { getOrders, getOrderByNo } from '../shared/orderStore.js';
 
 export default async function handler(req, res) {
   if (req.method === 'OPTIONS') {
     res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, PATCH, OPTIONS');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
     res.statusCode = 200;
     return res.end();
@@ -42,39 +18,39 @@ export default async function handler(req, res) {
 
   const url = new URL(req.url, `http://${req.headers.host}`);
   const orderNo = url.searchParams.get('orderNo');
+  const userId = url.searchParams.get('userId');
 
   try {
-    // GET — 获取订单列表或单个订单
     if (req.method === 'GET') {
+      // 单个订单
       if (orderNo) {
         const order = getOrderByNo(orderNo);
         if (!order) return json(res, { success: false, error: '订单不存在' }, 404);
         return json(res, { success: true, data: order });
       }
 
-      // 分页
+      // 按用户筛选
+      if (userId) {
+        const orders = getOrders({ userId });
+        return json(res, { success: true, data: { orders, total: orders.length } });
+      }
+
+      // 分页列表
       const page = parseInt(url.searchParams.get('page')) || 1;
       const pageSize = parseInt(url.searchParams.get('pageSize')) || 20;
       const status = url.searchParams.get('status');
 
-      let filtered = orders;
-      if (status) {
-        filtered = orders.filter(o => o.status === status);
-      }
+      const filter = {};
+      if (status) filter.status = status;
 
-      const total = filtered.length;
+      const all = getOrders(filter);
+      const total = all.length;
       const start = (page - 1) * pageSize;
-      const items = filtered.slice(start, start + pageSize);
+      const items = all.slice(start, start + pageSize);
 
       return json(res, {
         success: true,
-        data: {
-          orders: items,
-          total,
-          page,
-          pageSize,
-          totalPages: Math.ceil(total / pageSize)
-        }
+        data: { orders: items, total, page, pageSize, totalPages: Math.ceil(total / pageSize) }
       });
     }
 

@@ -1,37 +1,13 @@
-// =============================================
-// Vercel Serverless: 支付 API
-// POST   /api/payment — 创建订单
-// GET    /api/payment?orderNo=xxx — 查询订单状态
-// PATCH  /api/payment — 模拟支付（demo模式）
-// =============================================
+// 支付 API — 创建订单 / 查询状态 / 模拟支付
+// POST   /api/payment         创建订单（含用户信息）
+// GET    /api/payment?orderNo=xxx  查询订单
+// PATCH  /api/payment         模拟支付/取消
 
-// 内存存储（同一实例内复用）
-// 生产环境应替换为 Vercel KV / Redis / 数据库
-const orders = new Map();
+import { addOrder, getOrderByNo, updateOrderStatus } from './shared/orderStore.js';
+import { findOrCreateUser, updateUserStats } from './shared/userStore.js';
+
 const ORDER_EXPIRE_MS = 15 * 60 * 1000;
 
-function cleanExpiredOrders() {
-  const now = Date.now();
-  for (const [id, order] of orders) {
-    if (now - order.createdAt > ORDER_EXPIRE_MS && order.status === 'pending') {
-      order.status = 'expired';
-    }
-  }
-}
-
-function generateOrderNo() {
-  const now = new Date();
-  const y = now.getFullYear().toString().slice(-2);
-  const m = (now.getMonth() + 1).toString().padStart(2, '0');
-  const d = now.getDate().toString().padStart(2, '0');
-  const h = now.getHours().toString().padStart(2, '0');
-  const min = now.getMinutes().toString().padStart(2, '0');
-  const s = now.getSeconds().toString().padStart(2, '0');
-  const rand = Math.random().toString(36).slice(2, 8).toUpperCase();
-  return `PET${y}${m}${d}${h}${min}${s}${rand}`;
-}
-
-// 解析请求 body
 function parseBody(req) {
   return new Promise((resolve) => {
     let body = '';
@@ -50,29 +26,26 @@ function json(res, data, status = 200) {
 }
 
 export default async function handler(req, res) {
-  // CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-  if (req.method === 'OPTIONS') {
-    res.statusCode = 200;
-    return res.end();
-  }
+  if (req.method === 'OPTIONS') { res.statusCode = 200; return res.end(); }
 
   try {
     // GET — 查询订单状态
     if (req.method === 'GET') {
       const url = new URL(req.url, `http://${req.headers.host}`);
       const orderNo = url.searchParams.get('orderNo');
+      if (!orderNo) return json(res, { error: '缺少订单号' }, 400);
 
-      if (!orderNo) {
-        return json(res, { error: '缺少订单号' }, 400);
-      }
+      const order = getOrderByNo(orderNo);
+      if (!order) return json(res, { error: '订单不存在' }, 404);
 
-      const order = orders.get(orderNo);
-      if (!order) {
-        return json(res, { error: '订单不存在' }, 404);
+      const now = Date.now();
+      if (order.status === 'pending' && now - order.createdAt > ORDER_EXPIRE_MS) {
+        updateOrderStatus(orderNo, 'expired');
+        order.status = 'expired';
       }
 
       return json(res, {
@@ -84,60 +57,63 @@ export default async function handler(req, res) {
     // POST — 创建订单
     if (req.method === 'POST') {
       const body = await parseBody(req);
-      const { items, total } = body;
+      const { items, total, payMethod, userInfo } = body;
 
       if (!items || !Array.isArray(items) || items.length === 0) {
         return json(res, { error: '无效的商品信息' }, 400);
       }
 
-      cleanExpiredOrders();
+      // 注册/查找用户
+      let userId = null, userName = null;
+      if (userInfo && userInfo.phone) {
+        const user = findOrCreateUser({ name: userInfo.name || '未留名', phone: userInfo.phone });
+        userId = user.phone;
+        userName = user.name;
+      }
 
-      const orderNo = generateOrderNo();
-      const order = {
-        orderNo,
+      const record = addOrder({
         items: items.map(i => ({ id: i.id, name: i.name, price: i.price, quantity: i.quantity })),
         total,
         status: 'pending',
-        createdAt: Date.now(),
-      };
-
-      orders.set(orderNo, order);
+        payMethod: payMethod || null,
+        userId,
+        userName
+      });
 
       return json(res, {
         success: true,
         data: {
-          orderNo: order.orderNo,
-          total: order.total,
-          status: order.status,
+          orderNo: record.orderNo,
+          total: record.total,
+          status: record.status,
           qrCode: null,
-          expiresAt: order.createdAt + ORDER_EXPIRE_MS,
+          expiresAt: record.createdAt + ORDER_EXPIRE_MS
         }
       });
     }
 
-    // PATCH — 模拟支付操作（demo模式）
+    // PATCH — 模拟支付（demo模式）
     if (req.method === 'PATCH') {
       const body = await parseBody(req);
       const { orderNo, action } = body || {};
 
-      if (!orderNo) {
-        return json(res, { error: '缺少订单号' }, 400);
-      }
+      if (!orderNo) return json(res, { error: '缺少订单号' }, 400);
 
-      const order = orders.get(orderNo);
-      if (!order) {
-        return json(res, { error: '订单不存在' }, 404);
-      }
+      const order = getOrderByNo(orderNo);
+      if (!order) return json(res, { error: '订单不存在' }, 404);
 
       if (action === 'pay') {
-        order.status = 'paid';
-        order.paidAt = Date.now();
-        return json(res, { success: true, data: { orderNo: order.orderNo, status: 'paid' } });
+        updateOrderStatus(orderNo, 'paid');
+        // 更新用户消费统计
+        if (order.userId) {
+          updateUserStats(order.userId, order.total);
+        }
+        return json(res, { success: true, data: { orderNo, status: 'paid' } });
       }
 
       if (action === 'cancel') {
-        order.status = 'cancelled';
-        return json(res, { success: true, data: { orderNo: order.orderNo, status: 'cancelled' } });
+        updateOrderStatus(orderNo, 'cancelled');
+        return json(res, { success: true, data: { orderNo, status: 'cancelled' } });
       }
 
       return json(res, { error: '无效的操作' }, 400);

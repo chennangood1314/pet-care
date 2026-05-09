@@ -1,18 +1,15 @@
 // =============================================
 // 支付模块 - 完整支付流程
-// 支持：支付宝 / 微信支付 / 银行卡
-// 模式：demo（模拟支付）/ live（真实支付）
+// 下单 → 模拟支付 → 订单历史
 // =============================================
 
 const PAYMENT_CONFIG = {
-  mode: 'demo', // 'demo' | 'live'
-  pollInterval: 2000, // 轮询间隔 (ms)
-  expireMinutes: 15,  // 订单过期时间
-  apiBase: '/api'     // API 基础路径
+  pollInterval: 2000,
+  expireMinutes: 15,
+  apiBase: '/api'
 };
 
 let paymentTimer = null;
-let pollingTimer = null;
 
 function initPayment() {
   const backBtn = document.getElementById('back-to-cart');
@@ -36,6 +33,18 @@ async function startPayment() {
     return;
   }
 
+  // 收集收货信息
+  const userName = document.getElementById('user-name')?.value.trim();
+  const userPhone = document.getElementById('user-phone')?.value.trim();
+  if (!userName || !userPhone) {
+    showToast('请填写收货人姓名和手机号码');
+    return;
+  }
+  if (!/^1[3-9]\d{9}$/.test(userPhone)) {
+    showToast('请输入正确的手机号码');
+    return;
+  }
+
   const methodInput = document.querySelector('input[name="payment"]:checked');
   if (!methodInput) {
     showToast('请选择支付方式');
@@ -55,27 +64,20 @@ async function startPayment() {
   payBtn.textContent = '正在创建订单...';
 
   try {
-    // 调用 API 创建订单
-    let orderData;
-
-    if (PAYMENT_CONFIG.mode === 'demo') {
-      // Demo 模式：本地模拟创建订单
-      orderData = createDemoOrder(total, payMethod);
-    } else {
-      // Live 模式：调用真实 API
-      const response = await fetch(`${PAYMENT_CONFIG.apiBase}/payment`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          items: CartStore.get(),
-          total,
-          payMethod
-        })
-      });
-      const result = await response.json();
-      if (!result.success) throw new Error(result.error);
-      orderData = result.data;
-    }
+    // 始终调用 API 创建订单
+    const response = await fetch(`${PAYMENT_CONFIG.apiBase}/payment`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        items: CartStore.get().map(i => ({ id: i.id, name: i.name, price: i.price, quantity: i.quantity })),
+        total,
+        payMethod,
+        userInfo: { name: userName, phone: userPhone }
+      })
+    });
+    const result = await response.json();
+    if (!result.success) throw new Error(result.error);
+    const orderData = result.data;
 
     // 显示支付弹窗
     showPaymentModal(orderData, payMethod, methodNames[payMethod]);
@@ -88,22 +90,8 @@ async function startPayment() {
   }
 }
 
-// Demo 模式：创建模拟订单
-function createDemoOrder(total, payMethod) {
-  const orderNo = 'PET' + Date.now().toString().slice(-10) + Math.random().toString(36).slice(2, 6).toUpperCase();
-  return {
-    orderNo,
-    total,
-    status: 'pending',
-    qrCode: null,
-    paymentUrl: null,
-    expiresAt: Date.now() + PAYMENT_CONFIG.expireMinutes * 60 * 1000
-  };
-}
-
 // 显示支付弹窗
 function showPaymentModal(orderData, payMethod, methodName) {
-  // 移除已存在的弹窗
   const existing = document.getElementById('payment-modal');
   if (existing) existing.remove();
 
@@ -112,7 +100,6 @@ function showPaymentModal(orderData, payMethod, methodName) {
 
   const iconClass = methodIcons[payMethod] || 'fa-credit-card';
   const color = methodColors[payMethod] || '#4CAF50';
-
   const expiredTime = new Date(orderData.expiresAt).toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
 
   const modal = document.createElement('div');
@@ -132,11 +119,11 @@ function showPaymentModal(orderData, payMethod, methodName) {
         <span class="amount-value">¥${orderData.total.toFixed(2)}</span>
       </div>
 
-      <div class="payment-modal-qr" id="payment-qr-area">
+      <div class="payment-modal-qr">
         <div class="qr-container">
           <div class="qr-placeholder">
             <i class="fab ${iconClass}" style="font-size:60px; color:${color};"></i>
-            <p>${PAYMENT_CONFIG.mode === 'demo' ? '演示模式 · 模拟支付' : '请使用' + methodName + '扫码支付'}</p>
+            <p>演示模式 · 模拟支付</p>
           </div>
         </div>
         <div class="qr-timer" id="qr-timer">
@@ -153,15 +140,12 @@ function showPaymentModal(orderData, payMethod, methodName) {
       </div>
 
       <div class="payment-modal-actions">
-        ${PAYMENT_CONFIG.mode === 'demo'
-          ? `<button class="btn btn-primary btn-block" id="simulate-pay-btn">
-               <i class="fas fa-check-circle"></i> 模拟支付成功
-             </button>
-             <button class="btn btn-secondary btn-block" id="simulate-fail-btn">
-               <i class="fas fa-times-circle"></i> 模拟支付失败
-             </button>`
-          : `<p class="payment-hint">支付完成后将自动跳转</p>`
-        }
+        <button class="btn btn-primary btn-block" id="simulate-pay-btn">
+          <i class="fas fa-check-circle"></i> 模拟支付成功
+        </button>
+        <button class="btn btn-secondary btn-block" id="simulate-fail-btn">
+          <i class="fas fa-times-circle"></i> 模拟支付失败
+        </button>
         <button class="btn btn-text btn-block" id="cancel-pay-btn">
           取消支付
         </button>
@@ -172,28 +156,43 @@ function showPaymentModal(orderData, payMethod, methodName) {
   document.body.appendChild(modal);
   document.body.style.overflow = 'hidden';
 
-  // 绑定事件
+  // 事件绑定
   document.getElementById('payment-modal-close').addEventListener('click', () => cancelPayment(orderData.orderNo));
   document.getElementById('cancel-pay-btn').addEventListener('click', () => cancelPayment(orderData.orderNo));
 
-  if (PAYMENT_CONFIG.mode === 'demo') {
-    document.getElementById('simulate-pay-btn').addEventListener('click', () => {
-      completePayment(orderData.orderNo, 'success');
-    });
-    document.getElementById('simulate-fail-btn').addEventListener('click', () => {
-      completePayment(orderData.orderNo, 'fail');
-    });
-  }
+  // 模拟支付成功 → 调用 PATCH API 更新服务端状态
+  document.getElementById('simulate-pay-btn').addEventListener('click', async () => {
+    try {
+      await fetch(`${PAYMENT_CONFIG.apiBase}/payment`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ orderNo: orderData.orderNo, action: 'pay' })
+      });
+    } catch (e) { /* 即使 API 失败也继续 */ }
+    completePayment(orderData.orderNo, 'success');
+  });
 
-  // 开始倒计时 & 轮询
+  // 模拟支付失败
+  document.getElementById('simulate-fail-btn').addEventListener('click', () => {
+    completePayment(orderData.orderNo, 'fail');
+  });
+
+  // 倒计时
   startPaymentTimer(orderData);
-  startPolling(orderData.orderNo);
 }
 
 // 取消支付
-function cancelPayment(orderNo) {
+async function cancelPayment(orderNo) {
   stopAllTimers();
   closePaymentModal();
+  // 通知服务端取消
+  try {
+    await fetch(`${PAYMENT_CONFIG.apiBase}/payment`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ orderNo, action: 'cancel' })
+    });
+  } catch (e) { /* 静默失败 */ }
 
   const payBtn = document.getElementById('confirm-payment');
   if (payBtn) {
@@ -209,14 +208,9 @@ function completePayment(orderNo, result) {
   closePaymentModal();
 
   if (result === 'success') {
-    // 先保存订单（在清空购物车前）
     saveOrderToHistory(orderNo);
-
-    // 清空购物车
     CartStore.clear();
     updateCartBadge();
-
-    // 显示成功页
     showOrderSuccessPage(orderNo);
   } else {
     const payBtn = document.getElementById('confirm-payment');
@@ -228,7 +222,7 @@ function completePayment(orderNo, result) {
   }
 }
 
-// 开始支付倒计时
+// 支付倒计时
 function startPaymentTimer(orderData) {
   const timerEl = document.getElementById('qr-timer');
   if (!timerEl) return;
@@ -239,7 +233,6 @@ function startPaymentTimer(orderData) {
       stopAllTimers();
       closePaymentModal();
       showToast('订单已过期，请重新下单');
-
       const payBtn = document.getElementById('confirm-payment');
       if (payBtn) {
         payBtn.disabled = false;
@@ -247,7 +240,6 @@ function startPaymentTimer(orderData) {
       }
       return;
     }
-
     const mins = Math.floor(remaining / 60000);
     const secs = Math.floor((remaining % 60000) / 1000);
     timerEl.innerHTML = `
@@ -255,43 +247,18 @@ function startPaymentTimer(orderData) {
       <span>剩余支付时间：${mins}:${secs.toString().padStart(2, '0')}</span>
     `;
   };
-
   updateTimer();
   paymentTimer = setInterval(updateTimer, 1000);
 }
 
-// 轮询支付状态（Live 模式）
-function startPolling(orderNo) {
-  if (PAYMENT_CONFIG.mode !== 'live') return;
-
-  pollingTimer = setInterval(async () => {
-    try {
-      const response = await fetch(`${PAYMENT_CONFIG.apiBase}/payment?orderNo=${orderNo}`);
-      const result = await response.json();
-      if (result.success && result.data.status === 'paid') {
-        stopAllTimers();
-        closePaymentModal();
-        completePayment(orderNo, 'success');
-      }
-    } catch (e) {
-      // 静默失败
-    }
-  }, PAYMENT_CONFIG.pollInterval);
-}
-
-// 停止所有定时器
 function stopAllTimers() {
   if (paymentTimer) { clearInterval(paymentTimer); paymentTimer = null; }
-  if (pollingTimer) { clearInterval(pollingTimer); pollingTimer = null; }
 }
 
-// 关闭支付弹窗
 function closePaymentModal() {
   const modal = document.getElementById('payment-modal');
   if (modal) modal.remove();
   document.body.style.overflow = '';
-
-  // 恢复支付按钮
   const payBtn = document.getElementById('confirm-payment');
   if (payBtn) {
     payBtn.disabled = false;
@@ -301,9 +268,6 @@ function closePaymentModal() {
 
 // 显示支付成功页
 function showOrderSuccessPage(orderNo) {
-  // 保存订单到本地
-  saveOrderToHistory(orderNo);
-
   const main = document.querySelector('main');
   const existing = document.getElementById('order-success');
   if (existing) existing.remove();
@@ -348,13 +312,8 @@ function showOrderSuccessPage(orderNo) {
       </div>
     </div>
   `;
-  page.style.cssText = `
-    position:fixed; inset:0; background:#f5f7fa;
-    z-index:999; overflow-y:auto;
-  `;
+  page.style.cssText = 'position:fixed; inset:0; background:#f5f7fa; z-index:999; overflow-y:auto;';
   document.body.appendChild(page);
-
-  // 滚动到顶部
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
@@ -362,17 +321,20 @@ function showOrderSuccessPage(orderNo) {
 function saveOrderToHistory(orderNo) {
   const orders = storage.get('orderHistory', []);
   const items = CartStore.get();
-  const now = new Date();
+  const userName = document.getElementById('user-name')?.value || '';
+  const userPhone = document.getElementById('user-phone')?.value || '';
+  const payMethod = document.querySelector('input[name="payment"]:checked')?.value || '';
+
   orders.unshift({
     orderNo,
-    items: items.map(i => ({
-      id: i.id, name: i.name, img: i.img,
-      price: i.price, quantity: i.quantity
-    })),
+    items: items.map(i => ({ id: i.id, name: i.name, img: i.img, price: i.price, quantity: i.quantity })),
     total: items.reduce((sum, i) => sum + i.price * i.quantity, 0),
+    payMethod,
+    userName,
+    userPhone,
     status: 'paid',
-    createdAt: now.toISOString(),
-    paidAt: now.toISOString()
+    createdAt: new Date().toISOString(),
+    paidAt: new Date().toISOString()
   });
   storage.set('orderHistory', orders.slice(0, 50));
 }
@@ -398,9 +360,7 @@ function showOrderHistory() {
           <i class="fas fa-receipt"></i>
         </div>
         <h3 style="color:#999; margin-bottom:20px;">还没有订单</h3>
-        <button class="btn btn-primary" onclick="document.getElementById('order-history').remove(); navigateTo('store');">
-          去购物
-        </button>
+        <button class="btn btn-primary" onclick="document.getElementById('order-history').remove(); navigateTo('store');">去购物</button>
       </div>
     `;
   } else {
@@ -441,10 +401,7 @@ function showOrderHistory() {
     `;
   }
 
-  page.style.cssText = `
-    position:fixed; inset:0; background:#f5f7fa;
-    z-index:999; overflow-y:auto;
-  `;
+  page.style.cssText = 'position:fixed; inset:0; background:#f5f7fa; z-index:999; overflow-y:auto;';
   document.body.appendChild(page);
 }
 
@@ -457,7 +414,6 @@ function goHome() {
   navigateTo('home');
 }
 
-// 导出全局函数
 window.goHome = goHome;
 window.showOrderHistory = showOrderHistory;
 
