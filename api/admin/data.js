@@ -170,15 +170,13 @@ function seedTestData() {
   for (const u of sampleUsers) findOrCreateUser(u);
 }
 
-// ==================== 请求体解析 ====================
-  // 接收 payment API 同步过来的订单数据
+function syncOrderFromPayment(order) {
   const existing = orders.find(o => o.orderNo === order.orderNo);
   if (existing) {
     Object.assign(existing, order);
   } else {
     orders.unshift({ ...order });
   }
-  // 同步用户数据
   if (order.userId && order.status === 'paid') {
     findOrCreateUser({ name: order.userName || '未留名', phone: order.userId });
     updateUserStats(order.userId, order.total);
