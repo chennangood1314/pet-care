@@ -52,7 +52,10 @@
                     </div>
                 </div>
                 <div class="hero-image">
-                    <div style="font-size:180px;text-align:center;line-height:1.2;">🐶🐱</div>
+                    <img src="https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=500&h=400&fit=crop&crop=center"
+                         alt="可爱的小狗和小猫"
+                         loading="eager"
+                         width="500" height="400">
                 </div>
             </div>
         </section>
@@ -62,28 +65,28 @@
             <div class="container">
                 <h2 class="section-title">核心功能</h2>
                 <div class="features-grid">
-                    <div class="feature-card">
+                    <div class="feature-card animate-on-scroll">
                         <div class="feature-icon">
                             <i class="fas fa-bell"></i>
                         </div>
                         <h3>每日提醒</h3>
                         <p>定时提醒喂食、喝水、排便等日常养护任务，养成良好养宠习惯</p>
                     </div>
-                    <div class="feature-card">
+                    <div class="feature-card animate-on-scroll">
                         <div class="feature-icon">
                             <i class="fas fa-check-circle"></i>
                         </div>
                         <h3>打卡系统</h3>
                         <p>记录每日养护完成情况，可视化展示养宠进度和习惯养成</p>
                     </div>
-                    <div class="feature-card">
+                    <div class="feature-card animate-on-scroll">
                         <div class="feature-icon">
                             <i class="fas fa-first-aid"></i>
                         </div>
                         <h3>问题应对</h3>
                         <p>常见问题快速指南，紧急情况应对措施，让新手不再慌张</p>
                     </div>
-                    <div class="feature-card">
+                    <div class="feature-card animate-on-scroll">
                         <div class="feature-icon">
                             <i class="fas fa-brain"></i>
                         </div>
@@ -124,17 +127,17 @@
                 <h2 class="section-title">选择您的宠物类型</h2>
                 <div class="pet-options">
                     <div class="pet-option active" data-pet="dog">
-                        <i class="fas fa-dog"></i>
+                        <img src="https://images.unsplash.com/photo-1552053831-71594a27632d?w=160&h=160&fit=crop&crop=center" alt="狗狗" width="80" height="80" loading="lazy">
                         <h3>狗狗</h3>
                         <p>幼犬/成犬养护指南</p>
                     </div>
-                    <div class="pet-option" data-pet="cat">
-                        <i class="fas fa-cat"></i>
+                    <div class="pet-option animate-on-scroll" data-pet="cat">
+                        <img src="https://images.unsplash.com/photo-1514888286974-9d38e62c9b03?w=160&h=160&fit=crop&crop=center" alt="猫咪" width="80" height="80" loading="lazy">
                         <h3>猫咪</h3>
                         <p>幼猫/成猫养护指南</p>
                     </div>
-                    <div class="pet-option" data-pet="other">
-                        <i class="fas fa-paw"></i>
+                    <div class="pet-option animate-on-scroll" data-pet="other">
+                        <img src="https://images.unsplash.com/photo-1585110396000-d9c6fac9e8a7?w=160&h=160&fit=crop&crop=center" alt="小宠物" width="80" height="80" loading="lazy">
                         <h3>其他宠物</h3>
                         <p>兔子、仓鼠等小宠物</p>
                     </div>
@@ -174,6 +177,33 @@
                                 <li><i class="fas fa-check"></i> 第一次健康检查</li>
                             </ul>
                         </div>
+                        <div class="guide-panel" id="month1-panel">
+                            <h3>第1个月养成关键习惯</h3>
+                            <ul>
+                                <li><i class="fas fa-check"></i> 固定喂食时间：每天2-3次，形成规律</li>
+                                <li><i class="fas fa-check"></i> 如厕巩固：大多数宠物已基本掌握定点排便</li>
+                                <li><i class="fas fa-check"></i> 基础口令训练：「坐下」「过来」「不行」</li>
+                                <li><i class="fas fa-check"></i> 牵引绳适应：每天佩戴10-15分钟</li>
+                                <li><i class="fas fa-check"></i> 第一次外出（打完疫苗后）：短时间安静环境</li>
+                                <li><i class="fas fa-check"></i> 梳毛/剪指甲脱敏训练，零食正面引导</li>
+                                <li><i class="fas fa-check"></i> 预约第二针疫苗和定期驱虫</li>
+                            </ul>
+                        </div>
+                        <div class="guide-panel" id="emergency-panel">
+                            <h3>紧急情况处理指南</h3>
+                            <ul>
+                                <li><i class="fas fa-exclamation-triangle"></i> <strong>误食毒物：</strong>立即送医，保留呕吐物样本。常见毒物：巧克力、葡萄、洋葱、木糖醇</li>
+                                <li><i class="fas fa-exclamation-triangle"></i> <strong>中暑：</strong>移到阴凉处，凉水擦脚掌和腹部，少量喂水，立即送医</li>
+                                <li><i class="fas fa-exclamation-triangle"></i> <strong>外伤出血：</strong>干净纱布按压止血5分钟，勿用酒精冲洗伤口</li>
+                                <li><i class="fas fa-exclamation-triangle"></i> <strong>抽搐/癫痫：</strong>移开危险物品，不要按住宠物，记下时长，结束后立即就医</li>
+                                <li><i class="fas fa-exclamation-triangle"></i> <strong>骨折/跛行：</strong>限制活动，硬纸板临时固定伤肢，不要自行复位</li>
+                                <li><i class="fas fa-exclamation-triangle"></i> <strong>呼吸困难：</strong>检查口腔异物，保持通风，立即就医</li>
+                            </ul>
+                            <div class="emergency-contact" style="margin-top:16px; background:#fff3e0; padding:12px 16px; border-radius:8px;">
+                                <p><i class="fas fa-phone-alt" style="color:#ff9800;"></i> <strong>建议：</strong></p>
+                                <p style="font-size:14px; color:#666;">保存附近宠物医院的24小时急诊电话，提前了解有夜诊服务的医院地址。</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -184,38 +214,53 @@
             <div class="container">
                 <h2 class="section-title">宠物健康管理</h2>
                 <div class="health-grid">
-                    <div class="health-card">
+                    <div class="health-card animate-on-scroll">
                         <h3><i class="fas fa-thermometer"></i> 常见症状识别</h3>
                         <div class="symptom-list">
                             <div class="symptom-item" onclick="openSymptomDetail('呕吐/腹泻','mild','消化不良或误食。先禁食6-12小时，少量喂水。如持续超过24小时或便血，立即就医。')">
                                 <span class="symptom-name">呕吐/腹泻</span>
                                 <span class="symptom-level mild">轻微</span>
                             </div>
+                            <div class="symptom-item" onclick="openSymptomDetail('打喷嚏/流鼻涕','mild','可能是过敏或轻微感冒。保持环境温暖干燥，避免吹空调。如有眼部分泌物增多或精神萎靡，需就医排查犬瘟/猫鼻支。')">
+                                <span class="symptom-name">打喷嚏/流鼻涕</span>
+                                <span class="symptom-level mild">轻微</span>
+                            </div>
                             <div class="symptom-item" onclick="openSymptomDetail('食欲不振','moderate','观察精神状态和饮水情况。可尝试加热食物增加香味。持续超过48小时需就医，可能是潜在疾病信号。')">
                                 <span class="symptom-name">食欲不振</span>
                                 <span class="symptom-level moderate">中等</span>
                             </div>
-                            <div class="symptom-item" onclick="openSymptomDetail('呼吸困难','severe','立即就医！可能原因：中暑、异物卡喉、心脏病。途中保持宠物通风，避免剧烈移动。')">
+                            <div class="symptom-item" onclick="openSymptomDetail('皮肤瘙痒/脱毛','moderate','可能原因：真菌感染、螨虫、过敏。检查皮肤是否有红斑、结痂、皮屑。使用伊丽莎白圈防止舔咬，尽快就医确诊。')">
+                                <span class="symptom-name">皮肤瘙痒/脱毛</span>
+                                <span class="symptom-level moderate">中等</span>
+                            </div>
+                            <div class="symptom-item" onclick="openSymptomDetail('频繁抓耳/甩头','moderate','可能原因：耳螨或细菌性耳炎。检查耳道是否有褐色分泌物或异味。使用专用洗耳液清洁，严重时需就医用药。')">
+                                <span class="symptom-name">频繁抓耳/甩头</span>
+                                <span class="symptom-level moderate">中等</span>
+                            </div>
+                            <div class="symptom-item" onclick="openSymptomDetail('跛行/关节僵硬','moderate','休息观察24小时，限制活动。如无明显好转或疼痛加剧（触碰时叫/咬），需拍X光排查骨折或髌骨脱位。老年宠物注意关节炎。')">
+                                <span class="symptom-name">跛行/关节僵硬</span>
+                                <span class="symptom-level moderate">中等</span>
+                            </div>
+                            <div class="symptom-item" onclick="openSymptomDetail('尿频/尿血','severe','立即就医！可能原因：尿路感染、膀胱结石。公猫需特别注意尿闭风险，24小时未排尿可危及生命。')">
+                                <span class="symptom-name">尿频/尿血</span>
+                                <span class="symptom-level severe">紧急</span>
+                            </div>
+                            <div class="symptom-item" onclick="openSymptomDetail('呼吸困难','severe','立即就医！可能原因：中暑、异物卡喉、心脏病。途中保持宠物通风，避免剧烈移动，不要强行喂水。')">
                                 <span class="symptom-name">呼吸困难</span>
                                 <span class="symptom-level severe">紧急</span>
                             </div>
                         </div>
                     </div>
-                    <div class="health-card">
+                    <div class="health-card animate-on-scroll">
                         <h3><i class="fas fa-calendar-check"></i> 疫苗和驱虫计划</h3>
                         <div class="vaccine-schedule">
-                            <div class="vaccine-item">
-                                <span>第8周</span>
-                                <span>第一针疫苗</span>
-                            </div>
-                            <div class="vaccine-item">
-                                <span>第12周</span>
-                                <span>第二针疫苗</span>
-                            </div>
-                            <div class="vaccine-item">
-                                <span>每月</span>
-                                <span>体外驱虫</span>
-                            </div>
+                            <div class="vaccine-item"><span>第8周</span><span>第一针多联疫苗（犬六联/猫三联）</span></div>
+                            <div class="vaccine-item"><span>第12周</span><span>第二针多联疫苗</span></div>
+                            <div class="vaccine-item"><span>第16周</span><span>第三针多联疫苗 + 狂犬疫苗</span></div>
+                            <div class="vaccine-item"><span>每年</span><span>加强针（多联+狂犬）</span></div>
+                            <div class="vaccine-item"><span>每月</span><span>体外驱虫（滴剂/喷剂）</span></div>
+                            <div class="vaccine-item"><span>每3个月</span><span>体内驱虫（片剂）</span></div>
+                            <div class="vaccine-item"><span>第12周起</span><span>心丝虫预防（每月一次）</span></div>
                         </div>
                     </div>
                 </div>
@@ -275,29 +320,41 @@
             <div class="container">
                 <h2 class="section-title">宠物训练方法</h2>
                 <div class="training-cards">
-                    <div class="training-card">
-                        <div class="training-icon">
-                            <i class="fas fa-toilet"></i>
-                        </div>
+                    <div class="training-card animate-on-scroll">
+                        <img src="https://images.unsplash.com/photo-1583337130417-3346a1be7992?w=400&h=250&fit=crop&crop=center" alt="如厕训练" loading="lazy" width="400" height="200">
                         <h3>如厕训练</h3>
                         <p>固定地点、定时引导、及时奖励，7天养成良好排便习惯</p>
                         <button class="training-link" onclick="openTrainingDetail('toilet')">查看详细教程 <i class="fas fa-arrow-right"></i></button>
                     </div>
-                    <div class="training-card">
-                        <div class="training-icon">
-                            <i class="fas fa-utensils"></i>
-                        </div>
+                    <div class="training-card animate-on-scroll">
+                        <img src="https://images.unsplash.com/photo-1543466835-6f1dc7c1cd5c?w=400&h=250&fit=crop&crop=center" alt="进食训练" loading="lazy" width="400" height="200">
                         <h3>进食训练</h3>
                         <p>定时定量、不随意喂食、建立正确的进食礼仪</p>
                         <button class="training-link" onclick="openTrainingDetail('feeding')">查看详细教程 <i class="fas fa-arrow-right"></i></button>
                     </div>
-                    <div class="training-card">
-                        <div class="training-icon">
-                            <i class="fas fa-hand-peace"></i>
-                        </div>
+                    <div class="training-card animate-on-scroll">
+                        <img src="https://images.unsplash.com/photo-1548199973-03f56ce3f8fe?w=400&h=250&fit=crop&crop=center" alt="社交训练" loading="lazy" width="400" height="200">
                         <h3>社交训练</h3>
                         <p>接触不同环境、人和其他动物，培养友好性格</p>
                         <button class="training-link" onclick="openTrainingDetail('social')">查看详细教程 <i class="fas fa-arrow-right"></i></button>
+                    </div>
+                    <div class="training-card animate-on-scroll">
+                        <img src="https://images.unsplash.com/photo-1587300001388-1f5e5ed1f2e5?w=400&h=250&fit=crop&crop=center" alt="基础口令训练" loading="lazy" width="400" height="200">
+                        <h3>基础口令训练</h3>
+                        <p>坐下、趴下、等待、过来 — 四大基础口令训练法</p>
+                        <button class="training-link" onclick="openTrainingDetail('commands')">查看详细教程 <i class="fas fa-arrow-right"></i></button>
+                    </div>
+                    <div class="training-card animate-on-scroll">
+                        <img src="https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?w=400&h=250&fit=crop&crop=center" alt="牵引绳随行" loading="lazy" width="400" height="200">
+                        <h3>牵引绳随行</h3>
+                        <p>防止爆冲、培养随行习惯，让散步更轻松愉快</p>
+                        <button class="training-link" onclick="openTrainingDetail('leash')">查看详细教程 <i class="fas fa-arrow-right"></i></button>
+                    </div>
+                    <div class="training-card animate-on-scroll">
+                        <img src="https://images.unsplash.com/photo-1561037404611-2c24ce1e5e0c?w=400&h=250&fit=crop&crop=center" alt="笼内训练" loading="lazy" width="400" height="200">
+                        <h3>笼内训练</h3>
+                        <p>建立宠物专属安全区，有效缓解分离焦虑</p>
+                        <button class="training-link" onclick="openTrainingDetail('crate')">查看详细教程 <i class="fas fa-arrow-right"></i></button>
                     </div>
                 </div>
             </div>
@@ -414,13 +471,11 @@
                         <h3>收货信息</h3>
                         <div class="form-group">
                             <label for="user-name"><i class="fa fa-user"></i> 收货人姓名</label>
-                            <input type="text" id="user-name" placeholder="请输入收货人姓名" required
-                              class="w-full px-4 py-3 border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:border-purple-500 focus:ring-2 focus:ring-purple-100 outline-none transition">
+                            <input type="text" id="user-name" class="checkout-input" placeholder="请输入收货人姓名" required>
                         </div>
                         <div class="form-group">
                             <label for="user-phone"><i class="fa fa-phone"></i> 手机号码</label>
-                            <input type="tel" id="user-phone" placeholder="请输入手机号码" required pattern="1[3-9][0-9]{9}"
-                              class="w-full px-4 py-3 border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:border-purple-500 focus:ring-2 focus:ring-purple-100 outline-none transition">
+                            <input type="tel" id="user-phone" class="checkout-input" placeholder="请输入手机号码" required pattern="1[3-9][0-9]{9}">
                         </div>
                         <h3>支付方式</h3>
                         <div class="payment-methods">

@@ -385,7 +385,7 @@ function showOrderHistory() {
               <div style="border-top:1px solid #f0f0f0; padding-top:12px;">
                 ${order.items.map(i => `
                   <div style="display:flex; justify-content:space-between; padding:4px 0; font-size:14px; color:#666;">
-                    <span>${i.img} ${i.name} x${i.quantity}</span>
+                    <span><img src="${i.img}" alt="${i.name}" style="width:24px;height:24px;object-fit:cover;border-radius:4px;vertical-align:middle;margin-right:6px;">${i.name} x${i.quantity}</span>
                     <span>¥${(i.price * i.quantity).toFixed(2)}</span>
                   </div>
                 `).join('')}

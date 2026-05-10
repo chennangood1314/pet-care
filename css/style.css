@@ -5,11 +5,40 @@
     box-sizing: border-box;
 }
 
+
+:root {
+    --primary: #4CAF50;
+    --primary-dark: #388E3C;
+    --primary-light: #8BC34A;
+    --primary-bg: #e8f5e9;
+    --danger: #ff4444;
+    --warning: #ff9800;
+    --star: #ffb400;
+    --text: #333;
+    --text-secondary: #666;
+    --text-muted: #999;
+    --text-placeholder: #bbb;
+    --bg: #f8f9fa;
+    --bg-alt: #f5f7fa;
+    --white: #fff;
+    --border: #e0e0e0;
+    --border-light: #eee;
+    --shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
+    --shadow-md: 0 4px 20px rgba(0,0,0,0.08);
+    --shadow-lg: 0 8px 30px rgba(0,0,0,0.12);
+    --shadow-hover: 0 12px 36px rgba(0,0,0,0.15);
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-full: 24px;
+    --transition: 0.3s ease;
+}
+
 body {
     font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     line-height: 1.6;
     color: #333;
-    background-color: #f8f9fa;
+    background-color: var(--bg);
 }
 
 .container {
@@ -21,7 +50,7 @@ body {
 /* 导航栏样式 */
 .navbar {
     background-color: #fff;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
     position: fixed;
     top: 0;
     left: 0;
@@ -43,7 +72,7 @@ body {
 }
 
 .logo i {
-    color: #4CAF50;
+    color: var(--primary);
     font-size: 24px;
 }
 
@@ -69,9 +98,22 @@ body {
     transition: color 0.3s;
 }
 
+.nav-links a {
+    position: relative;
+}
 .nav-links a:hover,
 .nav-links a.active {
-    color: #4CAF50;
+    color: var(--primary);
+}
+.nav-links a.active::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--primary);
+    border-radius: 2px;
 }
 
 .nav-cart {
@@ -82,7 +124,7 @@ body {
     position: absolute;
     top: -8px;
     right: -8px;
-    background-color: #ff4444;
+    background-color: var(--danger);
     color: white;
     border-radius: 50%;
     width: 18px;
@@ -107,7 +149,7 @@ main {
 /* 英雄区域 */
 .hero {
     padding: 60px 0;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, var(--primary) 0%, #2E7D32 100%);
     color: white;
 }
 
@@ -140,9 +182,6 @@ main {
 
 .hero-image {
     flex: 1;
-}
-
-.hero-image {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -151,14 +190,21 @@ main {
 
 .hero-image img {
     width: 100%;
-    border-radius: 10px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    max-width: 420px;
+    height: auto;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    object-fit: cover;
+    aspect-ratio: 5/4;
 }
 
 @media (max-width: 768px) {
     .hero-image {
         min-width: auto;
-        font-size: 100px;
+    }
+    .hero-image img {
+        max-width: 280px;
+        border-radius: 12px;
     }
 }
 
@@ -176,12 +222,12 @@ main {
 }
 
 .btn-primary {
-    background-color: #4CAF50;
+    background-color: var(--primary);
     color: white;
 }
 
 .btn-primary:hover {
-    background-color: #45a049;
+    background-color: var(--primary-dark);
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
 }
@@ -215,20 +261,20 @@ main {
 .feature-card {
     background: white;
     padding: 30px;
-    border-radius: 10px;
+    border-radius: var(--radius-md);
     text-align: center;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    box-shadow: var(--shadow-md);
     transition: transform 0.3s, box-shadow 0.3s;
 }
 
 .feature-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-hover);
 }
 
 .feature-icon {
     font-size: 40px;
-    color: #4CAF50;
+    color: var(--primary);
     margin-bottom: 20px;
 }
 
@@ -240,7 +286,7 @@ main {
 /* 每日养护区域 */
 .dashboard {
     padding: 60px 0;
-    background-color: #f5f7fa;
+    background-color: var(--bg-alt);
 }
 
 .date-display {
@@ -263,8 +309,8 @@ main {
 .task-card {
     background: white;
     padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
     display: flex;
     align-items: center;
     gap: 15px;
@@ -272,7 +318,7 @@ main {
 
 .task-icon {
     font-size: 24px;
-    color: #4CAF50;
+    color: var(--primary);
 }
 
 .task-content {
@@ -303,8 +349,8 @@ main {
 }
 
 .task-status.completed {
-    background-color: #e8f5e9;
-    color: #4CAF50;
+    background-color: var(--primary-bg);
+    color: var(--primary);
 }
 
 .task-status:hover {
@@ -315,22 +361,22 @@ main {
 .progress-container {
     background: white;
     padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
 }
 
 .progress-bar {
     height: 20px;
     background-color: #e0e0e0;
-    border-radius: 10px;
+    border-radius: var(--radius-md);
     margin: 20px 0;
     overflow: hidden;
 }
 
 .progress-fill {
     height: 100%;
-    background: linear-gradient(90deg, #4CAF50, #8BC34A);
-    border-radius: 10px;
+    background: linear-gradient(90deg, var(--primary), var(--primary-light));
+    border-radius: var(--radius-md);
     width: 0%;
     display: flex;
     align-items: center;
@@ -338,6 +384,19 @@ main {
     color: white;
     font-size: 12px;
     transition: width 0.5s ease;
+    position: relative;
+    overflow: hidden;
+}
+.progress-fill.full::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    animation: shimmerProgress 1.5s ease-in-out infinite;
+}
+@keyframes shimmerProgress {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
 }
 
 .progress-text {
@@ -359,24 +418,30 @@ main {
 
 .pet-option {
     padding: 30px;
-    border-radius: 10px;
+    border-radius: var(--radius-md);
     text-align: center;
     cursor: pointer;
     transition: all 0.3s;
     background: white;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    box-shadow: var(--shadow-md);
     border: 2px solid transparent;
 }
 
 .pet-option.active {
-    border-color: #4CAF50;
+    border-color: var(--primary);
     transform: translateY(-5px);
 }
 
-.pet-option i {
-    font-size: 40px;
+.pet-option img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
     margin-bottom: 15px;
-    color: #4CAF50;
+    transition: transform var(--transition);
+}
+.pet-option:hover img {
+    transform: scale(1.08);
 }
 
 .pet-option h3 {
@@ -386,7 +451,7 @@ main {
 /* 新手指南 */
 .guide {
     padding: 60px 0;
-    background-color: #f5f7fa;
+    background-color: var(--bg-alt);
 }
 
 .guide-tabs {
@@ -408,15 +473,15 @@ main {
 }
 
 .guide-tab.active {
-    background-color: #4CAF50;
+    background-color: var(--primary);
     color: white;
 }
 
 .guide-panels {
     background: white;
     padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
 }
 
 .guide-panel {
@@ -449,7 +514,7 @@ main {
 }
 
 .guide-panel li i {
-    color: #4CAF50;
+    color: var(--primary);
 }
 
 /* 健康管理 */
@@ -466,8 +531,8 @@ main {
 .health-card {
     background: white;
     padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
 }
 
 .health-card h3 {
@@ -485,7 +550,20 @@ main {
     gap: 15px;
 }
 
-.symptom-item,
+.symptom-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 12px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: background 0.2s;
+}
+.symptom-item:hover {
+    background: var(--bg-alt);
+}
+
 .vaccine-item {
     display: flex;
     justify-content: space-between;
@@ -507,7 +585,7 @@ main {
 
 .symptom-level.moderate {
     background-color: #fff3e0;
-    color: #ff9800;
+    color: var(--warning);
 }
 
 .symptom-level.severe {
@@ -518,7 +596,7 @@ main {
 /* 宠物档案 */
 .profile {
     padding: 60px 0;
-    background-color: #f5f7fa;
+    background-color: var(--bg-alt);
 }
 
 .profile-container {
@@ -531,8 +609,8 @@ main {
 .pet-list {
     background: white;
     padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
 }
 
 .pet-form h3,
@@ -568,7 +646,7 @@ main {
 .form-group input:focus,
 .form-group select:focus {
     outline: none;
-    border-color: #4CAF50;
+    border-color: var(--primary);
 }
 
 .pets-container {
@@ -588,7 +666,7 @@ main {
 }
 
 .pet-card {
-    background: #f8f9fa;
+    background: var(--bg);
     padding: 20px;
     border-radius: 8px;
     margin-bottom: 15px;
@@ -599,7 +677,7 @@ main {
 
 .pet-card i {
     font-size: 24px;
-    color: #4CAF50;
+    color: var(--primary);
 }
 
 .pet-info h4 {
@@ -625,33 +703,46 @@ main {
 
 .training-card {
     background: white;
-    padding: 30px;
-    border-radius: 10px;
+    border-radius: var(--radius-md);
     text-align: center;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    box-shadow: var(--shadow-md);
     transition: transform 0.3s;
+    overflow: hidden;
 }
 
 .training-card:hover {
     transform: translateY(-5px);
 }
 
-.training-icon {
-    font-size: 40px;
-    color: #4CAF50;
-    margin-bottom: 20px;
+.training-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    transition: transform var(--transition);
+}
+.training-card:hover img {
+    transform: scale(1.03);
 }
 
 .training-card h3 {
     margin-bottom: 15px;
     color: #333;
+    padding: 18px 20px 0 20px;
+}
+
+.training-card p {
+    padding: 0 20px;
+}
+
+.training-card .training-link {
+    margin-bottom: 20px;
 }
 
 .training-link {
     display: inline-flex;
     align-items: center;
     gap: 5px;
-    color: #4CAF50;
+    color: var(--primary);
     text-decoration: none;
     font-weight: 500;
     margin-top: 15px;
@@ -662,12 +753,12 @@ main {
     font-size: inherit;
     font-family: inherit;
 }
-.training-link:hover { color: #388E3C; }
+.training-link:hover { color: var(--primary-dark); }
 
 /* 宠物商城 */
 .store {
     padding: 60px 0;
-    background-color: #f5f7fa;
+    background-color: var(--bg-alt);
 }
 
 .store-subtitle {
@@ -722,7 +813,7 @@ main {
 }
 
 .store-search input:focus {
-    border-color: #4CAF50;
+    border-color: var(--primary);
 }
 
 .store-sort {
@@ -759,8 +850,8 @@ main {
 }
 
 .category-btn.active {
-    border-color: #4CAF50;
-    background-color: #4CAF50;
+    border-color: var(--primary);
+    background-color: var(--primary);
     color: white;
 }
 
@@ -771,70 +862,6 @@ main {
     margin-bottom: 40px;
 }
 
-.product-card {
-    background: white;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-    transition: transform 0.3s;
-}
-
-.product-card:hover {
-    transform: translateY(-5px);
-}
-
-.product-image {
-    height: 200px;
-    overflow: hidden;
-}
-
-.product-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.product-content {
-    padding: 20px;
-}
-
-.product-title {
-    font-size: 16px;
-    font-weight: 500;
-    margin-bottom: 10px;
-    color: #333;
-}
-
-.product-price {
-    font-size: 18px;
-    font-weight: 600;
-    color: #ff4444;
-    margin-bottom: 15px;
-}
-
-.product-rating {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    margin-bottom: 15px;
-    color: #ffb400;
-}
-
-.add-to-cart {
-    width: 100%;
-    padding: 10px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: 500;
-    transition: background-color 0.3s;
-}
-
-.add-to-cart:hover {
-    background-color: #45a049;
-}
 
 .store-features {
     display: grid;
@@ -842,8 +869,8 @@ main {
     gap: 20px;
     background: white;
     padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
 }
 
 .feature-item {
@@ -852,7 +879,7 @@ main {
 
 .feature-item i {
     font-size: 30px;
-    color: #4CAF50;
+    color: var(--primary);
     margin-bottom: 15px;
 }
 
@@ -960,7 +987,7 @@ main {
 }
 
 .cart-item-price {
-    color: #ff4444;
+    color: var(--danger);
     font-weight: 500;
 }
 
@@ -980,7 +1007,7 @@ main {
 }
 
 .remove-item {
-    color: #ff4444;
+    color: var(--danger);
     background: none;
     border: none;
     cursor: pointer;
@@ -1002,7 +1029,7 @@ main {
 }
 
 .total-amount {
-    color: #ff4444;
+    color: var(--danger);
     font-size: 24px;
 }
 
@@ -1025,8 +1052,24 @@ main {
 .checkout-form {
     background: white;
     padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+}
+
+.checkout-input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--bg);
+    font-size: 15px;
+    outline: none;
+    transition: border-color var(--transition), background var(--transition), box-shadow var(--transition);
+}
+.checkout-input:focus {
+    background: var(--white);
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(76,175,80,0.1);
 }
 
 .checkout-summary h3,
@@ -1041,9 +1084,29 @@ main {
 
 .order-item {
     display: flex;
+    align-items: center;
     justify-content: space-between;
     padding: 10px 0;
     border-bottom: 1px solid #eee;
+    gap: 10px;
+}
+
+.order-item-img {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.order-item-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.order-item-detail {
+    flex: 1;
 }
 
 .order-total {
@@ -1099,11 +1162,11 @@ main {
 }
 
 .payment-option input:checked + .payment-content {
-    color: #4CAF50;
+    color: var(--primary);
 }
 
 .payment-option input:checked {
-    border-color: #4CAF50;
+    border-color: var(--primary);
 }
 
 .checkout-actions {
@@ -1121,7 +1184,7 @@ main {
 }
 
 .payment-security i {
-    color: #4CAF50;
+    color: var(--primary);
 }
 
 /* 页脚 */
@@ -1161,7 +1224,7 @@ main {
 }
 
 .footer-section a:hover {
-    color: #4CAF50;
+    color: var(--primary);
 }
 
 .footer-section p {
@@ -1186,7 +1249,7 @@ main {
     bottom: 20px;
     right: 20px;
     background: white;
-    border-radius: 10px;
+    border-radius: var(--radius-md);
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
     padding: 20px;
     max-width: 300px;
@@ -1218,7 +1281,7 @@ main {
 
 .notification-content i {
     font-size: 24px;
-    color: #4CAF50;
+    color: var(--primary);
 }
 
 .notification-text {
@@ -1237,6 +1300,17 @@ main {
     font-size: 20px;
     color: #666;
     cursor: pointer;
+}
+
+/* 滚动渐入动画 */
+.animate-on-scroll {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.animate-on-scroll.visible {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 /* =============================================
@@ -1276,11 +1350,8 @@ main {
         gap: 20px;
     }
 
-    .product-img {
-        height: 130px;
-        font-size: 48px;
-    }
-
+    .product-img { height: 140px; }
+    
     .profile-container {
         grid-template-columns: 1fr;
     }
@@ -1381,10 +1452,6 @@ main {
         font-size: 14px;
     }
 
-    .hero-image img {
-        max-height: 200px;
-        object-fit: cover;
-    }
 
     /* 通用 */
     .section-title {
@@ -1423,8 +1490,9 @@ main {
         min-width: 90px;
     }
 
-    .pet-option i {
-        font-size: 28px;
+    .pet-option img {
+        width: 56px;
+        height: 56px;
     }
 
     .pet-option h3 {
@@ -1470,10 +1538,7 @@ main {
         gap: 12px;
     }
 
-    .product-img {
-        height: 100px;
-        font-size: 40px;
-    }
+    .product-img { height: 100px; }
 
     .product-info {
         padding: 10px;
@@ -1576,10 +1641,7 @@ main {
         gap: 10px;
     }
 
-    .product-img {
-        height: 80px;
-        font-size: 32px;
-    }
+    .product-img { height: 80px; }
 
     .product-name {
         font-size: 12px;
@@ -1656,7 +1718,7 @@ main {
     max-height: 90vh;
     overflow-y: auto;
     z-index: 9999;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
     animation: modalSlideIn 0.3s ease;
 }
 
@@ -1717,7 +1779,7 @@ main {
     height: 200px;
     margin: 0 auto 12px;
     border: 2px dashed #ddd;
-    border-radius: 12px;
+    border-radius: var(--radius-md);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1735,7 +1797,7 @@ main {
 }
 
 .qr-timer {
-    color: #ff9800;
+    color: var(--warning);
     font-size: 14px;
 }
 
@@ -1744,7 +1806,7 @@ main {
 }
 
 .payment-modal-info {
-    background: #f8f9fa;
+    background: var(--bg);
     border-radius: 8px;
     padding: 12px 16px;
     margin-bottom: 20px;
@@ -1809,10 +1871,17 @@ main {
 }
 
 .cart-item-img {
-    font-size: 32px;
     width: 48px;
-    text-align: center;
+    height: 48px;
     flex-shrink: 0;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.cart-item-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .cart-item-info {
@@ -1829,7 +1898,7 @@ main {
 }
 
 .cart-item-price {
-    color: #ff4444;
+    color: var(--danger);
     font-weight: 500;
     font-size: 14px;
 }
@@ -1869,7 +1938,7 @@ main {
 .cart-item-del {
     background: none;
     border: none;
-    color: #ff4444;
+    color: var(--danger);
     cursor: pointer;
     padding: 6px;
     flex-shrink: 0;
@@ -1885,16 +1954,16 @@ main {
 .product-card {
     position: relative;
     background: white;
-    border-radius: 12px;
+    border-radius: var(--radius-md);
     overflow: hidden;
-    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.06);
+    box-shadow: var(--shadow-md);
     transition: transform 0.3s, box-shadow 0.3s;
     cursor: default;
 }
 
 .product-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-lg);
 }
 
 .product-card.added {
@@ -1911,22 +1980,28 @@ main {
     position: absolute;
     top: 10px;
     left: 10px;
-    background: linear-gradient(135deg, #ff4444, #ff6b6b);
+    background: linear-gradient(135deg, var(--danger), #ff6b6b);
     color: white;
     padding: 3px 10px;
-    border-radius: 12px;
+    border-radius: var(--radius-md);
     font-size: 12px;
     font-weight: 600;
     z-index: 1;
 }
 
 .product-img {
-    height: 160px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 64px;
-    background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
+    height: 180px;
+    overflow: hidden;
+    position: relative;
+}
+.product-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--transition);
+}
+.product-card:hover .product-img img {
+    transform: scale(1.08);
 }
 
 .product-info {
@@ -1958,8 +2033,8 @@ main {
     font-size: 11px;
     padding: 2px 8px;
     background: #f0f8ff;
-    color: #4CAF50;
-    border-radius: 10px;
+    color: var(--primary);
+    border-radius: var(--radius-md);
     border: 1px solid #e0efe0;
 }
 
@@ -1972,12 +2047,12 @@ main {
 }
 
 .stars {
-    color: #ffb400;
+    color: var(--star);
     letter-spacing: 1px;
 }
 
 .rating-num {
-    color: #ffb400;
+    color: var(--star);
     font-weight: 600;
 }
 
@@ -2000,7 +2075,7 @@ main {
 .price-now {
     font-size: 20px;
     font-weight: 700;
-    color: #ff4444;
+    color: var(--danger);
 }
 
 .price-original {
@@ -2011,7 +2086,7 @@ main {
 
 .btn-add-cart {
     padding: 8px 14px;
-    background: #4CAF50;
+    background: var(--primary);
     color: white;
     border: none;
     border-radius: 20px;
@@ -2023,7 +2098,7 @@ main {
 }
 
 .btn-add-cart:hover {
-    background: #45a049;
+    background: var(--primary-dark);
     transform: scale(1.05);
 }
 
@@ -2031,7 +2106,7 @@ main {
     .payment-modal-box {
         width: 95vw;
         padding: 20px;
-        border-radius: 12px 12px 0 0;
+        border-radius: var(--radius-md) 12px 0 0;
         bottom: 0;
         top: auto;
         transform: translate(-50%, 0);
