@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>招聘中心 - 宠物新手助手</title>
+    <meta name="description" content="宠物行业求职招聘平台，连接优秀宠物医生、兽医助理、美容师等人才与优质宠物诊所。支持在线发布招聘岗位、投递简历。">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">
+                <a href="index.html" style="display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit;">
+                    <i class="fas fa-paw"></i>
+                    <h1>宠物新手助手</h1>
+                </a>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html"><i class="fas fa-home"></i> 首页</a></li>
+                <li><a href="index.html#dashboard"><i class="fas fa-calendar-alt"></i> 每日养护</a></li>
+                <li><a href="index.html#guide"><i class="fas fa-book"></i> 新手指南</a></li>
+                <li><a href="index.html#training"><i class="fas fa-graduation-cap"></i> 训练方法</a></li>
+                <li><a href="index.html#ai-consultation"><i class="fas fa-robot"></i> AI问诊</a></li>
+                <li><a href="experts.html"><i class="fas fa-user-md"></i> 专家问诊</a></li>
+                <li><a href="index.html#health"><i class="fas fa-heartbeat"></i> 健康管理</a></li>
+                <li><a href="index.html#store"><i class="fas fa-store"></i> 宠物商城</a></li>
+                <li><a href="jobs.html" class="active"><i class="fas fa-briefcase"></i> 招聘中心</a></li>
+                <li><a href="index.html#profile"><i class="fas fa-user"></i> 我的宠物</a></li>
+                <li class="nav-cart">
+                    <a href="index.html#cart">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-count">0</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="nav-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <!-- 招聘中心 -->
+        <section id="recruitment" class="recruitment" style="padding-top:100px;">
+            <div class="container">
+                <h2 class="section-title"><i class="fas fa-briefcase"></i> 招聘中心</h2>
+                <p class="recruitment-subtitle">宠物行业求职招聘平台，连接优秀人才与优质宠物诊所</p>
+                <div class="recruitment-actions-top">
+                    <button class="btn btn-primary" onclick="openPostJobModal()">
+                        <i class="fas fa-plus-circle"></i> 发布招聘
+                    </button>
+                </div>
+                <div class="job-search-bar">
+                    <div class="job-search-input">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="job-search" placeholder="搜索岗位名称、诊所、地点...">
+                    </div>
+                    <select id="job-type-filter" class="job-filter-select">
+                        <option value="">全部类型</option>
+                        <option value="fulltime">全职</option>
+                        <option value="parttime">兼职</option>
+                        <option value="intern">实习</option>
+                    </select>
+                </div>
+                <div class="job-grid" id="job-grid">
+                    <div class="job-loading">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <p>加载岗位列表...</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 岗位详情弹窗 -->
+    <div class="modal-overlay" id="job-detail-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:1000; align-items:center; justify-content:center;">
+      <div class="job-detail-card" style="background:white; border-radius:16px; max-width:600px; width:95%; max-height:85vh; overflow-y:auto; padding:30px; position:relative;">
+        <button onclick="document.getElementById('job-detail-modal').style.display='none'" style="position:absolute; top:12px; right:16px; background:none; border:none; font-size:24px; cursor:pointer; color:#999;">&times;</button>
+        <div id="job-detail-content"></div>
+      </div>
+    </div>
+
+    <!-- 发布招聘弹窗 -->
+    <div class="modal-overlay" id="post-job-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:1000; align-items:center; justify-content:center;">
+      <div class="post-job-card" style="background:white; border-radius:16px; max-width:650px; width:95%; max-height:85vh; overflow-y:auto; padding:30px; position:relative;">
+        <button onclick="document.getElementById('post-job-modal').style.display='none'" style="position:absolute; top:12px; right:16px; background:none; border:none; font-size:24px; cursor:pointer; color:#999;">&times;</button>
+        <h3 style="font-size:22px; margin-bottom:20px; color:#333;"><i class="fas fa-plus-circle"></i> 发布招聘岗位</h3>
+        <form id="post-job-form" class="post-job-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label>岗位名称 <span class="required">*</span></label>
+              <input type="text" id="job-title" placeholder="如：宠物医生、兽医助理" required>
+            </div>
+            <div class="form-group">
+              <label>诊所名称 <span class="required">*</span></label>
+              <input type="text" id="job-clinic" placeholder="请输入诊所名称" required>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>薪资范围</label>
+              <input type="text" id="job-salary" placeholder="如：8K-15K 或 面议">
+            </div>
+            <div class="form-group">
+              <label>工作地点</label>
+              <input type="text" id="job-location" placeholder="如：北京朝阳区">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>经验要求</label>
+              <input type="text" id="job-experience" placeholder="如：1-3年 / 不限">
+            </div>
+            <div class="form-group">
+              <label>学历要求</label>
+              <input type="text" id="job-education" placeholder="如：大专及以上">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>工作类型</label>
+              <select id="job-type">
+                <option value="fulltime">全职</option>
+                <option value="parttime">兼职</option>
+                <option value="intern">实习</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>联系人</label>
+              <input type="text" id="job-contact" placeholder="联系人姓名">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>联系电话</label>
+            <input type="text" id="job-phone" placeholder="联系电话">
+          </div>
+          <div class="form-group">
+            <label>岗位描述</label>
+            <textarea id="job-desc" rows="3" placeholder="描述岗位的主要工作内容..."></textarea>
+          </div>
+          <div class="form-group">
+            <label>任职要求</label>
+            <textarea id="job-requirements" rows="3" placeholder="描述任职资格和要求..."></textarea>
+          </div>
+          <div class="form-group">
+            <label>福利待遇</label>
+            <textarea id="job-benefits" rows="2" placeholder="如：五险一金、带薪年假、包住宿..."></textarea>
+          </div>
+          <div class="form-notice">
+            <i class="fas fa-info-circle"></i>
+            <span>发布后需等待管理员审核通过才会在平台展示。</span>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">提交发布</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- 求职申请弹窗 -->
+    <div class="modal-overlay" id="apply-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:1000; align-items:center; justify-content:center;">
+      <div class="apply-card" style="background:white; border-radius:16px; max-width:500px; width:95%; max-height:85vh; overflow-y:auto; padding:30px; position:relative;">
+        <button onclick="document.getElementById('apply-modal').style.display='none'" style="position:absolute; top:12px; right:16px; background:none; border:none; font-size:24px; cursor:pointer; color:#999;">&times;</button>
+        <h3 style="font-size:22px; margin-bottom:8px; color:#333;"><i class="fas fa-paper-plane"></i> 投递简历</h3>
+        <p id="apply-job-title" style="color:#888; margin-bottom:20px; font-size:14px;"></p>
+        <form id="apply-form" class="apply-form">
+          <input type="hidden" id="apply-job-id">
+          <div class="form-row">
+            <div class="form-group">
+              <label>姓名 <span class="required">*</span></label>
+              <input type="text" id="apply-name" placeholder="请输入姓名" required>
+            </div>
+            <div class="form-group">
+              <label>手机号 <span class="required">*</span></label>
+              <input type="tel" id="apply-phone" placeholder="请输入手机号" required pattern="1[3-9][0-9]{9}">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>邮箱（选填）</label>
+            <input type="email" id="apply-email" placeholder="请输入邮箱">
+          </div>
+          <div class="form-group">
+            <label>相关经验</label>
+            <input type="text" id="apply-experience" placeholder="如：3年宠物临床经验">
+          </div>
+          <div class="form-group">
+            <label>个人简介/简历 <span class="required">*</span></label>
+            <textarea id="apply-resume" rows="4" placeholder="请简要介绍您的教育背景、工作经历和技能特长..." required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">提交申请</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3><i class="fas fa-paw"></i> 宠物新手助手</h3>
+                    <p>让每一只宠物都能得到科学、专业的养护</p>
+                </div>
+                <div class="footer-section">
+                    <h3>快速链接</h3>
+                    <ul>
+                        <li><a href="index.html">首页</a></li>
+                        <li><a href="index.html#dashboard">每日养护</a></li>
+                        <li><a href="index.html#guide">新手指南</a></li>
+                        <li><a href="index.html#store">宠物商城</a></li>
+                        <li><a href="index.html#health">健康管理</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>联系我们</h3>
+                    <p><i class="fas fa-envelope"></i> support@pethelper.com</p>
+                    <p><i class="fas fa-phone"></i> 400-123-4567</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 宠物新手助手. 版权所有.</p>
+                <p>本网站内容仅供参考，具体养护请咨询专业兽医</p>
+                <p class="mt-2"><a href="admin/index.html" style="color:#666;text-decoration:none;font-size:12px;">管理入口</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+    // ============ 导航栏 ============
+    const navbar = document.querySelector('.navbar');
+    window.addEventListener('scroll', () => {
+        navbar.classList.toggle('scrolled', window.pageYOffset > 80);
+    });
+
+    const navToggle = document.querySelector('.nav-toggle');
+    const navLinks = document.querySelector('.nav-links');
+    if (navToggle) {
+        navToggle.addEventListener('click', () => navLinks.classList.toggle('active'));
+    }
+    navLinks.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => navLinks.classList.remove('active'));
+    });
+
+    // ============ Toast ============
+    function showToast(message) {
+        const existing = document.querySelector('.toast-message');
+        if (existing) existing.remove();
+        const toast = document.createElement('div');
+        toast.className = 'toast-message';
+        toast.textContent = message;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 3000);
+    }
+
+    // ============ 静态备用数据（API 不可用时使用）============
+    var FALLBACK_JOBS = [
+        { id:1, clinicName:'瑞鹏宠物医院（朝阳分院）', title:'宠物医生', salary:'15K-25K', location:'北京朝阳区', experience:'3-5年', education:'本科及以上', description:'负责门诊日常诊疗、手术、住院宠物管理等工作', requirements:'1. 持有国家执业兽医师资格证\n2. 3年以上临床经验\n3. 能独立完成常见外科手术\n4. 良好的沟通能力和服务意识', benefits:'五险一金、带薪年假、定期培训、员工宠物免费医疗', contactPhone:'010-88886666', contactPerson:'张院长', type:'fulltime', createdAt:'2026-04-15T08:00:00.000Z', applicantCount:12 },
+        { id:2, clinicName:'宠爱国际动物医院', title:'兽医助理', salary:'6K-9K', location:'上海浦东新区', experience:'1-3年', education:'大专及以上', description:'协助医生完成诊疗、护理住院宠物、管理医疗器械', requirements:'1. 动物医学相关专业\n2. 热爱小动物、有耐心\n3. 能接受周末轮班', benefits:'五险一金、员工宿舍、餐补、节日福利', contactPhone:'021-66668888', contactPerson:'李主任', type:'fulltime', createdAt:'2026-04-20T10:00:00.000Z', applicantCount:28 },
+        { id:3, clinicName:'芭比堂动物医院（海淀总院）', title:'宠物美容师', salary:'8K-12K', location:'北京海淀区', experience:'2年以上', education:'不限', description:'为犬猫提供洗澡、剪毛、造型等美容服务', requirements:'1. 持有宠物美容师证书（B级以上）\n2. 2年以上宠物美容经验\n3. 熟悉不同犬种的造型标准', benefits:'底薪+提成、五险、免费培训、团建活动', contactPhone:'010-66669999', contactPerson:'王经理', type:'fulltime', createdAt:'2026-04-25T14:00:00.000Z', applicantCount:35 },
+        { id:4, clinicName:'美联众合动物医院', title:'宠物医生助理（实习生）', salary:'3K-5K', location:'广州天河区', experience:'应届毕业生', education:'大专及以上', description:'在资深兽医师指导下，学习临床诊疗技能', requirements:'1. 动物医学相关专业应届毕业生\n2. 踏实肯学、吃苦耐劳\n3. 有实习经验优先', benefits:'提供住宿、餐补、转正机会、导师带教', contactPhone:'020-88887777', contactPerson:'陈主任', type:'intern', createdAt:'2026-05-01T09:00:00.000Z', applicantCount:52 }
+    ];
+    var FALLBACK_JOB_TYPES = [
+        { value:'fulltime', label:'全职' },
+        { value:'parttime', label:'兼职' },
+        { value:'intern', label:'实习' }
+    ];
+
+    // ============ 加载岗位列表 ============
+    let currentJobSearch = '';
+    let currentJobType = '';
+
+    async function loadJobs() {
+        const grid = document.getElementById('job-grid');
+        if (!grid) return;
+        try {
+            const params = new URLSearchParams();
+            if (currentJobSearch) params.set('search', currentJobSearch);
+            if (currentJobType) params.set('type', currentJobType);
+            var jobs = [], jobTypes = [];
+            try {
+                var res = await fetch('/api/jobs?' + params.toString());
+                if (!res.ok) throw new Error('API unavailable');
+                var data = await res.json();
+                if (data.success) { jobs = data.data.jobs; jobTypes = data.data.jobTypes; }
+            } catch (e) {
+                jobs = FALLBACK_JOBS.filter(function(j) {
+                    if (currentJobSearch) {
+                        var q = currentJobSearch.toLowerCase();
+                        var match = (j.title + j.clinicName + j.description + j.location).toLowerCase().indexOf(q) !== -1;
+                        if (!match) return false;
+                    }
+                    if (currentJobType && j.type !== currentJobType) return false;
+                    return true;
+                });
+                jobTypes = FALLBACK_JOB_TYPES;
+            }
+            if (!jobs.length) {
+                grid.innerHTML = '<div class="job-empty"><i class="fas fa-briefcase"></i><p>暂无招聘岗位</p></div>';
+                return;
+            }
+            grid.innerHTML = jobs.map(function(job) {
+                var typeLabel = job.type === 'fulltime' ? '全职' : job.type === 'parttime' ? '兼职' : '实习';
+                return '<div class="job-card" onclick="openJobDetail(' + job.id + ')">' +
+                    '<div class="job-card-header">' +
+                        '<h4 class="job-card-title">' + escapeHtml(job.title) + '</h4>' +
+                        '<span class="job-type-tag type-' + job.type + '">' + typeLabel + '</span>' +
+                    '</div>' +
+                    '<p class="job-card-clinic"><i class="fas fa-building"></i> ' + escapeHtml(job.clinicName) + '</p>' +
+                    '<p class="job-card-salary">' + escapeHtml(job.salary) + '</p>' +
+                    '<div class="job-card-meta">' +
+                        '<span><i class="fas fa-map-marker-alt"></i> ' + escapeHtml(job.location || '不限') + '</span>' +
+                        '<span><i class="fas fa-briefcase"></i> ' + escapeHtml(job.experience || '不限') + '</span>' +
+                        '<span><i class="fas fa-graduation-cap"></i> ' + escapeHtml(job.education || '不限') + '</span>' +
+                    '</div>' +
+                    '<div class="job-card-footer">' +
+                        '<span class="job-card-time">' + formatTimeAgo(job.createdAt) + '</span>' +
+                        '<span class="job-card-apply" onclick="event.stopPropagation();openApplyModal(' + job.id + ',\'' + escapeHtml(job.title) + '\')">' +
+                            '<i class="fas fa-paper-plane"></i> 立即申请' +
+                        '</span>' +
+                    '</div>' +
+                '</div>';
+            }).join('');
+        } catch (err) {
+            grid.innerHTML = '<div class="job-empty"><i class="fas fa-exclamation-circle"></i><p>加载失败，请刷新重试</p></div>';
+        }
+    }
+
+    // ============ 岗位详情弹窗 ============
+    async function openJobDetail(jobId) {
+        var job = null;
+        try {
+            var res = await fetch('/api/jobs/' + jobId);
+            if (res.ok) {
+                var data = await res.json();
+                if (data.success) job = data.data;
+            }
+        } catch (e) {}
+        if (!job) {
+            job = FALLBACK_JOBS.find(function(j) { return j.id === jobId; });
+        }
+        if (!job) { showToast('岗位详情加载失败'); return; }
+        var typeMap = { fulltime: '全职', parttime: '兼职', intern: '实习' };
+        var html = '<h3 style="font-size:22px;margin-bottom:8px;">' + escapeHtml(job.title) + '</h3>' +
+            '<span class="job-type-tag type-' + job.type + '" style="margin-bottom:12px;display:inline-block;">' + (typeMap[job.type] || job.type) + '</span>' +
+            '<p style="font-size:18px;color:#333;font-weight:bold;margin-bottom:12px;">' + escapeHtml(job.clinicName) + '</p>' +
+            '<p style="font-size:20px;color:#ff6b35;font-weight:bold;margin-bottom:16px;">' + escapeHtml(job.salary) + '</p>' +
+            '<div style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:20px;color:#666;font-size:14px;">' +
+                '<span><i class="fas fa-map-marker-alt"></i> ' + escapeHtml(job.location || '不限') + '</span>' +
+                '<span><i class="fas fa-briefcase"></i> ' + escapeHtml(job.experience || '不限') + '</span>' +
+                '<span><i class="fas fa-graduation-cap"></i> ' + escapeHtml(job.education || '不限') + '</span>' +
+            '</div>';
+        if (job.description) html += '<div style="margin-bottom:16px;"><h4 style="font-size:16px;margin-bottom:8px;">岗位描述</h4><p style="color:#555;line-height:1.8;">' + escapeHtml(job.description) + '</p></div>';
+        if (job.requirements) html += '<div style="margin-bottom:16px;"><h4 style="font-size:16px;margin-bottom:8px;">任职要求</h4><p style="color:#555;line-height:1.8;white-space:pre-line;">' + escapeHtml(job.requirements) + '</p></div>';
+        if (job.benefits) html += '<div style="margin-bottom:16px;"><h4 style="font-size:16px;margin-bottom:8px;">福利待遇</h4><p style="color:#555;line-height:1.8;">' + escapeHtml(job.benefits) + '</p></div>';
+        if (job.contactPerson) html += '<p style="color:#888;font-size:14px;">联系人：' + escapeHtml(job.contactPerson) + '　' + escapeHtml(job.contactPhone) + '</p>';
+        html += '<button class="btn btn-primary btn-block" style="margin-top:16px;" onclick="document.getElementById(\'job-detail-modal\').style.display=\'none\';openApplyModal(' + job.id + ',\'' + escapeHtml(job.title) + '\')">' +
+            '<i class="fas fa-paper-plane"></i> 立即申请' +
+        '</button>';
+        document.getElementById('job-detail-content').innerHTML = html;
+        document.getElementById('job-detail-modal').style.display = 'flex';
+    }
+
+    // ============ 发布招聘 ============
+    function openPostJobModal() {
+        document.getElementById('post-job-modal').style.display = 'flex';
+    }
+
+    document.getElementById('post-job-form').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const title = document.getElementById('job-title').value.trim();
+        const clinicName = document.getElementById('job-clinic').value.trim();
+        if (!title || !clinicName) return showToast('岗位名称和诊所名称不能为空');
+
+        try {
+            const res = await fetch('/api/jobs', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    title, clinicName,
+                    salary: document.getElementById('job-salary').value.trim(),
+                    location: document.getElementById('job-location').value.trim(),
+                    experience: document.getElementById('job-experience').value.trim(),
+                    education: document.getElementById('job-education').value.trim(),
+                    type: document.getElementById('job-type').value,
+                    contactPerson: document.getElementById('job-contact').value.trim(),
+                    contactPhone: document.getElementById('job-phone').value.trim(),
+                    description: document.getElementById('job-desc').value.trim(),
+                    requirements: document.getElementById('job-requirements').value.trim(),
+                    benefits: document.getElementById('job-benefits').value.trim()
+                })
+            });
+            const data = await res.json();
+            if (data.success) {
+                showToast('岗位已发布，请等待管理员审核');
+                document.getElementById('post-job-modal').style.display = 'none';
+                this.reset();
+                loadJobs();
+            } else {
+                showToast(data.error || '发布失败');
+            }
+        } catch (err) {
+            showToast('网络错误，请稍后重试');
+        }
+    });
+
+    // ============ 求职申请 ============
+    function openApplyModal(jobId, jobTitle) {
+        document.getElementById('apply-job-id').value = jobId;
+        document.getElementById('apply-job-title').textContent = '申请岗位：' + jobTitle;
+        document.getElementById('apply-modal').style.display = 'flex';
+    }
+
+    document.getElementById('apply-form').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const jobId = document.getElementById('apply-job-id').value;
+        const applicantName = document.getElementById('apply-name').value.trim();
+        const applicantPhone = document.getElementById('apply-phone').value.trim();
+        if (!applicantName || !applicantPhone) return showToast('姓名和电话不能为空');
+        if (!/^1[3-9]\d{9}$/.test(applicantPhone)) return showToast('手机号格式不正确');
+
+        try {
+            const res = await fetch('/api/jobs/' + jobId + '/apply', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    applicantName, applicantPhone,
+                    applicantEmail: document.getElementById('apply-email').value.trim(),
+                    experience: document.getElementById('apply-experience').value.trim(),
+                    resume: document.getElementById('apply-resume').value.trim()
+                })
+            });
+            const data = await res.json();
+            if (data.success) {
+                showToast('申请已提交，招聘方将尽快联系您');
+                document.getElementById('apply-modal').style.display = 'none';
+                this.reset();
+            } else {
+                showToast(data.error || '申请失败');
+            }
+        } catch (err) {
+            showToast('网络错误，请稍后重试');
+        }
+    });
+
+    // ============ 工具函数 ============
+    function escapeHtml(str) {
+        const div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+    }
+
+    function formatTimeAgo(dateStr) {
+        const now = new Date();
+        const date = new Date(dateStr);
+        const diff = now - date;
+        const minutes = Math.floor(diff / 60000);
+        const hours = Math.floor(diff / 3600000);
+        const days = Math.floor(diff / 86400000);
+        if (minutes < 1) return '刚刚';
+        if (minutes < 60) return minutes + '分钟前';
+        if (hours < 24) return hours + '小时前';
+        if (days < 30) return days + '天前';
+        return Math.floor(days / 30) + '个月前';
+    }
+
+    // ============ 搜索和筛选 ============
+    document.getElementById('job-search').addEventListener('input', function() {
+        currentJobSearch = this.value;
+        loadJobs();
+    });
+    document.getElementById('job-type-filter').addEventListener('change', function() {
+        currentJobType = this.value;
+        loadJobs();
+    });
+
+    // ============ 弹窗点击关闭 ============
+    document.querySelectorAll('.modal-overlay').forEach(overlay => {
+        overlay.addEventListener('click', function(e) {
+            if (e.target === this) this.style.display = 'none';
+        });
+    });
+
+    // ============ 购物车徽标 ============
+    function updateCartBadge() {
+        try {
+            const cart = JSON.parse(localStorage.getItem('pet_cart') || '[]');
+            const total = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const badge = document.querySelector('.cart-count');
+            if (badge) {
+                badge.textContent = total;
+                badge.style.display = total > 0 ? 'flex' : 'none';
+            }
+        } catch(e) {}
+    }
+
+    // ============ 初始化 ============
+    document.addEventListener('DOMContentLoaded', () => {
+        loadJobs();
+        updateCartBadge();
+    });
+    </script>
+</body>
+</html>

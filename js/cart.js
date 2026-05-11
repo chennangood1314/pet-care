@@ -83,7 +83,9 @@ function renderCartBody() {
     total += item.price * item.quantity;
     return `
       <div class="cart-item" data-id="${item.id}">
-        <div class="cart-item-img"><img src="${item.img}" alt="${item.name}" width="48" height="48" loading="lazy"></div>
+        <div class="cart-item-img">
+          <img src="${item.img || 'https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=120&h=120&fit=crop'}" alt="${item.name}" loading="lazy" style="width:100%;height:100%;object-fit:cover;">
+        </div>
         <div class="cart-item-info">
           <p class="cart-item-name">${item.name}</p>
           <p class="cart-item-price">¥${item.price}</p>
@@ -138,7 +140,9 @@ function renderOrderSummary() {
     subtotal += lineTotal;
     return `
       <div class="order-item">
-        <span class="order-item-img"><img src="${item.img}" alt="${item.name}" width="40" height="40" loading="lazy"></span>
+        <span class="order-item-img">
+          <img src="${item.img || 'https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=80&h=80&fit=crop'}" alt="${item.name}" loading="lazy" style="width:100%;height:100%;object-fit:cover;">
+        </span>
         <div class="order-item-detail">
           <span class="order-item-name">${item.name}</span>
           <span class="order-item-qty">x${item.quantity}</span>

@@ -4,6 +4,9 @@
     { "source": "/api/admin/orders", "destination": "/api/admin/data?section=orders" },
     { "source": "/api/admin/users", "destination": "/api/admin/data?section=users" },
     { "source": "/api/admin/revenue", "destination": "/api/admin/data?section=revenue" },
+    { "source": "/api/jobs/([^/]+)/apply", "destination": "/api/jobs?action=apply&id=$1" },
+    { "source": "/api/jobs/([^/]+)", "destination": "/api/jobs?id=$1" },
+    { "source": "/api/experts/(.*)", "destination": "/api/experts" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }

@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>宠物新手助手 - 科学养宠每一天</title>
+    <meta name="description" content="宠物新手助手提供每日养护提醒、AI健康问诊、专家在线咨询、宠物商城、招聘求职等一站式宠物服务平台。">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap">
@@ -22,8 +23,11 @@
                 <li><a href="#dashboard"><i class="fas fa-calendar-alt"></i> 每日养护</a></li>
                 <li><a href="#guide"><i class="fas fa-book"></i> 新手指南</a></li>
                 <li><a href="#training"><i class="fas fa-graduation-cap"></i> 训练方法</a></li>
+                <li><a href="#ai-consultation"><i class="fas fa-robot"></i> AI问诊</a></li>
+                <li><a href="experts.html"><i class="fas fa-user-md"></i> 专家问诊</a></li>
                 <li><a href="#health"><i class="fas fa-heartbeat"></i> 健康管理</a></li>
                 <li><a href="#store"><i class="fas fa-store"></i> 宠物商城</a></li>
+                <li><a href="jobs.html"><i class="fas fa-briefcase"></i> 招聘中心</a></li>
                 <li><a href="#profile"><i class="fas fa-user"></i> 我的宠物</a></li>
                 <li class="nav-cart">
                     <a href="#cart">
@@ -52,10 +56,29 @@
                     </div>
                 </div>
                 <div class="hero-image">
-                    <img src="https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=500&h=400&fit=crop&crop=center"
-                         alt="可爱的小狗和小猫"
-                         loading="eager"
-                         width="500" height="400">
+                    <div class="hero-slideshow" id="hero-slideshow">
+                        <div class="hero-slide active">
+                            <img src="https://images.dog.ceo/breeds/retriever-golden/n02099601_3388.jpg" alt="金毛寻回犬" loading="eager">
+                            <span class="hero-breed-tag">金毛寻回犬</span>
+                        </div>
+                        <div class="hero-slide">
+                            <img src="https://images.dog.ceo/breeds/labrador/n02099712_3854.jpg" alt="拉布拉多" loading="lazy">
+                            <span class="hero-breed-tag">拉布拉多</span>
+                        </div>
+                        <div class="hero-slide">
+                            <img src="https://images.dog.ceo/breeds/samoyed/n02111889_3345.jpg" alt="萨摩耶" loading="lazy">
+                            <span class="hero-breed-tag">萨摩耶</span>
+                        </div>
+                        <div class="hero-slide">
+                            <img src="https://images.dog.ceo/breeds/corgi-cardigan/n02113186_225.jpg" alt="柯基犬" loading="lazy">
+                            <span class="hero-breed-tag">柯基犬</span>
+                        </div>
+                        <div class="hero-slide">
+                            <img src="https://images.dog.ceo/breeds/husky/n02110185_2736.jpg" alt="哈士奇" loading="lazy">
+                            <span class="hero-breed-tag">哈士奇</span>
+                        </div>
+                    </div>
+                    <div class="hero-dots" id="hero-dots"></div>
                 </div>
             </div>
         </section>
@@ -65,33 +88,84 @@
             <div class="container">
                 <h2 class="section-title">核心功能</h2>
                 <div class="features-grid">
-                    <div class="feature-card animate-on-scroll">
+                    <div class="feature-card animate-on-scroll" onclick="navigateTo('dashboard')" title="点击进入每日养护">
                         <div class="feature-icon">
                             <i class="fas fa-bell"></i>
                         </div>
                         <h3>每日提醒</h3>
                         <p>定时提醒喂食、喝水、排便等日常养护任务，养成良好养宠习惯</p>
+                        <span class="feature-action">点击进入 <i class="fas fa-arrow-right"></i></span>
                     </div>
-                    <div class="feature-card animate-on-scroll">
+                    <div class="feature-card animate-on-scroll" onclick="navigateTo('dashboard')" title="点击查看打卡进度">
                         <div class="feature-icon">
                             <i class="fas fa-check-circle"></i>
                         </div>
                         <h3>打卡系统</h3>
                         <p>记录每日养护完成情况，可视化展示养宠进度和习惯养成</p>
+                        <span class="feature-action">点击进入 <i class="fas fa-arrow-right"></i></span>
                     </div>
-                    <div class="feature-card animate-on-scroll">
+                    <div class="feature-card animate-on-scroll" onclick="navigateTo('health')" title="点击查看健康指南">
                         <div class="feature-icon">
                             <i class="fas fa-first-aid"></i>
                         </div>
                         <h3>问题应对</h3>
                         <p>常见问题快速指南，紧急情况应对措施，让新手不再慌张</p>
+                        <span class="feature-action">点击进入 <i class="fas fa-arrow-right"></i></span>
                     </div>
-                    <div class="feature-card animate-on-scroll">
+                    <div class="feature-card animate-on-scroll" onclick="navigateTo('training')" title="点击查看训练教程">
                         <div class="feature-icon">
                             <i class="fas fa-brain"></i>
                         </div>
                         <h3>科学训练</h3>
                         <p>宠物行为训练方法，养成良好习惯，建立健康的主宠关系</p>
+                        <span class="feature-action">点击进入 <i class="fas fa-arrow-right"></i></span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- AI 智能问诊 -->
+        <section id="ai-consultation" class="ai-consultation">
+            <div class="container">
+                <h2 class="section-title"><i class="fas fa-robot"></i> AI 宠物健康问诊</h2>
+                <p class="ai-subtitle">输入宠物症状或健康问题，智能助手为您提供专业建议</p>
+                <div class="ai-chat-container">
+                    <div class="ai-chat-header">
+                        <div class="ai-avatar">
+                            <i class="fas fa-stethoscope"></i>
+                        </div>
+                        <div>
+                            <strong>宠物健康助手</strong>
+                            <span style="font-size:12px;color:#888;display:block;">AI驱动 · 仅供参考 · 紧急情况请就医</span>
+                        </div>
+                    </div>
+                    <div class="ai-chat-body" id="ai-chat-body">
+                        <div class="ai-message ai-bot">
+                            <div class="ai-bubble">
+                                你好！我是宠物健康助手 🐾<br><br>
+                                我可以帮您初步了解以下问题：<br>
+                                • 呕吐/腹泻怎么办<br>
+                                • 疫苗和驱虫安排<br>
+                                • 皮肤瘙痒/脱毛问题<br>
+                                • 饮食禁忌和营养<br>
+                                • 行为问题（乱咬/乱叫/乱拉）<br>
+                                • 老年宠物护理<br>
+                                • 绝育手术须知<br><br>
+                                请描述您宠物的症状或选择下方快捷问题～
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ai-quick-questions">
+                        <button class="ai-quick-btn">猫咪呕吐怎么办</button>
+                        <button class="ai-quick-btn">狗狗拉肚子</button>
+                        <button class="ai-quick-btn">疫苗什么时候打</button>
+                        <button class="ai-quick-btn">皮肤瘙痒脱毛</button>
+                        <button class="ai-quick-btn">宠物不能吃什么</button>
+                        <button class="ai-quick-btn">驱虫多久一次</button>
+                    </div>
+                    <div class="ai-input-row">
+                        <input type="text" id="ai-input" class="ai-input" placeholder="输入宠物症状或健康问题..." autocomplete="off">
+                        <button id="ai-send-btn" class="ai-send-btn"><i class="fas fa-paper-plane"></i></button>
                     </div>
                 </div>
             </div>
@@ -127,17 +201,23 @@
                 <h2 class="section-title">选择您的宠物类型</h2>
                 <div class="pet-options">
                     <div class="pet-option active" data-pet="dog">
-                        <img src="https://images.unsplash.com/photo-1552053831-71594a27632d?w=160&h=160&fit=crop&crop=center" alt="狗狗" width="80" height="80" loading="lazy">
+                        <div class="pet-img">
+                            <img src="https://images.unsplash.com/photo-1552053831-71594a27632d?w=160&h=160&fit=crop&crop=center" alt="狗狗" loading="lazy">
+                        </div>
                         <h3>狗狗</h3>
                         <p>幼犬/成犬养护指南</p>
                     </div>
                     <div class="pet-option animate-on-scroll" data-pet="cat">
-                        <img src="https://images.unsplash.com/photo-1514888286974-9d38e62c9b03?w=160&h=160&fit=crop&crop=center" alt="猫咪" width="80" height="80" loading="lazy">
+                        <div class="pet-img">
+                            <img src="https://images.unsplash.com/photo-1514888286974-9e4f4a6e3cf2?w=160&h=160&fit=crop&crop=center" alt="猫咪" loading="lazy">
+                        </div>
                         <h3>猫咪</h3>
                         <p>幼猫/成猫养护指南</p>
                     </div>
                     <div class="pet-option animate-on-scroll" data-pet="other">
-                        <img src="https://images.unsplash.com/photo-1585110396000-d9c6fac9e8a7?w=160&h=160&fit=crop&crop=center" alt="小宠物" width="80" height="80" loading="lazy">
+                        <div class="pet-img">
+                            <img src="https://images.unsplash.com/photo-1535241749838-299277b6305f?w=160&h=160&fit=crop&crop=center" alt="其他宠物" loading="lazy">
+                        </div>
                         <h3>其他宠物</h3>
                         <p>兔子、仓鼠等小宠物</p>
                     </div>
@@ -321,37 +401,49 @@
                 <h2 class="section-title">宠物训练方法</h2>
                 <div class="training-cards">
                     <div class="training-card animate-on-scroll">
-                        <img src="https://images.unsplash.com/photo-1583337130417-3346a1be7992?w=400&h=250&fit=crop&crop=center" alt="如厕训练" loading="lazy" width="400" height="200">
+                        <div class="training-img">
+                            <img src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=400&h=200&fit=crop" alt="如厕训练" loading="lazy">
+                        </div>
                         <h3>如厕训练</h3>
                         <p>固定地点、定时引导、及时奖励，7天养成良好排便习惯</p>
                         <button class="training-link" onclick="openTrainingDetail('toilet')">查看详细教程 <i class="fas fa-arrow-right"></i></button>
                     </div>
                     <div class="training-card animate-on-scroll">
-                        <img src="https://images.unsplash.com/photo-1543466835-6f1dc7c1cd5c?w=400&h=250&fit=crop&crop=center" alt="进食训练" loading="lazy" width="400" height="200">
+                        <div class="training-img">
+                            <img src="https://images.unsplash.com/photo-1601758222941-3e8c5a0f4b5e?w=400&h=200&fit=crop" alt="进食训练" loading="lazy">
+                        </div>
                         <h3>进食训练</h3>
                         <p>定时定量、不随意喂食、建立正确的进食礼仪</p>
                         <button class="training-link" onclick="openTrainingDetail('feeding')">查看详细教程 <i class="fas fa-arrow-right"></i></button>
                     </div>
                     <div class="training-card animate-on-scroll">
-                        <img src="https://images.unsplash.com/photo-1548199973-03f56ce3f8fe?w=400&h=250&fit=crop&crop=center" alt="社交训练" loading="lazy" width="400" height="200">
+                        <div class="training-img">
+                            <img src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=400&h=200&fit=crop" alt="社交训练" loading="lazy">
+                        </div>
                         <h3>社交训练</h3>
                         <p>接触不同环境、人和其他动物，培养友好性格</p>
                         <button class="training-link" onclick="openTrainingDetail('social')">查看详细教程 <i class="fas fa-arrow-right"></i></button>
                     </div>
                     <div class="training-card animate-on-scroll">
-                        <img src="https://images.unsplash.com/photo-1587300001388-1f5e5ed1f2e5?w=400&h=250&fit=crop&crop=center" alt="基础口令训练" loading="lazy" width="400" height="200">
+                        <div class="training-img">
+                            <img src="https://images.unsplash.com/photo-1535930891776-0c2dfb7fda06?w=400&h=200&fit=crop" alt="基础口令训练" loading="lazy">
+                        </div>
                         <h3>基础口令训练</h3>
                         <p>坐下、趴下、等待、过来 — 四大基础口令训练法</p>
                         <button class="training-link" onclick="openTrainingDetail('commands')">查看详细教程 <i class="fas fa-arrow-right"></i></button>
                     </div>
                     <div class="training-card animate-on-scroll">
-                        <img src="https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?w=400&h=250&fit=crop&crop=center" alt="牵引绳随行" loading="lazy" width="400" height="200">
+                        <div class="training-img">
+                            <img src="https://images.unsplash.com/photo-1553882809-a677e5c3c2da?w=400&h=200&fit=crop" alt="牵引绳随行" loading="lazy">
+                        </div>
                         <h3>牵引绳随行</h3>
                         <p>防止爆冲、培养随行习惯，让散步更轻松愉快</p>
                         <button class="training-link" onclick="openTrainingDetail('leash')">查看详细教程 <i class="fas fa-arrow-right"></i></button>
                     </div>
                     <div class="training-card animate-on-scroll">
-                        <img src="https://images.unsplash.com/photo-1561037404611-2c24ce1e5e0c?w=400&h=250&fit=crop&crop=center" alt="笼内训练" loading="lazy" width="400" height="200">
+                        <div class="training-img">
+                            <img src="https://images.unsplash.com/photo-1541595597-1550b278ef7c?w=400&h=200&fit=crop" alt="笼内训练" loading="lazy">
+                        </div>
                         <h3>笼内训练</h3>
                         <p>建立宠物专属安全区，有效缓解分离焦虑</p>
                         <button class="training-link" onclick="openTrainingDetail('crate')">查看详细教程 <i class="fas fa-arrow-right"></i></button>

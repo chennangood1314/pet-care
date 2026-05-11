@@ -15,6 +15,12 @@ document.addEventListener('DOMContentLoaded', function() {
     // 初始化滚动动画
     initScrollAnimations();
 
+    // 初始化 Hero 轮播
+    initHeroSlideshow();
+
+    // 初始化 AI 问诊
+    initAIConsultation();
+
     // 显示欢迎通知
     const hasVisited = storage.get('hasVisited', false);
     if (!hasVisited) {
@@ -65,9 +71,9 @@ function initNavigation() {
 
     navLinks.forEach(link => {
         link.addEventListener('click', function(e) {
-            e.preventDefault();
             const targetId = this.getAttribute('href');
-            if (targetId.startsWith('#')) {
+            if (targetId && targetId.startsWith('#')) {
+                e.preventDefault();
                 const targetSection = document.querySelector(targetId);
                 if (targetSection) {
                     window.scrollTo({
@@ -278,34 +284,6 @@ function showToast(message) {
     const toast = document.createElement('div');
     toast.className = 'toast-message';
     toast.textContent = message;
-    toast.style.cssText = `
-        position: fixed;
-        top: 90px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: #333;
-        color: white;
-        padding: 12px 28px;
-        border-radius: 24px;
-        font-size: 15px;
-        z-index: 9999;
-        animation: toastIn 0.3s ease, toastOut 0.3s ease 2.5s forwards;
-        white-space: normal;
-        max-width: 90vw;
-        text-align: center;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-    `;
-
-    if (!document.getElementById('toast-styles')) {
-        const style = document.createElement('style');
-        style.id = 'toast-styles';
-        style.textContent = `
-            @keyframes toastIn { from { opacity:0; transform:translateX(-50%) translateY(-10px); } to { opacity:1; transform:translateX(-50%) translateY(0); } }
-            @keyframes toastOut { from { opacity:1; } to { opacity:0; } }
-        `;
-        document.head.appendChild(style);
-    }
-
     document.body.appendChild(toast);
     setTimeout(() => toast.remove(), 3000);
 }
@@ -412,6 +390,216 @@ function openSymptomDetail(name, level, advice) {
         if (e.target === modal) modal.style.display = 'none';
     };
 }
+
+// ========== Hero 轮播 ==========
+function initHeroSlideshow() {
+    const slideshow = document.getElementById('hero-slideshow');
+    const dotsContainer = document.getElementById('hero-dots');
+    if (!slideshow || !dotsContainer) return;
+
+    const slides = slideshow.querySelectorAll('.hero-slide');
+    if (slides.length === 0) return;
+
+    let current = 0;
+    let timer;
+
+    // 创建导航点
+    slides.forEach((_, i) => {
+        const dot = document.createElement('span');
+        dot.className = 'dot' + (i === 0 ? ' active' : '');
+        dot.addEventListener('click', () => goTo(i));
+        dotsContainer.appendChild(dot);
+    });
+
+    const dots = dotsContainer.querySelectorAll('.dot');
+
+    function goTo(index) {
+        slides[current].classList.remove('active');
+        dots[current].classList.remove('active');
+        current = index;
+        slides[current].classList.add('active');
+        dots[current].classList.add('active');
+        resetTimer();
+    }
+
+    function next() {
+        goTo((current + 1) % slides.length);
+    }
+
+    function resetTimer() {
+        clearInterval(timer);
+        timer = setInterval(next, 4000);
+    }
+
+    resetTimer();
+
+    // 触摸滑动支持
+    let touchStartX = 0;
+    slideshow.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; });
+    slideshow.addEventListener('touchend', e => {
+        const diff = touchStartX - e.changedTouches[0].clientX;
+        if (Math.abs(diff) > 40) {
+            diff > 0 ? goTo((current + 1) % slides.length) : goTo((current - 1 + slides.length) % slides.length);
+        }
+    });
+}
+
+// ========== AI 问诊 ==========
+const AI_KNOWLEDGE = {
+    '呕吐': {
+        answer: '宠物呕吐可能由多种原因引起：\n\n1. <strong>进食过快</strong>：使用慢食碗，少量多餐\n2. <strong>食物不耐受</strong>：近期是否换粮？换粮需7天过渡\n3. <strong>吞入异物</strong>：检查玩具、是否有小物件缺失\n4. <strong>肠胃炎/胰腺炎</strong>：如持续呕吐+精神差\n\n🚨 <strong>需立即就医的情况：</strong>\n• 24小时内呕吐超过3次\n• 呕吐物带血（红色/咖啡色）\n• 伴随腹泻、精神萎靡、拒绝饮水\n• 幼犬/幼猫呕吐（脱水风险高）',
+        tags: ['呕吐', '吐', '反胃', '恶心']
+    },
+    '腹泻': {
+        answer: '宠物腹泻常见处理：\n\n1. <strong>禁食6-12小时</strong>（不禁水），让肠胃休息\n2. <strong>少量喂水</strong>，防止脱水\n3. <strong>恢复饮食</strong>：白水煮鸡胸肉+白米饭，清淡易消化\n4. <strong>益生菌</strong>调理肠道菌群\n\n🚨 <strong>需立即就医的情况：</strong>\n• 腹泻超过24小时\n• 便中带血（鲜红/暗红/黑色）\n• 幼宠腹泻超过12小时\n• 伴随呕吐、发烧、精神萎靡',
+        tags: ['腹泻', '拉肚子', '拉稀', '软便', '便血']
+    },
+    '疫苗': {
+        answer: '宠物疫苗接种计划：\n\n<strong>幼犬：</strong>\n• 第8周：第一针多联疫苗（犬六联）\n• 第12周：第二针多联疫苗\n• 第16周：第三针多联+狂犬疫苗\n• 每年：加强针各一针\n\n<strong>幼猫：</strong>\n• 第8周：第一针猫三联\n• 第12周：第二针猫三联\n• 第16周：第三针猫三联+狂犬\n• 每年：加强针\n\n⚠️ <strong>注意：</strong>疫苗后可能出现1-2天嗜睡、食欲差，属正常反应。如面部肿胀或严重呕吐需立即就医。',
+        tags: ['疫苗', '打针', '防疫', '免疫', '狂犬', '多联']
+    },
+    '驱虫': {
+        answer: '宠物驱虫方案：\n\n<strong>体外驱虫（跳蚤/蜱虫）：</strong>\n• 频率：每月一次\n• 方式：滴剂（后颈皮肤）或喷剂\n• 品牌参考：福来恩、大宠爱\n\n<strong>体内驱虫（蛔虫/绦虫等）：</strong>\n• 频率：每3个月一次\n• 方式：口服片剂\n• 品牌参考：拜耳、海乐妙\n\n<strong>心丝虫预防：</strong>\n• 从第12周开始，每月一次\n\n⚠️ 驱虫后注意观察便便是否有虫体排出。不同体重对应不同剂量，请按说明书使用。',
+        tags: ['驱虫', '跳蚤', '蜱虫', '蛔虫', '心丝虫', '寄生虫']
+    },
+    '皮肤': {
+        answer: '宠物皮肤问题分析：\n\n<strong>常见症状及原因：</strong>\n• 瘙痒+红斑 → 过敏（食物/环境）/真菌感染\n• 脱毛+皮屑 → 真菌（猫癣/狗癣）/螨虫\n• 局部结痂 → 细菌感染/外伤\n• 耳缘增厚+黑色分泌物 → 耳螨\n\n<strong>家庭处理：</strong>\n1. 戴伊丽莎白圈，防止舔咬加重\n2. 保持环境干燥清洁\n3. 不要自行使用人类药膏\n\n🚨 尽快就医确诊（可能需要皮肤镜检），不要拖延以免扩散。',
+        tags: ['皮肤', '瘙痒', '脱毛', '皮屑', '猫癣', '狗癣', '过敏', '红斑', '湿疹']
+    },
+    '饮食': {
+        answer: '宠物饮食营养指南：\n\n<strong>不能吃的食物（有毒！）：</strong>\n🍫 巧克力 → 心脏毒性\n🍇 葡萄/葡萄干 → 肾衰竭\n🧅 洋葱/大蒜 → 溶血性贫血\n🥑 牛油果 → 呕吐腹泻\n🍺 酒精/咖啡因 → 中毒\n🌰 木糖醇 → 低血糖/肝损伤\n\n<strong>每日喂食量参考：</strong>\n• 幼犬：体重的3-5%，分3-4餐\n• 成犬：体重的2-3%，分2餐\n• 零食不超过总食量的10%\n\n⚠️ 换粮需要7天过渡：旧粮比例从75%逐步减到0%。',
+        tags: ['饮食', '食物', '喂食', '吃什么', '不能吃', '巧克力', '狗粮', '猫粮', '营养']
+    },
+    '行为': {
+        answer: '宠物常见行为问题解答：\n\n<strong>乱咬东西：</strong>\n• 幼犬换牙期正常（3-6月龄）\n• 提供磨牙玩具，及时引导\n• 咬人时大叫一声停止互动，让ta知道"咬人=游戏结束"\n\n<strong>乱叫/吠叫：</strong>\n• 排除饥饿、需排便、无聊等原因\n• 不要惩罚，给予充足运动和精神刺激\n• 训练"安静"口令\n\n<strong>分离焦虑：</strong>\n• 笼内训练（建立安全区）\n• 短时间离开→逐渐延长\n• 离开/回来时不夸张互动\n\n<strong>乱拉乱尿：</strong>\n• 检查泌尿道感染（需兽医诊断）\n• 绝育可减少标记行为\n• 彻底清洁排泄区域（专用酶清洁剂）',
+        tags: ['行为', '乱咬', '乱叫', '吠叫', '分离焦虑', '乱拉', '乱尿', '咬人', '扑人']
+    },
+    '老年': {
+        answer: '老年宠物护理要点（小型犬>10岁/大型犬>8岁/猫>11岁）：\n\n<strong>饮食调整：</strong>\n• 换为老年配方粮（低磷、适量蛋白）\n• 补充关节保健品（葡萄糖胺、软骨素）\n• 控制体重（肥胖加重关节负担）\n\n<strong>体检频率：</strong>\n• 每6个月一次基础体检\n• 每年一次全面体检（血检+尿检+B超+X光）\n\n<strong>日常注意：</strong>\n• 防滑地面（老年犬猫容易髋关节问题）\n• 调整食盆/水盆高度\n• 注意口腔健康（牙结石→心脏病风险）\n• 观察饮水量和排尿量变化（肾脏病早期信号）',
+        tags: ['老年', '老龄', '年纪大', '关节炎', '关节', '年检', '体检']
+    },
+    '绝育': {
+        answer: '宠物绝育常见问题：\n\n<strong>推荐时间：</strong>\n• 犬：6-12月龄（大型犬稍晚）\n• 猫：5-8月龄\n\n<strong>益处：</strong>\n• 母犬/猫：预防子宫蓄脓、乳腺瘤\n• 公犬/猫：减少标记行为、降低前列腺疾病\n• 降低走失风险（减少寻找配偶行为）\n\n<strong>术后护理：</strong>\n• 戴伊丽莎白圈7-10天\n• 限制剧烈运动\n• 保持伤口干燥\n• 按时拆线（如需拆线）\n\n⚠️ 绝育前需禁食8小时、禁水4小时。',
+        tags: ['绝育', '手术', '结扎', '阉割', '绝育手术', '做手术']
+    },
+    '洗澡': {
+        answer: '宠物洗澡指南：\n\n<strong>洗澡频率：</strong>\n• 狗狗：2-4周一次（视品种和活动量）\n• 猫咪：一般不需要洗澡（猫咪自洁能力强），长毛猫可2-3月洗一次\n• 短毛室内猫：6个月-1年一次\n\n<strong>注意事项：</strong>\n• 使用宠物专用沐浴露（人用沐浴露pH不同会伤皮肤）\n• 水温37-39°C（用手肘试温）\n• 从后往前洗，头部最后\n• 耳朵塞棉花防进水\n• 彻底冲洗干净（残留沐浴露会导致瘙痒）\n• 吹干吹透（潮湿→皮肤病）\n\n⚠️ 疫苗后一周内、生病期间、刚吃饱时不要洗澡。',
+        tags: ['洗澡', '清洁', '沐浴', '卫生', '臭味', '体味']
+    }
+};
+
+function initAIConsultation() {
+    const section = document.getElementById('ai-consultation');
+    if (!section) return;
+
+    const chatBody = document.getElementById('ai-chat-body');
+    const input = document.getElementById('ai-input');
+    const sendBtn = document.getElementById('ai-send-btn');
+    const quickBtns = document.querySelectorAll('.ai-quick-btn');
+
+    if (!chatBody) return;
+
+    function addMessage(text, type) {
+        const div = document.createElement('div');
+        div.className = 'ai-message ai-' + type;
+        div.innerHTML = '<div class="ai-bubble">' + text.replace(/\n/g, '<br>') + '</div>';
+        chatBody.appendChild(div);
+        chatBody.scrollTop = chatBody.scrollHeight;
+        return div;
+    }
+
+    function showTyping() {
+        const div = document.createElement('div');
+        div.className = 'ai-message ai-bot ai-typing';
+        div.innerHTML = '<div class="ai-bubble"><span class="typing-dots"><span></span><span></span><span></span></span></div>';
+        chatBody.appendChild(div);
+        chatBody.scrollTop = chatBody.scrollHeight;
+        return div;
+    }
+
+    function findAnswer(query) {
+        const q = query.toLowerCase();
+        let bestMatch = null;
+        let bestScore = 0;
+
+        for (const [key, data] of Object.entries(AI_KNOWLEDGE)) {
+            // 检查标题匹配
+            if (q.includes(key)) return data;
+
+            // 检查标签匹配
+            for (const tag of data.tags) {
+                if (q.includes(tag)) {
+                    const score = tag.length;
+                    if (score > bestScore) {
+                        bestScore = score;
+                        bestMatch = data;
+                    }
+                }
+            }
+        }
+        return bestMatch;
+    }
+
+    function handleQuery(query) {
+        if (!query.trim()) return;
+
+        // 用户消息
+        addMessage(query, 'user');
+
+        // 显示输入中
+        const typingEl = showTyping();
+        input.value = '';
+        input.disabled = true;
+        sendBtn.disabled = true;
+
+        // 模拟AI思考
+        setTimeout(() => {
+            typingEl.remove();
+
+            const result = findAnswer(query);
+            if (result) {
+                addMessage(result.answer, 'bot');
+            } else {
+                addMessage(
+                    '感谢您的咨询！根据您的描述，建议：<br><br>'
+                    + '1. <strong>观察记录</strong>：仔细记录宠物症状（出现时间、频率、严重程度）<br>'
+                    + '2. <strong>基础检查</strong>：检查精神状态、食欲、饮水量、体温（正常38-39°C）<br>'
+                    + '3. <strong>线上咨询</strong>：建议预约在线兽医进行视频问诊<br>'
+                    + '4. <strong>及时就医</strong>：如症状持续或加重，请尽快到宠物医院就诊<br><br>'
+                    + '💡 <strong>提示：</strong>您可以尝试描述具体症状（如：呕吐、腹泻、皮肤瘙痒、疫苗等），我会提供更有针对性的建议。',
+                    'bot'
+                );
+            }
+
+            input.disabled = false;
+            sendBtn.disabled = false;
+            input.focus();
+        }, 1200 + Math.random() * 800);
+    }
+
+    // 发送按钮
+    if (sendBtn && input) {
+        sendBtn.addEventListener('click', () => handleQuery(input.value));
+        input.addEventListener('keydown', e => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                handleQuery(input.value);
+            }
+        });
+    }
+
+    // 快捷问题
+    quickBtns.forEach(btn => {
+        btn.addEventListener('click', () => handleQuery(btn.textContent.trim()));
+    });
+}
+
+// 点击弹窗遮罩关闭
+document.addEventListener('click', function(e) {
+  if (e.target.classList.contains('modal-overlay')) {
+    e.target.style.display = 'none';
+  }
+});
 
 // 导出全局函数
 window.openTrainingDetail = openTrainingDetail;

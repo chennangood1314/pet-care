@@ -11,7 +11,7 @@ const PRODUCTS = [
     price: 128, originalPrice: 168,
     rating: 4.9, sales: 12860,
     badge: '热销',
-    img: 'https://images.unsplash.com/photo-1568640347025-5d5f3e6e6c78?w=400&h=300&fit=crop&crop=center',
+    img: 'https://images.unsplash.com/photo-1589924113186-b91aa261ae7d?w=400&h=300&fit=crop',
     tags: ['进口', '天然', '无谷物']
   },
   {
@@ -21,7 +21,7 @@ const PRODUCTS = [
     price: 158, originalPrice: 198,
     rating: 4.8, sales: 9320,
     badge: '推荐',
-    img: 'https://images.unsplash.com/photo-1574158482683-c9a6c0e70c5f?w=400&h=300&fit=crop&crop=center',
+    img: 'https://images.unsplash.com/photo-1574153938451-3c62a40b3c21?w=400&h=300&fit=crop',
     tags: ['进口', '高蛋白']
   },
   {
@@ -31,7 +31,7 @@ const PRODUCTS = [
     price: 168, originalPrice: 220,
     rating: 4.7, sales: 7640,
     badge: '特惠',
-    img: 'https://images.unsplash.com/photo-1589924067326-9e5f1c6d1c2f?w=400&h=300&fit=crop&crop=center',
+    img: 'https://images.unsplash.com/photo-1568640341199-13e0dc28b95c?w=400&h=300&fit=crop',
     tags: ['国产优选', '消化好']
   },
   {
@@ -41,7 +41,7 @@ const PRODUCTS = [
     price: 88, originalPrice: 110,
     rating: 4.9, sales: 15200,
     badge: '爆款',
-    img: 'https://images.unsplash.com/photo-1513360371669-4a2f4a0d0a1a?w=400&h=300&fit=crop&crop=center',
+    img: 'https://images.unsplash.com/photo-1600489000022-c20865ae1c47?w=400&h=300&fit=crop',
     tags: ['冻干', '高肉量', '无添加']
   },
   // 健康护理
@@ -52,7 +52,7 @@ const PRODUCTS = [
     price: 65, originalPrice: 88,
     rating: 4.9, sales: 23100,
     badge: '必备',
-    img: 'https://images.unsplash.com/photo-1629909613654-28e377c37b09?w=400&h=300&fit=crop&crop=center',
+    img: 'https://images.unsplash.com/photo-1583511655826-2f0d0e0a8c50?w=400&h=300&fit=crop',
     tags: ['进口', '驱虫', '防跳蚤']
   },
   {
@@ -62,7 +62,7 @@ const PRODUCTS = [
     price: 48, originalPrice: 68,
     rating: 4.7, sales: 8800,
     badge: '',
-    img: 'https://images.unsplash.com/photo-1516734212186-dc63d0f2a7c4?w=400&h=300&fit=crop&crop=center',
+    img: 'https://images.unsplash.com/photo-1535930891776-0c2dfb7fda06?w=400&h=300&fit=crop',
     tags: ['温和', '防感染']
   },
   {
@@ -72,7 +72,7 @@ const PRODUCTS = [
     price: 98, originalPrice: 128,
     rating: 4.8, sales: 11400,
     badge: '推荐',
-    img: 'https://images.unsplash.com/photo-1583337426798-4f6b1f0b4e01?w=400&h=300&fit=crop&crop=center',
+    img: 'https://images.unsplash.com/photo-1628009368231-bb8333c4c0ac?w=400&h=300&fit=crop',
     tags: ['益生菌', '肠胃好']
   },
   {
@@ -82,7 +82,7 @@ const PRODUCTS = [
     price: 39, originalPrice: 59,
     rating: 4.6, sales: 6700,
     badge: '',
-    img: 'https://images.unsplash.com/photo-1583511655057-6f4b0f1b4e01?w=400&h=300&fit=crop&crop=center',
+    img: 'https://images.unsplash.com/photo-1516733962614-7b5e26b5b12d?w=400&h=300&fit=crop',
     tags: ['安全', '易操作']
   },
   // 玩具用品
@@ -93,7 +93,7 @@ const PRODUCTS = [
     price: 29, originalPrice: 45,
     rating: 4.8, sales: 19800,
     badge: '超值',
-    img: 'https://images.unsplash.com/photo-1545249390-6bdfb7b3e4a7?w=400&h=300&fit=crop&crop=center',
+    img: 'https://images.unsplash.com/photo-1545243424-0ce743321e11?w=400&h=300&fit=crop',
     tags: ['互动', '耐用']
   },
   {
@@ -103,7 +103,7 @@ const PRODUCTS = [
     price: 35, originalPrice: 55,
     rating: 4.7, sales: 14200,
     badge: '',
-    img: 'https://images.unsplash.com/photo-1535295973756-1e3f6f0b3b1e?w=400&h=300&fit=crop&crop=center',
+    img: 'https://images.unsplash.com/photo-1601758222941-3e8c5a0f4b5e?w=400&h=300&fit=crop',
     tags: ['天然橡胶', '耐咬']
   },
   {
@@ -113,7 +113,7 @@ const PRODUCTS = [
     price: 298, originalPrice: 398,
     rating: 4.8, sales: 5600,
     badge: '热销',
-    img: 'https://images.unsplash.com/photo-1570458436416-b8fcccfe883f?w=400&h=300&fit=crop&crop=center',
+    img: 'https://images.unsplash.com/photo-1574233913503-dd6e0f7e40db?w=400&h=300&fit=crop',
     tags: ['稳固', '大空间', '磨爪']
   },
   {
@@ -123,7 +123,7 @@ const PRODUCTS = [
     price: 49, originalPrice: 72,
     rating: 4.6, sales: 8900,
     badge: '',
-    img: 'https://images.unsplash.com/photo-1587300001388-1f5e5ed1f2e5?w=400&h=300&fit=crop&crop=center',
+    img: 'https://images.unsplash.com/photo-1534361960057-3e8dd50b3e05?w=400&h=300&fit=crop',
     tags: ['益智', '减少狼吞虎咽']
   },
   // 家居用品
@@ -134,7 +134,7 @@ const PRODUCTS = [
     price: 89, originalPrice: 129,
     rating: 4.8, sales: 22000,
     badge: '必备',
-    img: 'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=400&h=300&fit=crop&crop=center',
+    img: 'https://images.unsplash.com/photo-1583511655857-d19c408f8e7b?w=400&h=300&fit=crop',
     tags: ['自动', '过滤', '安静']
   },
   {
@@ -144,7 +144,7 @@ const PRODUCTS = [
     price: 55, originalPrice: 79,
     rating: 4.7, sales: 9200,
     badge: '',
-    img: 'https://images.unsplash.com/photo-1543466835-6f1dc7c1cd5c?w=400&h=300&fit=crop&crop=center',
+    img: 'https://images.unsplash.com/photo-1601758126309-462b84a94e0d?w=400&h=300&fit=crop',
     tags: ['防滑', '防打翻']
   },
   {
@@ -154,7 +154,7 @@ const PRODUCTS = [
     price: 168, originalPrice: 228,
     rating: 4.9, sales: 18700,
     badge: '爆款',
-    img: 'https://images.unsplash.com/photo-1574158482683-c9a6c0e70c5f?w=400&h=300&fit=crop&crop=center',
+    img: 'https://images.unsplash.com/photo-1574148604752-f0551b6c3a33?w=400&h=300&fit=crop',
     tags: ['防臭', '防溅砂', '大空间']
   },
   {
@@ -164,7 +164,7 @@ const PRODUCTS = [
     price: 198, originalPrice: 280,
     rating: 4.7, sales: 7800,
     badge: '',
-    img: 'https://images.unsplash.com/photo-1561037404611-2c24ce1e5e0c?w=400&h=300&fit=crop&crop=center',
+    img: 'https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=400&h=300&fit=crop',
     tags: ['航空标准', '透气', '安全']
   }
 ];
@@ -234,7 +234,7 @@ function renderProducts() {
     <div class="product-card animate-on-scroll" data-id="${product.id}">
       ${product.badge ? `<span class="product-badge">${product.badge}</span>` : ''}
       <div class="product-img">
-        <img src="${product.img}" alt="${product.name}" loading="lazy" width="400" height="300">
+        <img src="${product.img}" alt="${product.name}" loading="lazy">
       </div>
       <div class="product-info">
         <h4 class="product-name">${product.name}</h4>

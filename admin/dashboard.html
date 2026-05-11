@@ -57,6 +57,8 @@
       <a href="#" onclick="switchTab('users')" id="nav-users" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-800 transition"><i class="fa fa-users w-5 text-center"></i> 用户管理</a>
       <a href="#" onclick="switchTab('revenue')" id="nav-revenue" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-800 transition"><i class="fa fa-line-chart w-5 text-center"></i> 营收分析</a>
       <a href="#" onclick="switchTab('stats')" id="nav-stats" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-800 transition"><i class="fa fa-bar-chart w-5 text-center"></i> 数据概览</a>
+      <a href="#" onclick="switchTab('experts')" id="nav-experts" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-800 transition"><i class="fa fa-user-md w-5 text-center"></i> 专家管理</a>
+      <a href="#" onclick="switchTab('jobs')" id="nav-jobs" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-800 transition"><i class="fa fa-briefcase w-5 text-center"></i> 招聘管理</a>
     </nav>
     <div class="p-4 border-t border-gray-700 space-y-1">
       <a href="../index.html" target="_blank" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-800 transition text-gray-400 text-sm"><i class="fa fa-external-link w-5 text-center"></i> 打开前台</a>
@@ -182,6 +184,79 @@
         </div>
       </div>
 
+      <!-- ========== 专家管理 ========== -->
+      <div id="tab-experts" class="tab-content hidden">
+        <div class="flex flex-wrap justify-between items-center gap-3 mb-5">
+          <h2 class="text-xl md:text-2xl font-bold text-gray-800"><i class="fa fa-user-md mr-2 text-purple-600"></i>专家管理</h2>
+          <button onclick="openExpertModal()" class="px-4 py-2.5 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium transition text-sm flex items-center gap-2"><i class="fa fa-plus"></i> 添加专家</button>
+        </div>
+        <div class="flex flex-wrap gap-3 mb-4">
+          <input type="text" id="expert-search" oninput="renderExpertList()" placeholder="搜索姓名、电话、医院..." class="flex-1 min-w-[200px] px-4 py-2.5 border rounded-lg outline-none focus:border-purple-500 text-sm">
+          <select id="expert-status" onchange="renderExpertList()" class="px-4 py-2.5 border rounded-lg outline-none bg-white text-sm">
+            <option value="">全部状态</option>
+            <option value="pending">待审核</option>
+            <option value="approved">已通过</option>
+            <option value="rejected">已拒绝</option>
+          </select>
+        </div>
+        <div class="hidden md:block overflow-x-auto bg-white rounded-xl shadow-sm border border-gray-100">
+          <table class="w-full text-sm">
+            <thead class="bg-gray-50 text-gray-500">
+              <tr><th class="px-4 py-3 text-left">姓名</th><th class="px-4 py-3 text-left">电话</th><th class="px-4 py-3 text-left">主治方向</th><th class="px-4 py-3 text-left">医院</th><th class="px-4 py-3 text-center">状态</th><th class="px-4 py-3 text-center">操作</th></tr>
+            </thead>
+            <tbody id="expert-table-body"></tbody>
+          </table>
+          <div id="expert-empty-desktop" class="hidden text-center py-12 text-gray-400"><i class="fa fa-inbox text-3xl block mb-2"></i>暂无数据</div>
+        </div>
+        <div class="md:hidden space-y-3" id="expert-cards"></div>
+        <div id="expert-empty-mobile" class="md:hidden hidden text-center py-12 text-gray-400"><i class="fa fa-inbox text-3xl block mb-2"></i>暂无数据</div>
+      </div>
+
+      <!-- ========== 招聘管理 ========== -->
+      <div id="tab-jobs" class="tab-content hidden">
+        <div class="flex flex-wrap justify-between items-center gap-3 mb-5">
+          <h2 class="text-xl md:text-2xl font-bold text-gray-800"><i class="fa fa-briefcase mr-2 text-purple-600"></i>招聘管理</h2>
+          <button onclick="openJobModal()" class="px-4 py-2.5 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium transition text-sm flex items-center gap-2"><i class="fa fa-plus"></i> 添加岗位</button>
+        </div>
+        <div class="flex flex-wrap gap-3 mb-4">
+          <input type="text" id="job-search" oninput="renderJobList()" placeholder="搜索岗位、诊所..." class="flex-1 min-w-[200px] px-4 py-2.5 border rounded-lg outline-none focus:border-purple-500 text-sm">
+          <select id="job-status-filter" onchange="renderJobList()" class="px-4 py-2.5 border rounded-lg outline-none bg-white text-sm">
+            <option value="">全部状态</option>
+            <option value="pending">待审核</option>
+            <option value="approved">已通过</option>
+            <option value="closed">已关闭</option>
+          </select>
+        </div>
+        <div class="hidden md:block overflow-x-auto bg-white rounded-xl shadow-sm border border-gray-100">
+          <table class="w-full text-sm">
+            <thead class="bg-gray-50 text-gray-500">
+              <tr><th class="px-4 py-3 text-left">岗位</th><th class="px-4 py-3 text-left">诊所</th><th class="px-4 py-3 text-left">薪资</th><th class="px-4 py-3 text-center">申请数</th><th class="px-4 py-3 text-center">状态</th><th class="px-4 py-3 text-center">操作</th></tr>
+            </thead>
+            <tbody id="job-table-body"></tbody>
+          </table>
+          <div id="job-empty-desktop" class="hidden text-center py-12 text-gray-400"><i class="fa fa-inbox text-3xl block mb-2"></i>暂无数据</div>
+        </div>
+        <div class="md:hidden space-y-3" id="job-cards"></div>
+        <div id="job-empty-mobile" class="md:hidden hidden text-center py-12 text-gray-400"><i class="fa fa-inbox text-3xl block mb-2"></i>暂无数据</div>
+
+        <!-- 申请列表弹窗（行内展开区域） -->
+        <div id="applications-panel" class="hidden mt-6 bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-bold text-gray-800" id="applications-panel-title">岗位申请列表</h3>
+            <button onclick="document.getElementById('applications-panel').classList.add('hidden')" class="text-gray-400 hover:text-gray-600 text-xl">&times;</button>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+              <thead class="bg-gray-50 text-gray-500">
+                <tr><th class="px-4 py-2 text-left">求职者</th><th class="px-4 py-2 text-left">电话</th><th class="px-4 py-2 text-left">经验</th><th class="px-4 py-2 text-center">状态</th><th class="px-4 py-2 text-left">简历</th></tr>
+              </thead>
+              <tbody id="applications-table-body"></tbody>
+            </table>
+          </div>
+          <div id="applications-empty" class="hidden text-center py-8 text-gray-400"><i class="fa fa-inbox text-2xl block mb-2"></i>暂无申请</div>
+        </div>
+      </div>
+
     </div>
   </main>
 </div>
@@ -233,11 +308,71 @@
   </div>
 </div>
 
+<!-- 专家编辑弹窗 -->
+<div id="expert-modal" class="hidden fixed inset-0 z-[60]">
+  <div class="absolute inset-0 bg-black/50" onclick="closeExpertModal()"></div>
+  <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-2xl shadow-2xl w-[calc(100%-2rem)] max-w-lg max-h-[90vh] overflow-y-auto p-5 md:p-6">
+    <h3 class="text-lg md:text-xl font-bold mb-5" id="expert-modal-title">添加专家</h3>
+    <form id="expert-form" class="space-y-4">
+      <input type="hidden" id="expert-id">
+      <div class="grid grid-cols-2 gap-4">
+        <div><label class="block text-sm font-medium text-gray-700 mb-1">姓名 *</label><input type="text" id="expert-name" required class="w-full px-3 py-2.5 border rounded-lg outline-none focus:border-purple-500"></div>
+        <div><label class="block text-sm font-medium text-gray-700 mb-1">电话 *</label><input type="text" id="expert-phone" required class="w-full px-3 py-2.5 border rounded-lg outline-none focus:border-purple-500"></div>
+      </div>
+      <div><label class="block text-sm font-medium text-gray-700 mb-1">主治方向 *</label><select id="expert-specialty" required class="w-full px-3 py-2.5 border rounded-lg outline-none bg-white"><option value="">请选择</option><option value="犬科内科">犬科内科</option><option value="猫科">猫科</option><option value="宠物皮肤科">宠物皮肤科</option><option value="宠物骨科">宠物骨科</option><option value="宠物眼科">宠物眼科</option><option value="宠物牙科">宠物牙科</option><option value="宠物心脏科">宠物心脏科</option><option value="宠物肿瘤科">宠物肿瘤科</option><option value="宠物神经科">宠物神经科</option><option value="异宠科">异宠科</option><option value="宠物营养科">宠物营养科</option><option value="宠物行为科">宠物行为科</option><option value="宠物中医科">宠物中医科</option><option value="宠物急诊科">宠物急诊科</option></select></div>
+      <div><label class="block text-sm font-medium text-gray-700 mb-1">医院</label><input type="text" id="expert-hospital" class="w-full px-3 py-2.5 border rounded-lg outline-none focus:border-purple-500"></div>
+      <div><label class="block text-sm font-medium text-gray-700 mb-1">资质描述</label><textarea id="expert-qualifications" rows="2" class="w-full px-3 py-2.5 border rounded-lg outline-none focus:border-purple-500"></textarea></div>
+      <div><label class="block text-sm font-medium text-gray-700 mb-1">个人介绍</label><textarea id="expert-intro" rows="2" class="w-full px-3 py-2.5 border rounded-lg outline-none focus:border-purple-500"></textarea></div>
+      <div><label class="block text-sm font-medium text-gray-700 mb-1">审核状态</label><select id="expert-status-field" class="w-full px-3 py-2.5 border rounded-lg outline-none bg-white"><option value="pending">待审核</option><option value="approved">已通过</option><option value="rejected">已拒绝</option></select></div>
+      <div class="flex gap-3 pt-2">
+        <button type="submit" class="flex-1 py-2.5 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium transition text-sm"><i class="fa fa-check mr-1"></i> 保存</button>
+        <button type="button" onclick="closeExpertModal()" class="flex-1 py-2.5 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg font-medium transition text-sm">取消</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- 岗位编辑弹窗 -->
+<div id="job-modal" class="hidden fixed inset-0 z-[60]">
+  <div class="absolute inset-0 bg-black/50" onclick="closeJobModal()"></div>
+  <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-2xl shadow-2xl w-[calc(100%-2rem)] max-w-lg max-h-[90vh] overflow-y-auto p-5 md:p-6">
+    <h3 class="text-lg md:text-xl font-bold mb-5" id="job-modal-title">添加岗位</h3>
+    <form id="job-form" class="space-y-4">
+      <input type="hidden" id="job-id-field">
+      <div class="grid grid-cols-2 gap-4">
+        <div><label class="block text-sm font-medium text-gray-700 mb-1">岗位名称 *</label><input type="text" id="job-title-field" required class="w-full px-3 py-2.5 border rounded-lg outline-none focus:border-purple-500"></div>
+        <div><label class="block text-sm font-medium text-gray-700 mb-1">诊所名称 *</label><input type="text" id="job-clinic-field" required class="w-full px-3 py-2.5 border rounded-lg outline-none focus:border-purple-500"></div>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div><label class="block text-sm font-medium text-gray-700 mb-1">薪资</label><input type="text" id="job-salary-field" class="w-full px-3 py-2.5 border rounded-lg outline-none focus:border-purple-500"></div>
+        <div><label class="block text-sm font-medium text-gray-700 mb-1">地点</label><input type="text" id="job-location-field" class="w-full px-3 py-2.5 border rounded-lg outline-none focus:border-purple-500"></div>
+      </div>
+      <div class="grid grid-cols-3 gap-3">
+        <div><label class="block text-sm font-medium text-gray-700 mb-1">经验</label><input type="text" id="job-experience-field" class="w-full px-3 py-2.5 border rounded-lg outline-none focus:border-purple-500"></div>
+        <div><label class="block text-sm font-medium text-gray-700 mb-1">学历</label><input type="text" id="job-education-field" class="w-full px-3 py-2.5 border rounded-lg outline-none focus:border-purple-500"></div>
+        <div><label class="block text-sm font-medium text-gray-700 mb-1">类型</label><select id="job-type-field" class="w-full px-3 py-2.5 border rounded-lg outline-none bg-white"><option value="fulltime">全职</option><option value="parttime">兼职</option><option value="intern">实习</option></select></div>
+      </div>
+      <div><label class="block text-sm font-medium text-gray-700 mb-1">岗位描述</label><textarea id="job-desc-field" rows="2" class="w-full px-3 py-2.5 border rounded-lg outline-none focus:border-purple-500"></textarea></div>
+      <div><label class="block text-sm font-medium text-gray-700 mb-1">任职要求</label><textarea id="job-requirements-field" rows="2" class="w-full px-3 py-2.5 border rounded-lg outline-none focus:border-purple-500"></textarea></div>
+      <div><label class="block text-sm font-medium text-gray-700 mb-1">福利待遇</label><input type="text" id="job-benefits-field" class="w-full px-3 py-2.5 border rounded-lg outline-none focus:border-purple-500"></div>
+      <div class="grid grid-cols-2 gap-4">
+        <div><label class="block text-sm font-medium text-gray-700 mb-1">联系人</label><input type="text" id="job-contact-field" class="w-full px-3 py-2.5 border rounded-lg outline-none focus:border-purple-500"></div>
+        <div><label class="block text-sm font-medium text-gray-700 mb-1">联系电话</label><input type="text" id="job-phone-field" class="w-full px-3 py-2.5 border rounded-lg outline-none focus:border-purple-500"></div>
+      </div>
+      <div><label class="block text-sm font-medium text-gray-700 mb-1">审核状态</label><select id="job-status-field" class="w-full px-3 py-2.5 border rounded-lg outline-none bg-white"><option value="pending">待审核</option><option value="approved">已通过</option><option value="closed">已关闭</option></select></div>
+      <div class="flex gap-3 pt-2">
+        <button type="submit" class="flex-1 py-2.5 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium transition text-sm"><i class="fa fa-check mr-1"></i> 保存</button>
+        <button type="button" onclick="closeJobModal()" class="flex-1 py-2.5 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg font-medium transition text-sm">取消</button>
+      </div>
+    </form>
+  </div>
+</div>
+
 <div id="toast" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] px-6 py-3 rounded-full text-white text-sm shadow-lg"></div>
 
 <script>
 const API = '/api/admin';
-let token, products = [], usersData = [], revenueData = null;
+let token, products = [], usersData = [], revenueData = null, expertsData = [], jobsData = [];
 
 // ==================== 初始化 ====================
 async function init() {
@@ -643,6 +778,8 @@ function switchTab(tab) {
   if (tab === 'users') loadUsers();
   if (tab === 'revenue') loadRevenue();
   if (tab === 'stats') loadStats();
+  if (tab === 'experts') loadExperts();
+  if (tab === 'jobs') loadJobs();
   if (window.innerWidth < 768) toggleSidebar();
 }
 
@@ -660,24 +797,325 @@ function showToast(msg, isError) {
 }
 
 // ==================== 生成测试数据 ====================
+// ==================== 专家管理模块 ====================
+async function loadExperts() {
+  try {
+    const res = await fetch(`${API}/experts`, { headers: { 'Authorization': `Bearer ${token}` } });
+    const data = await res.json();
+    if (data.success) { expertsData = data.data.experts; renderExpertList(); }
+  } catch (e) { showToast('加载专家失败', true); }
+}
+
+function renderExpertList() {
+  let filtered = [...expertsData];
+  const search = document.getElementById('expert-search')?.value?.toLowerCase() || '';
+  const status = document.getElementById('expert-status')?.value || '';
+  if (search) filtered = filtered.filter(e => e.name.toLowerCase().includes(search) || e.phone.includes(search) || (e.hospital||'').toLowerCase().includes(search));
+  if (status) filtered = filtered.filter(e => e.status === status);
+  renderExpertTable(filtered);
+  renderExpertCards(filtered);
+}
+
+function renderExpertTable(filtered) {
+  const tbody = document.getElementById('expert-table-body');
+  const empty = document.getElementById('expert-empty-desktop');
+  if (!tbody) return;
+  if (!filtered.length) { tbody.innerHTML = ''; if(empty)empty.classList.remove('hidden'); return; }
+  if (empty) empty.classList.add('hidden');
+  const statusLabel = { pending: '待审核', approved: '已通过', rejected: '已拒绝' };
+  const statusColor = { pending: 'bg-yellow-100 text-yellow-800', approved: 'bg-green-100 text-green-800', rejected: 'bg-red-100 text-red-800' };
+  tbody.innerHTML = filtered.map(e => `
+    <tr class="border-t border-gray-100 hover:bg-gray-50">
+      <td class="px-4 py-3 font-medium text-gray-800">${e.name}</td>
+      <td class="px-4 py-3 text-gray-600">${e.phone||''}</td>
+      <td class="px-4 py-3 text-gray-600">${e.specialty||''}</td>
+      <td class="px-4 py-3 text-gray-600 text-sm">${e.hospital||''}</td>
+      <td class="px-4 py-3 text-center"><span class="inline-block px-2 py-1 rounded-full text-xs font-medium ${statusColor[e.status]||''}">${statusLabel[e.status]||e.status}</span></td>
+      <td class="px-4 py-3 text-center">
+        <div class="flex gap-1 justify-center flex-wrap">
+          ${e.status==='pending' ? `<button onclick="approveExpert(${e.id})" class="px-2 py-1 text-xs bg-green-100 text-green-700 rounded hover:bg-green-200">通过</button><button onclick="rejectExpert(${e.id})" class="px-2 py-1 text-xs bg-red-100 text-red-700 rounded hover:bg-red-200">拒绝</button>` : ''}
+          <button onclick="editExpert(${e.id})" class="px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded hover:bg-blue-200">编辑</button>
+          <button onclick="deleteExpert(${e.id})" class="px-2 py-1 text-xs bg-gray-100 text-gray-600 rounded hover:bg-gray-200">删除</button>
+        </div>
+      </td>
+    </tr>`).join('');
+}
+
+function renderExpertCards(filtered) {
+  const cards = document.getElementById('expert-cards');
+  const empty = document.getElementById('expert-empty-mobile');
+  if (!cards) return;
+  if (!filtered.length) { cards.innerHTML = ''; if(empty)empty.classList.remove('hidden'); return; }
+  if (empty) empty.classList.add('hidden');
+  const statusLabel = { pending: '待审核', approved: '已通过', rejected: '已拒绝' };
+  cards.innerHTML = filtered.map(e => `
+    <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
+      <div class="flex justify-between items-start mb-2">
+        <div><span class="font-semibold text-gray-800">${e.name}</span><span class="text-gray-500 text-sm ml-2">${e.phone||''}</span></div>
+        <span class="text-xs px-2 py-0.5 rounded-full ${e.status==='approved'?'bg-green-100 text-green-700':e.status==='rejected'?'bg-red-100 text-red-700':'bg-yellow-100 text-yellow-800'}">${statusLabel[e.status]||e.status}</span>
+      </div>
+      <p class="text-gray-600 text-sm">${e.specialty||''} | ${e.hospital||''}</p>
+      <div class="flex gap-2 mt-3">
+        ${e.status==='pending' ? `<button onclick="approveExpert(${e.id})" class="px-2 py-1 text-xs bg-green-100 text-green-700 rounded">通过</button><button onclick="rejectExpert(${e.id})" class="px-2 py-1 text-xs bg-red-100 text-red-700 rounded">拒绝</button>` : ''}
+        <button onclick="editExpert(${e.id})" class="px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded">编辑</button>
+        <button onclick="deleteExpert(${e.id})" class="px-2 py-1 text-xs bg-gray-100 text-gray-600 rounded">删除</button>
+      </div>
+    </div>`).join('');
+}
+
+function openExpertModal(expert) {
+  document.getElementById('expert-modal').classList.remove('hidden');
+  const isEdit = !!expert;
+  document.getElementById('expert-modal-title').textContent = isEdit ? '编辑专家' : '添加专家';
+  document.getElementById('expert-id').value = isEdit ? expert.id : '';
+  document.getElementById('expert-name').value = isEdit ? expert.name : '';
+  document.getElementById('expert-phone').value = isEdit ? (expert.phone||'') : '';
+  document.getElementById('expert-specialty').value = isEdit ? (expert.specialty||'') : '';
+  document.getElementById('expert-hospital').value = isEdit ? (expert.hospital||'') : '';
+  document.getElementById('expert-qualifications').value = isEdit ? (expert.qualifications||'') : '';
+  document.getElementById('expert-intro').value = isEdit ? (expert.introduction||'') : '';
+  document.getElementById('expert-status-field').value = isEdit ? (expert.status||'approved') : 'approved';
+}
+
+function closeExpertModal() { document.getElementById('expert-modal').classList.add('hidden'); }
+
+function editExpert(id) { const e = expertsData.find(x => x.id === id); if (e) openExpertModal(e); }
+
+async function approveExpert(id) { await updateExpertStatus(id, 'approved'); }
+async function rejectExpert(id) { await updateExpertStatus(id, 'rejected'); }
+
+async function updateExpertStatus(id, status) {
+  try {
+    const res = await fetch(`${API}/experts/${id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify({ status }) });
+    const data = await res.json();
+    if (data.success) { await loadExperts(); showToast(status==='approved'?'已通过审核':'已拒绝'); }
+  } catch (e) { showToast('操作失败', true); }
+}
+
+async function deleteExpert(id) {
+  if (!confirm('确定删除该专家吗？')) return;
+  try {
+    const res = await fetch(`${API}/experts/${id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } });
+    const data = await res.json();
+    if (data.success) { await loadExperts(); showToast('专家已删除'); }
+  } catch (e) { showToast('删除失败', true); }
+}
+
+// 专家表单提交
+document.getElementById('expert-form').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const id = document.getElementById('expert-id').value;
+  const body = {
+    name: document.getElementById('expert-name').value.trim(),
+    phone: document.getElementById('expert-phone').value.trim(),
+    specialty: document.getElementById('expert-specialty').value,
+    hospital: document.getElementById('expert-hospital').value.trim(),
+    qualifications: document.getElementById('expert-qualifications').value.trim(),
+    introduction: document.getElementById('expert-intro').value.trim(),
+    status: document.getElementById('expert-status-field').value
+  };
+  try {
+    const method = id ? 'PUT' : 'POST';
+    const url = id ? `${API}/experts/${id}` : `${API}/experts`;
+    const res = await fetch(url, { method, headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify(body) });
+    const data = await res.json();
+    if (data.success) { closeExpertModal(); await loadExperts(); showToast(id ? '专家已更新' : '专家已添加'); }
+    else { showToast(data.error || '操作失败', true); }
+  } catch (e) { showToast('网络错误', true); }
+});
+
+// ==================== 招聘管理模块 ====================
+async function loadJobs() {
+  try {
+    const res = await fetch(`${API}/jobs`, { headers: { 'Authorization': `Bearer ${token}` } });
+    const data = await res.json();
+    if (data.success) { jobsData = data.data.jobs; renderJobList(); }
+  } catch (e) { showToast('加载岗位失败', true); }
+}
+
+function renderJobList() {
+  let filtered = [...jobsData];
+  const search = document.getElementById('job-search')?.value?.toLowerCase() || '';
+  const status = document.getElementById('job-status-filter')?.value || '';
+  if (search) filtered = filtered.filter(j => j.title.toLowerCase().includes(search) || j.clinicName.toLowerCase().includes(search));
+  if (status) filtered = filtered.filter(j => j.status === status);
+  renderJobTable(filtered);
+  renderJobCards(filtered);
+}
+
+function renderJobTable(filtered) {
+  const tbody = document.getElementById('job-table-body');
+  const empty = document.getElementById('job-empty-desktop');
+  if (!tbody) return;
+  if (!filtered.length) { tbody.innerHTML = ''; if(empty)empty.classList.remove('hidden'); return; }
+  if (empty) empty.classList.add('hidden');
+  const statusLabel = { pending: '待审核', approved: '已通过', closed: '已关闭' };
+  const statusColor = { pending: 'bg-yellow-100 text-yellow-800', approved: 'bg-green-100 text-green-800', closed: 'bg-gray-100 text-gray-600' };
+  tbody.innerHTML = filtered.map(j => `
+    <tr class="border-t border-gray-100 hover:bg-gray-50">
+      <td class="px-4 py-3 font-medium text-gray-800">${j.title}</td>
+      <td class="px-4 py-3 text-gray-600 text-sm">${j.clinicName}</td>
+      <td class="px-4 py-3 text-gray-600">${j.salary||'面议'}</td>
+      <td class="px-4 py-3 text-center">
+        <button onclick="viewApplications(${j.id},'${j.title}')" class="text-blue-600 hover:underline text-xs font-medium">${j.applicantCount||0} 人</button>
+      </td>
+      <td class="px-4 py-3 text-center"><span class="inline-block px-2 py-1 rounded-full text-xs font-medium ${statusColor[j.status]||''}">${statusLabel[j.status]||j.status}</span></td>
+      <td class="px-4 py-3 text-center">
+        <div class="flex gap-1 justify-center flex-wrap">
+          ${j.status==='pending' ? `<button onclick="approveJob(${j.id})" class="px-2 py-1 text-xs bg-green-100 text-green-700 rounded hover:bg-green-200">通过</button><button onclick="rejectJob(${j.id})" class="px-2 py-1 text-xs bg-red-100 text-red-700 rounded hover:bg-red-200">拒绝</button>` : ''}
+          <button onclick="editJob(${j.id})" class="px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded hover:bg-blue-200">编辑</button>
+          <button onclick="deleteJob(${j.id})" class="px-2 py-1 text-xs bg-gray-100 text-gray-600 rounded hover:bg-gray-200">删除</button>
+        </div>
+      </td>
+    </tr>`).join('');
+}
+
+function renderJobCards(filtered) {
+  const cards = document.getElementById('job-cards');
+  const empty = document.getElementById('job-empty-mobile');
+  if (!cards) return;
+  if (!filtered.length) { cards.innerHTML = ''; if(empty)empty.classList.remove('hidden'); return; }
+  if (empty) empty.classList.add('hidden');
+  const statusLabel = { pending: '待审核', approved: '已通过', closed: '已关闭' };
+  cards.innerHTML = filtered.map(j => `
+    <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
+      <div class="flex justify-between items-start mb-2">
+        <div><span class="font-semibold text-gray-800">${j.title}</span><span class="text-gray-500 text-sm ml-2">${j.clinicName}</span></div>
+        <span class="text-xs px-2 py-0.5 rounded-full ${j.status==='approved'?'bg-green-100 text-green-700':j.status==='closed'?'bg-gray-100 text-gray-600':'bg-yellow-100 text-yellow-800'}">${statusLabel[j.status]||j.status}</span>
+      </div>
+      <p class="text-red-500 font-semibold">${j.salary||'面议'}</p>
+      <p class="text-gray-500 text-xs">${j.location||''} · ${j.experience||'不限'} · 申请 ${j.applicantCount||0} 人</p>
+      <div class="flex gap-2 mt-3 flex-wrap">
+        ${j.status==='pending' ? `<button onclick="approveJob(${j.id})" class="px-2 py-1 text-xs bg-green-100 text-green-700 rounded">通过</button><button onclick="rejectJob(${j.id})" class="px-2 py-1 text-xs bg-red-100 text-red-700 rounded">拒绝</button>` : ''}
+        <button onclick="editJob(${j.id})" class="px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded">编辑</button>
+        <button onclick="viewApplications(${j.id},'${j.title}')" class="px-2 py-1 text-xs bg-purple-100 text-purple-700 rounded">查看申请</button>
+        <button onclick="deleteJob(${j.id})" class="px-2 py-1 text-xs bg-gray-100 text-gray-600 rounded">删除</button>
+      </div>
+    </div>`).join('');
+}
+
+function openJobModal(job) {
+  document.getElementById('job-modal').classList.remove('hidden');
+  const isEdit = !!job;
+  document.getElementById('job-modal-title').textContent = isEdit ? '编辑岗位' : '添加岗位';
+  document.getElementById('job-id-field').value = isEdit ? job.id : '';
+  document.getElementById('job-title-field').value = isEdit ? job.title : '';
+  document.getElementById('job-clinic-field').value = isEdit ? (job.clinicName||'') : '';
+  document.getElementById('job-salary-field').value = isEdit ? (job.salary||'') : '';
+  document.getElementById('job-location-field').value = isEdit ? (job.location||'') : '';
+  document.getElementById('job-experience-field').value = isEdit ? (job.experience||'') : '';
+  document.getElementById('job-education-field').value = isEdit ? (job.education||'') : '';
+  document.getElementById('job-type-field').value = isEdit ? (job.type||'fulltime') : 'fulltime';
+  document.getElementById('job-desc-field').value = isEdit ? (job.description||'') : '';
+  document.getElementById('job-requirements-field').value = isEdit ? (job.requirements||'') : '';
+  document.getElementById('job-benefits-field').value = isEdit ? (job.benefits||'') : '';
+  document.getElementById('job-contact-field').value = isEdit ? (job.contactPerson||'') : '';
+  document.getElementById('job-phone-field').value = isEdit ? (job.contactPhone||'') : '';
+  document.getElementById('job-status-field').value = isEdit ? (job.status||'approved') : 'approved';
+}
+
+function closeJobModal() { document.getElementById('job-modal').classList.add('hidden'); }
+
+function editJob(id) { const j = jobsData.find(x => x.id === id); if (j) openJobModal(j); }
+
+async function approveJob(id) { await updateJobStatus(id, 'approved'); }
+async function rejectJob(id) { await updateJobStatus(id, 'closed'); }
+
+async function updateJobStatus(id, status) {
+  try {
+    const res = await fetch(`${API}/jobs/${id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify({ status }) });
+    const data = await res.json();
+    if (data.success) { await loadJobs(); showToast(status==='approved'?'已通过审核':status==='closed'?'已关闭':'已更新'); }
+  } catch (e) { showToast('操作失败', true); }
+}
+
+async function deleteJob(id) {
+  if (!confirm('确定删除该岗位吗？')) return;
+  try {
+    const res = await fetch(`${API}/jobs/${id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } });
+    const data = await res.json();
+    if (data.success) { await loadJobs(); showToast('岗位已删除'); }
+  } catch (e) { showToast('删除失败', true); }
+}
+
+// 查看岗位申请
+async function viewApplications(jobId, jobTitle) {
+  document.getElementById('applications-panel-title').textContent = `「${jobTitle}」申请列表`;
+  document.getElementById('applications-panel').classList.remove('hidden');
+  const tbody = document.getElementById('applications-table-body');
+  const empty = document.getElementById('applications-empty');
+  tbody.innerHTML = '<tr><td colspan="5" class="text-center py-4 text-gray-400">加载中...</td></tr>';
+  try {
+    const res = await fetch(`${API}/applications?jobId=${jobId}`, { headers: { 'Authorization': `Bearer ${token}` } });
+    const data = await res.json();
+    if (!data.success || !data.data.applications.length) {
+      tbody.innerHTML = '';
+      if(empty) empty.classList.remove('hidden');
+      return;
+    }
+    if(empty) empty.classList.add('hidden');
+    const statusLabel = { pending: '待查看', viewed: '已查看', contacted: '已联系', hired: '已录用', rejected: '已拒绝' };
+    tbody.innerHTML = data.data.applications.map(a => `
+      <tr class="border-t border-gray-100">
+        <td class="px-4 py-3 font-medium">${a.applicantName}</td>
+        <td class="px-4 py-3 text-gray-600">${a.applicantPhone}</td>
+        <td class="px-4 py-3 text-gray-600 text-sm">${a.experience||''}</td>
+        <td class="px-4 py-3 text-center"><span class="text-xs px-2 py-0.5 rounded-full ${a.status==='hired'?'bg-green-100 text-green-700':a.status==='rejected'?'bg-red-100 text-red-700':'bg-gray-100 text-gray-600'}">${statusLabel[a.status]||a.status}</span></td>
+        <td class="px-4 py-3 text-gray-600 text-sm max-w-[200px] truncate">${a.resume||''}</td>
+      </tr>`).join('');
+  } catch (e) { tbody.innerHTML = '<tr><td colspan="5" class="text-center py-4 text-gray-400">加载失败</td></tr>'; }
+}
+
+// 岗位表单提交
+document.getElementById('job-form').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const id = document.getElementById('job-id-field').value;
+  const body = {
+    title: document.getElementById('job-title-field').value.trim(),
+    clinicName: document.getElementById('job-clinic-field').value.trim(),
+    salary: document.getElementById('job-salary-field').value.trim(),
+    location: document.getElementById('job-location-field').value.trim(),
+    experience: document.getElementById('job-experience-field').value.trim(),
+    education: document.getElementById('job-education-field').value.trim(),
+    type: document.getElementById('job-type-field').value,
+    description: document.getElementById('job-desc-field').value.trim(),
+    requirements: document.getElementById('job-requirements-field').value.trim(),
+    benefits: document.getElementById('job-benefits-field').value.trim(),
+    contactPerson: document.getElementById('job-contact-field').value.trim(),
+    contactPhone: document.getElementById('job-phone-field').value.trim(),
+    status: document.getElementById('job-status-field').value
+  };
+  try {
+    const method = id ? 'PUT' : 'POST';
+    const url = id ? `${API}/jobs/${id}` : `${API}/jobs`;
+    const res = await fetch(url, { method, headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify(body) });
+    const data = await res.json();
+    if (data.success) { closeJobModal(); await loadJobs(); showToast(id ? '岗位已更新' : '岗位已添加'); }
+    else { showToast(data.error || '操作失败', true); }
+  } catch (e) { showToast('网络错误', true); }
+});
+
 async function seedTestData() {
   try {
     const res = await fetch(`${API}/data?section=seed`, { method: 'POST', headers: { 'Authorization': `Bearer ${token}` } });
     const data = await res.json();
     if (data.success) {
       showToast('演示数据已生成！');
-      // 刷新所有数据
       await loadProducts();
       await loadOrders();
       await loadUsers();
       await loadRevenue();
       await loadStats();
+      if (expertsData.length === 0) await loadExperts();
+      if (jobsData.length === 0) await loadJobs();
       switchTab('stats');
     }
   } catch (e) { showToast('生成失败', true); }
 }
 
 document.getElementById('product-modal').addEventListener('click', function(e) { if (e.target === this) closeProductModal(); });
+document.getElementById('expert-modal').addEventListener('click', function(e) { if (e.target === this) closeExpertModal(); });
+document.getElementById('job-modal').addEventListener('click', function(e) { if (e.target === this) closeJobModal(); });
 
 init();
 </script>

@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>专家问诊 - 宠物新手助手</title>
+    <meta name="description" content="宠物新手助手平台认证宠物医疗专家团队，涵盖犬科、猫科、皮肤科等多个专科方向。专家入驻申请，审核通过后即可在线为宠物主人提供专业咨询。">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">
+                <a href="index.html" style="display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit;">
+                    <i class="fas fa-paw"></i>
+                    <h1>宠物新手助手</h1>
+                </a>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html"><i class="fas fa-home"></i> 首页</a></li>
+                <li><a href="index.html#dashboard"><i class="fas fa-calendar-alt"></i> 每日养护</a></li>
+                <li><a href="index.html#guide"><i class="fas fa-book"></i> 新手指南</a></li>
+                <li><a href="index.html#training"><i class="fas fa-graduation-cap"></i> 训练方法</a></li>
+                <li><a href="index.html#ai-consultation"><i class="fas fa-robot"></i> AI问诊</a></li>
+                <li><a href="experts.html" class="active"><i class="fas fa-user-md"></i> 专家问诊</a></li>
+                <li><a href="index.html#health"><i class="fas fa-heartbeat"></i> 健康管理</a></li>
+                <li><a href="index.html#store"><i class="fas fa-store"></i> 宠物商城</a></li>
+                <li><a href="jobs.html"><i class="fas fa-briefcase"></i> 招聘中心</a></li>
+                <li><a href="index.html#profile"><i class="fas fa-user"></i> 我的宠物</a></li>
+                <li class="nav-cart">
+                    <a href="index.html#cart">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-count">0</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="nav-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <!-- 专家问诊列表 -->
+        <section id="expert-consultation" class="expert-consultation">
+            <div class="container">
+                <h2 class="section-title"><i class="fas fa-user-md"></i> 专家问诊</h2>
+                <p class="expert-subtitle">平台认证宠物医疗专家，为您提供专业健康咨询</p>
+                <div class="expert-actions-top">
+                    <a href="#expert-register" class="btn btn-primary">
+                        <i class="fas fa-user-plus"></i> 专家入驻
+                    </a>
+                </div>
+                <div class="expert-grid" id="expert-grid">
+                    <div class="expert-loading">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <p>加载专家列表...</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 专家入驻注册 -->
+        <section id="expert-register" class="expert-register">
+            <div class="container">
+                <h2 class="section-title"><i class="fas fa-user-plus"></i> 专家入驻申请</h2>
+                <p class="expert-subtitle">请填写以下信息，提交后管理员将在1-3个工作日内审核</p>
+                <div class="expert-register-form-container">
+                    <form id="expert-register-form" class="expert-register-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="expert-name"><i class="fas fa-user"></i> 专家姓名 <span class="required">*</span></label>
+                                <input type="text" id="expert-name" placeholder="请输入真实姓名" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="expert-phone"><i class="fas fa-phone"></i> 手机号码 <span class="required">*</span></label>
+                                <input type="tel" id="expert-phone" placeholder="请输入手机号码" required pattern="1[3-9][0-9]{9}">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="expert-specialty"><i class="fas fa-stethoscope"></i> 主治方向 <span class="required">*</span></label>
+                                <select id="expert-specialty" required>
+                                    <option value="">请选择主治方向</option>
+                                    <option value="犬科内科">犬科内科</option>
+                                    <option value="猫科">猫科</option>
+                                    <option value="宠物皮肤科">宠物皮肤科</option>
+                                    <option value="宠物骨科">宠物骨科</option>
+                                    <option value="宠物眼科">宠物眼科</option>
+                                    <option value="宠物牙科">宠物牙科</option>
+                                    <option value="宠物心脏科">宠物心脏科</option>
+                                    <option value="宠物肿瘤科">宠物肿瘤科</option>
+                                    <option value="宠物神经科">宠物神经科</option>
+                                    <option value="异宠科">异宠科</option>
+                                    <option value="宠物营养科">宠物营养科</option>
+                                    <option value="宠物行为科">宠物行为科</option>
+                                    <option value="宠物中医科">宠物中医科</option>
+                                    <option value="宠物急诊科">宠物急诊科</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="expert-hospital"><i class="fas fa-hospital"></i> 所属医院/诊所</label>
+                                <input type="text" id="expert-hospital" placeholder="请输入所在医院或诊所名称">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="expert-qualifications"><i class="fas fa-certificate"></i> 资质描述 <span class="required">*</span></label>
+                            <textarea id="expert-qualifications" rows="3" placeholder="请描述您的学历背景、执业证书、从业年限等资质信息..." required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="expert-intro"><i class="fas fa-pen"></i> 个人介绍</label>
+                            <textarea id="expert-intro" rows="3" placeholder="请简单介绍您的专业方向和擅长领域..."></textarea>
+                        </div>
+                        <div class="form-notice">
+                            <i class="fas fa-info-circle"></i>
+                            <span>提交后将由管理员审核，审核通过后即可在平台展示。请确保信息真实有效。</span>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">提交入驻申请</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3><i class="fas fa-paw"></i> 宠物新手助手</h3>
+                    <p>让每一只宠物都能得到科学、专业的养护</p>
+                </div>
+                <div class="footer-section">
+                    <h3>快速链接</h3>
+                    <ul>
+                        <li><a href="index.html">首页</a></li>
+                        <li><a href="index.html#dashboard">每日养护</a></li>
+                        <li><a href="index.html#guide">新手指南</a></li>
+                        <li><a href="index.html#store">宠物商城</a></li>
+                        <li><a href="index.html#health">健康管理</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>联系我们</h3>
+                    <p><i class="fas fa-envelope"></i> support@pethelper.com</p>
+                    <p><i class="fas fa-phone"></i> 400-123-4567</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 宠物新手助手. 版权所有.</p>
+                <p>本网站内容仅供参考，具体养护请咨询专业兽医</p>
+                <p class="mt-2"><a href="admin/index.html" style="color:#666;text-decoration:none;font-size:12px;">管理入口</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+    // ============ 导航栏滚动效果 ============
+    const navbar = document.querySelector('.navbar');
+    let lastScroll = 0;
+    window.addEventListener('scroll', () => {
+        const currentScroll = window.pageYOffset;
+        if (currentScroll > 80) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+        lastScroll = currentScroll;
+    });
+
+    // 移动端菜单
+    const navToggle = document.querySelector('.nav-toggle');
+    const navLinks = document.querySelector('.nav-links');
+    if (navToggle) {
+        navToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+    }
+
+    // 点击导航链接后关闭移动端菜单
+    navLinks.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+            navLinks.classList.remove('active');
+        });
+    });
+
+    // ============ Toast 提示 ============
+    function showToast(message) {
+        const existing = document.querySelector('.toast-message');
+        if (existing) existing.remove();
+        const toast = document.createElement('div');
+        toast.className = 'toast-message';
+        toast.textContent = message;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 3000);
+    }
+
+    // ============ 静态备用数据（API 不可用时使用）============
+    var FALLBACK_EXPERTS = [
+        { id:1, name:'张明华', specialty:'犬科内科', qualifications:'中国农业大学兽医学博士，10年临床经验，持有国家执业兽医师资格证', hospital:'瑞鹏宠物医院（朝阳分院）', avatar:'👨‍⚕️', introduction:'擅长犬类消化系统疾病、呼吸道疾病及老年犬慢性病管理，累计接诊犬类病例超过5000例。', phone:'13800138001' },
+        { id:2, name:'李晓芳', specialty:'猫科', qualifications:'南京农业大学兽医硕士，8年猫科临床经验，国际猫科医学协会（ISFM）认证会员', hospital:'宠爱国际动物医院', avatar:'👩‍⚕️', introduction:'专注猫科疾病诊疗，尤其擅长猫下泌尿道疾病、猫传染性腹膜炎（FIP）及猫慢性肾病管理。', phone:'13800138002' },
+        { id:3, name:'王建国', specialty:'宠物皮肤科', qualifications:'吉林大学兽医学学士，12年临床经验，亚洲兽医皮肤科协会会员', hospital:'芭比堂动物医院（海淀总院）', avatar:'👨‍🔬', introduction:'专攻犬猫皮肤病，包括过敏性皮炎、真菌/细菌感染、寄生虫性皮肤病及免疫介导性皮肤病。', phone:'13800138003' }
+    ];
+
+    // ============ 加载专家列表 ============
+    async function loadExperts() {
+        var grid = document.getElementById('expert-grid');
+        if (!grid) return;
+        var experts = [];
+        try {
+            var res = await fetch('/api/experts');
+            if (!res.ok) throw new Error('API unavailable');
+            var data = await res.json();
+            if (data.success && data.data.length) experts = data.data;
+        } catch (e) {
+            experts = FALLBACK_EXPERTS;
+        }
+        if (!experts.length) {
+            grid.innerHTML = '<div class="expert-empty"><i class="fas fa-user-md"></i><p>暂无认证专家，快来申请入驻吧！</p></div>';
+            return;
+        }
+        grid.innerHTML = experts.map(function(e) {
+            return '<div class="expert-card">' +
+                '<div class="expert-card-header">' +
+                    '<div class="expert-avatar">' + (e.avatar || '👨‍⚕️') + '</div>' +
+                    '<div class="expert-info">' +
+                        '<h4 class="expert-name">' + e.name + '</h4>' +
+                        '<span class="expert-specialty-tag">' + e.specialty + '</span>' +
+                    '</div>' +
+                '</div>' +
+                '<p class="expert-hospital"><i class="fas fa-hospital"></i> ' + (e.hospital || '未填写') + '</p>' +
+                '<p class="expert-qualifications"><i class="fas fa-certificate"></i> ' + (e.qualifications || '暂无资质描述') + '</p>' +
+                '<p class="expert-intro">' + (e.introduction || '暂无个人介绍') + '</p>' +
+                '<div class="expert-card-footer">' +
+                    '<button class="btn btn-primary btn-sm" onclick="contactExpert(\'' + e.phone + '\',\'' + e.name + '\')">' +
+                        '<i class="fas fa-phone-alt"></i> 联系咨询' +
+                    '</button>' +
+                '</div>' +
+            '</div>';
+        }).join('');
+    }
+
+    function contactExpert(phone, name) {
+        if (confirm(`即将拨打 ${name} 的电话：${phone}\n\n或在手机上直接拨打该号码。`)) {
+            window.open(`tel:${phone}`);
+        }
+    }
+
+    // ============ 专家入驻注册 ============
+    document.getElementById('expert-register-form').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const name = document.getElementById('expert-name').value.trim();
+        const phone = document.getElementById('expert-phone').value.trim();
+        const specialty = document.getElementById('expert-specialty').value;
+        const hospital = document.getElementById('expert-hospital').value.trim();
+        const qualifications = document.getElementById('expert-qualifications').value.trim();
+        const introduction = document.getElementById('expert-intro').value.trim();
+
+        if (!name || !phone || !specialty) {
+            return showToast('请填写姓名、电话和主治方向');
+        }
+        if (!/^1[3-9]\d{9}$/.test(phone)) {
+            return showToast('手机号格式不正确');
+        }
+        if (!qualifications) {
+            return showToast('请填写资质描述');
+        }
+
+        try {
+            const res = await fetch('/api/experts', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, phone, specialty, hospital, qualifications, introduction })
+            });
+            const data = await res.json();
+            if (data.success) {
+                showToast('入驻申请已提交，请等待管理员审核');
+                this.reset();
+                setTimeout(() => { window.scrollTo({ top: 0, behavior: 'smooth' }); }, 300);
+            } else {
+                showToast(data.error || '提交失败，请重试');
+            }
+        } catch (err) {
+            showToast('网络错误，请稍后重试');
+        }
+    });
+
+    // ============ 初始化 ============
+    document.addEventListener('DOMContentLoaded', () => {
+        loadExperts();
+        // 更新购物车徽标
+        updateCartBadge();
+    });
+
+    function updateCartBadge() {
+        try {
+            const cart = JSON.parse(localStorage.getItem('pet_cart') || '[]');
+            const total = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const badge = document.querySelector('.cart-count');
+            if (badge) {
+                badge.textContent = total;
+                badge.style.display = total > 0 ? 'flex' : 'none';
+            }
+        } catch(e) {}
+    }
+    </script>
+</body>
+</html>
