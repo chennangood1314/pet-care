@@ -40,8 +40,9 @@
 
 body {
     font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    line-height: 1.75;
-    font-size: 16px;
+    line-height: 1.8;
+    font-size: 17px;
+    letter-spacing: 0.02em;
     color: var(--text);
     background-color: var(--bg);
     -webkit-font-smoothing: antialiased;
@@ -49,9 +50,9 @@ body {
 }
 
 .container {
-    max-width: 1200px;
+    max-width: 1280px;
     margin: 0 auto;
-    padding: 0 24px;
+    padding: 0 32px;
 }
 
 /* 导航栏样式 */
@@ -205,24 +206,25 @@ main {
 }
 
 .hero h2 {
-    font-size: 44px;
+    font-size: 48px;
     font-weight: 700;
-    margin-bottom: 20px;
+    margin-bottom: 22px;
     line-height: 1.3;
-    letter-spacing: -0.01em;
+    letter-spacing: 0.04em;
 }
 
 .hero p {
-    font-size: 20px;
-    margin-bottom: 36px;
+    font-size: 21px;
+    margin-bottom: 38px;
     opacity: 0.92;
-    line-height: 1.8;
+    line-height: 1.9;
     font-weight: 300;
+    letter-spacing: 0.03em;
 }
 
 .hero-buttons {
     display: flex;
-    gap: 18px;
+    gap: 20px;
 }
 
 .hero-image {
@@ -305,19 +307,19 @@ main {
 
 /* 按钮样式 */
 .btn {
-    padding: 14px 32px;
+    padding: 15px 36px;
     border: none;
     border-radius: var(--radius-md);
-    font-size: 17px;
+    font-size: 18px;
     font-weight: 600;
     cursor: pointer;
     text-decoration: none;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 10px;
     transition: all var(--transition);
-    letter-spacing: 0.01em;
+    letter-spacing: 0.03em;
 }
 
 .btn-primary {
@@ -346,17 +348,17 @@ main {
 
 /* 功能卡片 */
 .section-title {
-    font-size: 32px;
+    font-size: 34px;
     text-align: center;
-    margin-bottom: 48px;
+    margin-bottom: 52px;
     color: var(--text);
     line-height: 1.4;
     font-weight: 700;
-    letter-spacing: -0.01em;
+    letter-spacing: 0.03em;
 }
 .section-title i {
     color: var(--primary);
-    margin-right: 10px;
+    margin-right: 12px;
 }
 
 .features-grid {
@@ -396,23 +398,25 @@ main {
 }
 
 .feature-icon {
-    font-size: 44px;
+    font-size: 48px;
     color: var(--primary);
-    margin-bottom: 24px;
+    margin-bottom: 26px;
 }
 
 .feature-card h3 {
-    margin-bottom: 16px;
+    margin-bottom: 18px;
     color: #333;
-    line-height: 1.4;
+    line-height: 1.5;
     font-weight: 600;
-    font-size: 20px;
+    font-size: 22px;
+    letter-spacing: 0.03em;
 }
 
 .feature-card p {
-    font-size: 15px;
+    font-size: 16px;
     color: #666;
-    line-height: 1.7;
+    line-height: 1.8;
+    letter-spacing: 0.02em;
 }
 
 .feature-action {
@@ -492,10 +496,11 @@ main {
     align-self: flex-end;
 }
 .ai-bubble {
-    padding: 14px 18px;
-    border-radius: 14px;
-    font-size: 15px;
-    line-height: 1.8;
+    padding: 16px 20px;
+    border-radius: 16px;
+    font-size: 16px;
+    line-height: 1.9;
+    letter-spacing: 0.02em;
     color: #333;
     animation: aiBubbleIn 0.3s ease;
 }
@@ -1198,17 +1203,19 @@ main {
 }
 
 .training-card h3 {
-    margin-bottom: 15px;
+    margin-bottom: 16px;
     color: #333;
-    padding: 22px 24px 0 24px;
-    font-size: 18px;
+    padding: 24px 26px 0 26px;
+    font-size: 19px;
+    letter-spacing: 0.03em;
 }
 
 .training-card p {
-    padding: 0 24px;
-    font-size: 15px;
-    line-height: 1.7;
+    padding: 0 26px 20px;
+    font-size: 16px;
+    line-height: 1.8;
     color: #666;
+    letter-spacing: 0.02em;
 }
 
 .training-card .training-link {
@@ -1677,11 +1684,13 @@ main {
 }
 
 .footer-section h3 {
-    margin-bottom: 20px;
+    margin-bottom: 22px;
     color: white;
     display: flex;
     align-items: center;
     gap: 10px;
+    font-size: 18px;
+    letter-spacing: 0.03em;
 }
 
 .footer-section ul {
@@ -1689,13 +1698,14 @@ main {
 }
 
 .footer-section ul li {
-    margin-bottom: 10px;
+    margin-bottom: 12px;
 }
 
 .footer-section a {
     color: #ccc;
     text-decoration: none;
     transition: color 0.3s;
+    font-size: 15px;
 }
 
 .footer-section a:hover {
@@ -1704,10 +1714,11 @@ main {
 
 .footer-section p {
     color: #ccc;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
     display: flex;
     align-items: center;
     gap: 10px;
+    font-size: 15px;
 }
 
 .footer-bottom {
@@ -2576,17 +2587,19 @@ main {
 }
 
 .product-name {
-    font-size: 16px;
+    font-size: 17px;
     font-weight: 600;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
     color: #333;
     line-height: 1.5;
+    letter-spacing: 0.02em;
 }
 
 .product-desc {
-    font-size: 13px;
+    font-size: 14px;
     color: #999;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
+    letter-spacing: 0.01em;
 }
 
 .product-tags {
@@ -2755,26 +2768,27 @@ main {
 .expert-card-header {
     display: flex;
     align-items: center;
-    gap: 16px;
-    margin-bottom: 16px;
+    gap: 18px;
+    margin-bottom: 18px;
 }
 
 .expert-avatar {
-    width: 60px;
-    height: 60px;
+    width: 64px;
+    height: 64px;
     border-radius: 50%;
     background: var(--primary-bg);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 30px;
+    font-size: 32px;
     flex-shrink: 0;
 }
 
 .expert-header-info h3 {
-    font-size: 18px;
+    font-size: 19px;
     color: #333;
-    margin-bottom: 4px;
+    margin-bottom: 6px;
+    letter-spacing: 0.03em;
 }
 
 .expert-specialty-tag {
@@ -2808,10 +2822,11 @@ main {
 }
 
 .expert-intro {
-    font-size: 14px;
+    font-size: 15px;
     color: #555;
-    line-height: 1.7;
+    line-height: 1.8;
     flex: 1;
+    letter-spacing: 0.02em;
 }
 
 .expert-card-footer {
@@ -3031,10 +3046,11 @@ main {
 }
 
 .job-card-title {
-    font-size: 18px;
+    font-size: 19px;
     font-weight: 600;
     color: #333;
-    margin-bottom: 4px;
+    margin-bottom: 6px;
+    letter-spacing: 0.03em;
 }
 
 .job-card-clinic {
@@ -3067,10 +3083,11 @@ main {
 }
 
 .job-card-salary {
-    font-size: 22px;
+    font-size: 24px;
     font-weight: 700;
     color: var(--danger);
-    margin-bottom: 14px;
+    margin-bottom: 16px;
+    letter-spacing: 0.02em;
 }
 
 .job-card-meta {
