@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>专家问诊 - 宠物新手助手</title>
-    <meta name="description" content="宠物新手助手平台认证宠物医疗专家团队，涵盖犬科、猫科、皮肤科等多个专科方向。专家入驻申请，审核通过后即可在线为宠物主人提供专业咨询。">
+    <title>专家在线 - AI宠物问诊</title>
+    <meta name="description" content="AI宠物问诊平台认证宠物医疗专家团队，涵盖犬科、猫科、皮肤科等多个专科方向。专家入驻申请，审核通过后即可在线为宠物主人提供专业咨询。">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap">
@@ -17,20 +17,22 @@
             <div class="logo">
                 <a href="index.html" style="display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit;">
                     <i class="fas fa-paw"></i>
-                    <h1>宠物新手助手</h1>
+                    <h1>AI宠物问诊</h1>
                 </a>
             </div>
+            <div class="pet-theme-toggle" id="pet-theme-toggle">
+                <button class="pet-theme-btn active" data-theme="default" title="通用模式">🐾</button>
+                <button class="pet-theme-btn" data-theme="dog" title="狗狗主题">🐶</button>
+                <button class="pet-theme-btn" data-theme="cat" title="猫咪主题">🐱</button>
+            </div>
             <ul class="nav-links">
-                <li><a href="index.html"><i class="fas fa-home"></i> 首页</a></li>
-                <li><a href="index.html#dashboard"><i class="fas fa-calendar-alt"></i> 每日养护</a></li>
-                <li><a href="index.html#guide"><i class="fas fa-book"></i> 新手指南</a></li>
-                <li><a href="index.html#training"><i class="fas fa-graduation-cap"></i> 训练方法</a></li>
-                <li><a href="index.html#ai-consultation"><i class="fas fa-robot"></i> AI问诊</a></li>
-                <li><a href="experts.html" class="active"><i class="fas fa-user-md"></i> 专家问诊</a></li>
-                <li><a href="index.html#health"><i class="fas fa-heartbeat"></i> 健康管理</a></li>
-                <li><a href="index.html#store"><i class="fas fa-store"></i> 宠物商城</a></li>
+                <li class="nav-mobile-hide"><a href="index.html"><i class="fas fa-home"></i> 首页</a></li>
+                <li class="nav-mobile-hide"><a href="index.html#ai-consultation"><i class="fas fa-robot"></i> AI问诊</a></li>
+                <li><a href="experts.html" class="active"><i class="fas fa-user-md"></i> 专家在线</a></li>
+                <li class="nav-mobile-hide"><a href="index.html#health"><i class="fas fa-book-medical"></i> 健康百科</a></li>
+                <li class="nav-mobile-hide"><a href="index.html#store"><i class="fas fa-store"></i> 宠物商城</a></li>
+                <li class="nav-mobile-hide"><a href="index.html#profile"><i class="fas fa-user"></i> 我的</a></li>
                 <li><a href="jobs.html"><i class="fas fa-briefcase"></i> 招聘中心</a></li>
-                <li><a href="index.html#profile"><i class="fas fa-user"></i> 我的宠物</a></li>
                 <li class="nav-cart">
                     <a href="index.html#cart">
                         <i class="fas fa-shopping-cart"></i>
@@ -131,17 +133,17 @@
         <div class="container">
             <div class="footer-content">
                 <div class="footer-section">
-                    <h3><i class="fas fa-paw"></i> 宠物新手助手</h3>
-                    <p>让每一只宠物都能得到科学、专业的养护</p>
+                    <h3><i class="fas fa-paw"></i> AI宠物问诊</h3>
+                    <p>AI驱动的智能宠物健康管理平台</p>
                 </div>
                 <div class="footer-section">
                     <h3>快速链接</h3>
                     <ul>
                         <li><a href="index.html">首页</a></li>
-                        <li><a href="index.html#dashboard">每日养护</a></li>
-                        <li><a href="index.html#guide">新手指南</a></li>
+                        <li><a href="index.html#ai-consultation">AI问诊</a></li>
+                        <li><a href="index.html#health">健康百科</a></li>
                         <li><a href="index.html#store">宠物商城</a></li>
-                        <li><a href="index.html#health">健康管理</a></li>
+                        <li><a href="index.html#profile">我的宠物</a></li>
                     </ul>
                 </div>
                 <div class="footer-section">
@@ -151,12 +153,36 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2026 宠物新手助手. 版权所有.</p>
+                <p>&copy; 2026 AI宠物问诊. 版权所有.</p>
                 <p>本网站内容仅供参考，具体养护请咨询专业兽医</p>
-                <p class="mt-2"><a href="admin/index.html" style="color:#666;text-decoration:none;font-size:12px;">管理入口</a></p>
+                <p class="mt-2"><a href="/admin/" style="color:#666;text-decoration:none;font-size:12px;">管理入口</a></p>
             </div>
         </div>
     </footer>
+
+    <!-- 移动端底部标签栏 -->
+    <nav class="bottom-tabs" id="bottom-tabs">
+        <a class="bottom-tab" data-tab="home" data-target="home" href="index.html">
+            <i class="fas fa-home"></i>
+            <span>首页</span>
+        </a>
+        <a class="bottom-tab" data-tab="ai-consultation" data-target="ai-consultation" href="index.html#ai-consultation">
+            <i class="fas fa-robot"></i>
+            <span>AI问诊</span>
+        </a>
+        <a class="bottom-tab" data-tab="health" data-target="health" href="index.html#health">
+            <i class="fas fa-book-medical"></i>
+            <span>健康百科</span>
+        </a>
+        <a class="bottom-tab" data-tab="store" data-target="store" href="index.html#store">
+            <i class="fas fa-store"></i>
+            <span>商城</span>
+        </a>
+        <a class="bottom-tab" data-tab="profile" data-target="profile" href="index.html#profile">
+            <i class="fas fa-user"></i>
+            <span>我的</span>
+        </a>
+    </nav>
 
     <script>
     // ============ 导航栏滚动效果 ============
@@ -170,6 +196,25 @@
             navbar.classList.remove('scrolled');
         }
         lastScroll = currentScroll;
+    });
+
+    // 宠物主题切换
+    const savedThemeEx = (() => { try { const v = localStorage.getItem('petTheme'); return v ? JSON.parse(v) : 'default'; } catch(e) { return 'default'; } })();
+    function applyThemeX(theme) {
+        document.body.classList.remove('theme-dog', 'theme-cat');
+        if (theme === 'dog') document.body.classList.add('theme-dog');
+        else if (theme === 'cat') document.body.classList.add('theme-cat');
+    }
+    applyThemeX(savedThemeEx);
+    document.querySelectorAll('.pet-theme-btn').forEach(btn => {
+        if (btn.dataset.theme === savedThemeEx) btn.classList.add('active');
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.pet-theme-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            const theme = this.dataset.theme;
+            try { localStorage.setItem('petTheme', JSON.stringify(theme)); } catch(e) {}
+            applyThemeX(theme);
+        });
     });
 
     // 移动端菜单

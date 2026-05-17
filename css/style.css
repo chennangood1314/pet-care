@@ -7,44 +7,51 @@
 
 
 :root {
-    --primary: #4CAF50;
-    --primary-dark: #388E3C;
-    --primary-light: #8BC34A;
+    --primary: #43A047;
+    --primary-dark: #2E7D32;
+    --primary-light: #66BB6A;
     --primary-bg: #e8f5e9;
-    --danger: #ff4444;
-    --warning: #ff9800;
-    --star: #ffb400;
-    --text: #333;
-    --text-secondary: #666;
+    --primary-glow: rgba(67, 160, 71, 0.2);
+    --accent: #FF8F00;
+    --accent-light: #FFB74D;
+    --danger: #E53935;
+    --warning: #FF8F00;
+    --star: #FFB300;
+    --text: #1a1a2e;
+    --text-secondary: #5a5a7a;
     --text-muted: #999;
     --text-placeholder: #bbb;
-    --bg: #f8f9fa;
-    --bg-alt: #f5f7fa;
+    --bg: #f0f4f8;
+    --bg-alt: #f8fafc;
+    --bg-card: #ffffff;
     --white: #fff;
-    --border: #e0e0e0;
-    --border-light: #eee;
-    --shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
-    --shadow-md: 0 4px 20px rgba(0,0,0,0.08);
-    --shadow-lg: 0 8px 30px rgba(0,0,0,0.12);
-    --shadow-hover: 0 12px 36px rgba(0,0,0,0.15);
+    --border: #e2e8f0;
+    --border-light: #f0f0f5;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.06);
+    --shadow-md: 0 4px 6px rgba(0,0,0,0.04), 0 2px 16px rgba(0,0,0,0.06);
+    --shadow-lg: 0 10px 25px rgba(0,0,0,0.06), 0 4px 10px rgba(0,0,0,0.04);
+    --shadow-hover: 0 20px 40px rgba(0,0,0,0.1), 0 8px 16px rgba(0,0,0,0.06);
     --radius-sm: 8px;
-    --radius-md: 12px;
-    --radius-lg: 16px;
-    --radius-full: 24px;
-    --transition: 0.3s ease;
+    --radius-md: 14px;
+    --radius-lg: 20px;
+    --radius-full: 9999px;
+    --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 body {
     font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    line-height: 1.6;
-    color: #333;
+    line-height: 1.75;
+    font-size: 16px;
+    color: var(--text);
     background-color: var(--bg);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 .container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 20px;
+    padding: 0 24px;
 }
 
 /* 导航栏样式 */
@@ -62,13 +69,14 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px 20px;
+    padding: 10px 20px;
 }
 
 .logo {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
+    flex-shrink: 0;
 }
 
 .logo i {
@@ -80,22 +88,31 @@ body {
     font-size: 20px;
     font-weight: 600;
     color: #333;
+    white-space: nowrap;
 }
 
 .nav-links {
     display: flex;
     list-style: none;
-    gap: 30px;
+    gap: 24px;
 }
 
 .nav-links a {
     text-decoration: none;
     color: #666;
     font-weight: 500;
+    font-size: 15px;
     display: flex;
     align-items: center;
     gap: 5px;
     transition: color 0.3s;
+    white-space: nowrap;
+}
+
+.nav-links a i {
+    font-size: 14px;
+    width: 18px;
+    text-align: center;
 }
 
 .nav-links a {
@@ -143,20 +160,44 @@ body {
 
 /* 主内容区域 */
 main {
-    margin-top: 70px;
+    margin-top: 54px;
 }
 
 /* 英雄区域 */
 .hero {
-    padding: 60px 0;
-    background: linear-gradient(135deg, var(--primary) 0%, #2E7D32 100%);
+    padding: 80px 0 60px;
+    background: linear-gradient(135deg, #1b5e20 0%, var(--primary) 30%, #43A047 60%, #2E7D32 100%);
     color: white;
+    position: relative;
+    overflow: hidden;
+}
+.hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -20%;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
+    border-radius: 50%;
+}
+.hero::after {
+    content: '';
+    position: absolute;
+    bottom: -30%;
+    left: -10%;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
+    border-radius: 50%;
 }
 
 .hero .container {
     display: flex;
     align-items: center;
-    gap: 40px;
+    gap: 50px;
+    position: relative;
+    z-index: 1;
 }
 
 .hero-content {
@@ -164,22 +205,24 @@ main {
 }
 
 .hero h2 {
-    font-size: 36px;
+    font-size: 44px;
     font-weight: 700;
     margin-bottom: 20px;
-    line-height: 1.5;
-    letter-spacing: 0.02em;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
 }
 
 .hero p {
-    font-size: 18px;
-    margin-bottom: 30px;
-    opacity: 0.9;
+    font-size: 20px;
+    margin-bottom: 36px;
+    opacity: 0.92;
+    line-height: 1.8;
+    font-weight: 300;
 }
 
 .hero-buttons {
     display: flex;
-    gap: 15px;
+    gap: 18px;
 }
 
 .hero-image {
@@ -262,100 +305,120 @@ main {
 
 /* 按钮样式 */
 .btn {
-    padding: 12px 24px;
+    padding: 14px 32px;
     border: none;
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: 500;
+    border-radius: var(--radius-md);
+    font-size: 17px;
+    font-weight: 600;
     cursor: pointer;
     text-decoration: none;
-    display: inline-block;
-    transition: all 0.3s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all var(--transition);
+    letter-spacing: 0.01em;
 }
 
 .btn-primary {
-    background-color: var(--primary);
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
     color: white;
+    box-shadow: 0 4px 14px var(--primary-glow);
 }
 
 .btn-primary:hover {
-    background-color: var(--primary-dark);
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+    box-shadow: 0 8px 24px rgba(67, 160, 71, 0.35);
 }
 
 .btn-secondary {
-    background-color: transparent;
+    background-color: rgba(255,255,255,0.15);
     color: white;
-    border: 2px solid white;
+    border: 2px solid rgba(255,255,255,0.3);
+    backdrop-filter: blur(4px);
 }
 
 .btn-secondary:hover {
-    background-color: white;
-    color: #333;
+    background-color: rgba(255,255,255,0.25);
+    border-color: rgba(255,255,255,0.5);
+    transform: translateY(-2px);
 }
 
 /* 功能卡片 */
 .section-title {
-    font-size: 28px;
+    font-size: 32px;
     text-align: center;
-    margin-bottom: 40px;
-    color: #333;
+    margin-bottom: 48px;
+    color: var(--text);
+    line-height: 1.4;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+}
+.section-title i {
+    color: var(--primary);
+    margin-right: 10px;
 }
 
 .features-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 30px;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 28px;
     padding: 40px 0;
 }
 
 .feature-card {
-    background: white;
-    padding: 30px;
-    border-radius: var(--radius-md);
+    background: var(--bg-card);
+    padding: 36px 28px;
+    border-radius: var(--radius-lg);
     text-align: center;
-    box-shadow: var(--shadow-md);
-    transition: transform 0.3s, box-shadow 0.3s;
+    box-shadow: var(--shadow-sm);
+    transition: all var(--transition);
     cursor: pointer;
     position: relative;
     overflow: hidden;
+    border: 1px solid var(--border-light);
 }
-.feature-card::after {
+.feature-card::before {
     content: '';
     position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: var(--primary);
-    transform: scaleX(0);
-    transition: transform 0.3s ease;
+    inset: 0;
+    background: linear-gradient(180deg, var(--primary-bg) 0%, transparent 60%);
+    opacity: 0;
+    transition: opacity var(--transition);
 }
-.feature-card:hover::after {
-    transform: scaleX(1);
+.feature-card:hover::before {
+    opacity: 1;
 }
-
 .feature-card:hover {
-    transform: translateY(-5px);
+    transform: translateY(-4px);
     box-shadow: var(--shadow-hover);
+    border-color: transparent;
 }
 
 .feature-icon {
-    font-size: 40px;
+    font-size: 44px;
     color: var(--primary);
-    margin-bottom: 20px;
+    margin-bottom: 24px;
 }
 
 .feature-card h3 {
-    margin-bottom: 15px;
+    margin-bottom: 16px;
     color: #333;
+    line-height: 1.4;
+    font-weight: 600;
+    font-size: 20px;
+}
+
+.feature-card p {
+    font-size: 15px;
+    color: #666;
+    line-height: 1.7;
 }
 
 .feature-action {
     display: inline-block;
-    margin-top: 12px;
-    font-size: 13px;
+    margin-top: 14px;
+    font-size: 14px;
     color: var(--primary);
     font-weight: 500;
     opacity: 0;
@@ -369,15 +432,15 @@ main {
 
 /* AI 智能问诊 */
 .ai-consultation {
-    padding: 60px 0;
+    padding: 80px 0;
     background: var(--bg-alt);
 }
 .ai-subtitle {
     text-align: center;
-    color: #888;
-    margin-top: -30px;
-    margin-bottom: 36px;
-    font-size: 15px;
+    color: var(--text-muted);
+    margin-top: -32px;
+    margin-bottom: 40px;
+    font-size: 16px;
 }
 .ai-chat-container {
     max-width: 680px;
@@ -386,24 +449,28 @@ main {
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-lg);
     overflow: hidden;
+    border: 1px solid var(--border-light);
 }
 .ai-chat-header {
     display: flex;
     align-items: center;
     gap: 14px;
     padding: 18px 24px;
-    background: linear-gradient(135deg, var(--primary), #2E7D32);
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
     color: white;
+    position: relative;
 }
 .ai-avatar {
-    width: 44px;
-    height: 44px;
+    width: 48px;
+    height: 48px;
     border-radius: 50%;
     background: rgba(255,255,255,0.2);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 20px;
+    font-size: 22px;
+    backdrop-filter: blur(4px);
+    border: 2px solid rgba(255,255,255,0.3);
 }
 .ai-chat-body {
     height: 380px;
@@ -425,10 +492,10 @@ main {
     align-self: flex-end;
 }
 .ai-bubble {
-    padding: 12px 16px;
+    padding: 14px 18px;
     border-radius: 14px;
-    font-size: 14px;
-    line-height: 1.7;
+    font-size: 15px;
+    line-height: 1.8;
     color: #333;
     animation: aiBubbleIn 0.3s ease;
 }
@@ -457,9 +524,9 @@ main {
 .ai-quick-btn {
     background: white;
     border: 1px solid #e0e0e0;
-    padding: 7px 14px;
+    padding: 8px 16px;
     border-radius: 20px;
-    font-size: 13px;
+    font-size: 14px;
     color: #555;
     cursor: pointer;
     transition: all 0.2s;
@@ -481,8 +548,8 @@ main {
     flex: 1;
     border: 1px solid #e0e0e0;
     border-radius: 24px;
-    padding: 10px 18px;
-    font-size: 14px;
+    padding: 12px 20px;
+    font-size: 15px;
     outline: none;
     transition: border-color 0.2s;
     font-family: inherit;
@@ -678,7 +745,7 @@ main {
 
 /* 宠物类型选择 */
 .pet-type {
-    padding: 60px 0;
+    padding: 80px 0;
 }
 
 .pet-options {
@@ -709,14 +776,15 @@ main {
     height: 80px;
     border-radius: 50%;
     margin: 0 auto 15px;
-    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 44px;
     transition: transform var(--transition);
 }
-.pet-img img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
+.pet-img-dog { background: linear-gradient(135deg, #ffe0b2, #ffcc80); }
+.pet-img-cat { background: linear-gradient(135deg, #e0e0e0, #bdbdbd); }
+.pet-img-other { background: linear-gradient(135deg, #f3e5f5, #ce93d8); }
 .pet-option:hover .pet-img {
     transform: scale(1.08);
 }
@@ -796,7 +864,7 @@ main {
 
 /* 健康管理 */
 .health {
-    padding: 60px 0;
+    padding: 80px 0;
 }
 
 .health-grid {
@@ -870,9 +938,128 @@ main {
     color: #721c24;
 }
 
+/* 健康百科 Tab 切换 */
+.health-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.health-tab {
+    padding: 12px 28px;
+    border: 2px solid #e0e0e0;
+    background: white;
+    border-radius: 24px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 500;
+    color: #666;
+    transition: all 0.3s;
+    font-family: inherit;
+}
+
+.health-tab.active {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+
+.health-tab:hover:not(.active) {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.health-panel {
+    display: none;
+}
+
+.health-panel.active {
+    display: block;
+}
+
+/* 养宠指南内部子标签 */
+.guide-inner-tabs {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.guide-inner-tab {
+    padding: 8px 18px;
+    border: 1px solid #ddd;
+    background: white;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    color: #666;
+    transition: all 0.3s;
+    font-family: inherit;
+}
+
+.guide-inner-tab.active {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+
+.guide-inner-panel {
+    display: none;
+}
+
+.guide-inner-panel.active {
+    display: block;
+}
+
+.guide-inner-panel h3 {
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 14px;
+}
+
+.guide-inner-panel ul {
+    list-style: none;
+    padding: 0;
+}
+
+.guide-inner-panel ul li {
+    padding: 10px 14px;
+    margin-bottom: 6px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #555;
+    line-height: 1.6;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.guide-inner-panel ul li i {
+    color: var(--primary);
+    margin-top: 2px;
+    flex-shrink: 0;
+}
+
+/* 我的宠物 - 每日养护任务 */
+.daily-tasks-mini {
+    background: white;
+    border-radius: var(--radius-md);
+    padding: 24px;
+    margin-bottom: 30px;
+    box-shadow: var(--shadow-md);
+}
+
+.daily-tasks-mini .date-display {
+    margin-bottom: 16px;
+}
+
 /* 宠物档案 */
 .profile {
-    padding: 60px 0;
+    padding: 80px 0;
     background-color: var(--bg-alt);
 }
 
@@ -913,11 +1100,12 @@ main {
 .form-group input,
 .form-group select {
     width: 100%;
-    padding: 12px;
+    padding: 14px 16px;
     border: 1px solid #ddd;
-    border-radius: 8px;
+    border-radius: 10px;
     font-size: 16px;
     transition: border-color 0.3s;
+    font-family: inherit;
 }
 
 .form-group input:focus,
@@ -969,7 +1157,7 @@ main {
 
 /* 训练方法 */
 .training {
-    padding: 60px 0;
+    padding: 80px 0;
 }
 
 .training-cards {
@@ -994,26 +1182,33 @@ main {
 .training-img {
     width: 100%;
     height: 120px;
-    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 52px;
 }
-.training-img img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform var(--transition);
-}
-.training-card:hover .training-img img {
-    transform: scale(1.08);
+.training-img-toilet { background: linear-gradient(135deg, #e8f5e9, #c8e6c9); }
+.training-img-feeding { background: linear-gradient(135deg, #fff3e0, #ffe0b2); }
+.training-img-social { background: linear-gradient(135deg, #e3f2fd, #bbdefb); }
+.training-img-commands { background: linear-gradient(135deg, #fce4ec, #f8bbd0); }
+.training-img-leash { background: linear-gradient(135deg, #e0f2f1, #b2dfdb); }
+.training-img-crate { background: linear-gradient(135deg, #ede7f6, #d1c4e9); }
+.training-card:hover .training-img {
+    filter: brightness(0.95);
 }
 
 .training-card h3 {
     margin-bottom: 15px;
     color: #333;
-    padding: 18px 20px 0 20px;
+    padding: 22px 24px 0 24px;
+    font-size: 18px;
 }
 
 .training-card p {
-    padding: 0 20px;
+    padding: 0 24px;
+    font-size: 15px;
+    line-height: 1.7;
+    color: #666;
 }
 
 .training-card .training-link {
@@ -1039,7 +1234,7 @@ main {
 
 /* 宠物商城 */
 .store {
-    padding: 60px 0;
+    padding: 80px 0;
     background-color: var(--bg-alt);
 }
 
@@ -1122,12 +1317,13 @@ main {
 }
 
 .category-btn {
-    padding: 10px 20px;
+    padding: 12px 24px;
     border: 2px solid #ddd;
     background: white;
-    border-radius: 20px;
+    border-radius: 24px;
     cursor: pointer;
     font-weight: 500;
+    font-size: 15px;
     transition: all 0.3s;
 }
 
@@ -1468,9 +1664,9 @@ main {
 
 /* 页脚 */
 .footer {
-    background-color: #333;
+    background-color: #1a1a2e;
     color: white;
-    padding: 60px 0 20px;
+    padding: 80px 0 30px;
 }
 
 .footer-content {
@@ -1516,10 +1712,11 @@ main {
 
 .footer-bottom {
     text-align: center;
-    padding-top: 20px;
-    border-top: 1px solid #444;
+    padding-top: 24px;
+    border-top: 1px solid rgba(255,255,255,0.1);
     color: #999;
     font-size: 14px;
+    line-height: 1.8;
 }
 
 /* 通知 */
@@ -1602,13 +1799,24 @@ main {
         padding: 0 16px;
     }
 
+    .logo h1 {
+        font-size: 16px;
+    }
+    .logo i {
+        font-size: 18px;
+    }
+
     .nav-links {
-        gap: 15px;
+        gap: 10px;
     }
 
     .nav-links a {
-        font-size: 13px;
+        font-size: 12px;
         gap: 3px;
+    }
+    .nav-links a i {
+        font-size: 11px;
+        width: 14px;
     }
 
     .hero h2 {
@@ -1618,6 +1826,7 @@ main {
 
     .hero p {
         font-size: 15px;
+        line-height: 1.6;
     }
 
     .features-grid {
@@ -1685,10 +1894,10 @@ main {
     }
 
     .nav-links a {
-        padding: 14px 0;
-        font-size: 15px;
+        padding: 16px 0;
+        font-size: 16px;
         justify-content: flex-start;
-        gap: 10px;
+        gap: 12px;
     }
 
     .nav-toggle {
@@ -1702,10 +1911,13 @@ main {
         position: relative;
     }
 
+/* 底部标签栏 — 默认隐藏（桌面端），移动端通过 @media 覆盖为 flex */
+.bottom-tabs {
+    display: none;
+}
+
     /* 英雄区域 */
-    .hero {
-        padding: 30px 0;
-    }
+    .hero { padding: 30px 0 24px; }
 
     .hero .container {
         flex-direction: column;
@@ -1713,14 +1925,87 @@ main {
         gap: 24px;
     }
 
+    /* ═══ 移动端小程序风格 ═══ */
+    .nav-links .nav-mobile-hide,
+    .nav-links.active .nav-mobile-hide { display: none !important; }
+
+    .bottom-tabs {
+        display: flex;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        background: #fff;
+        border-top: 0.5px solid #e8e8e8;
+        box-shadow: 0 -2px 12px rgba(0,0,0,0.04);
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+        height: calc(50px + env(safe-area-inset-bottom, 0px));
+    }
+
+    .bottom-tab {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        color: #999;
+        font-size: 10px;
+        font-weight: 400;
+        gap: 2px;
+        transition: color 0.2s ease;
+        position: relative;
+        padding-top: 6px;
+        -webkit-tap-highlight-color: transparent;
+        user-select: none;
+    }
+
+    .bottom-tab i { font-size: 21px; line-height: 1; transition: color 0.2s ease, transform 0.2s ease; }
+    .bottom-tab span { line-height: 1; }
+    .bottom-tab.active { color: var(--primary); font-weight: 500; }
+    .bottom-tab.active i { transform: scale(1.05); }
+    .bottom-tab.active::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 20px;
+        height: 3px;
+        background: var(--primary);
+        border-radius: 0 0 3px 3px;
+    }
+    .bottom-tab:active { opacity: 0.7; }
+
+    body { padding-bottom: calc(50px + env(safe-area-inset-bottom, 0px)); }
+    main { padding-bottom: calc(50px + env(safe-area-inset-bottom, 0px)); }
+    .footer { padding-bottom: calc(70px + env(safe-area-inset-bottom, 0px)); }
+
+    .ai-consultation { padding: 40px 0; }
+    .features { padding: 40px 0; }
+    .pet-type { padding: 40px 0; }
+    .health { padding: 40px 0; }
+    .profile { padding: 40px 0; }
+    .store { padding: 40px 0; }
+    .expert-consultation { padding: 40px 0; }
+    .recruitment { padding: 40px 0; }
+
+    .features-grid { gap: 12px; padding: 16px 0; }
+    .feature-card { padding: 20px 16px; border-radius: 10px; box-shadow: 0 1px 6px rgba(0,0,0,0.04); }
+    .feature-card:hover { transform: none; box-shadow: 0 1px 6px rgba(0,0,0,0.04); }
+    .health-tab { padding: 8px 16px; font-size: 13px; }
+    .section-title { font-size: 22px; margin-bottom: 24px; }
+
     .hero h2 {
-        font-size: 24px;
-        line-height: 1.45;
+        font-size: 28px;
+        line-height: 1.4;
     }
 
     .hero p {
-        font-size: 14px;
-        margin-bottom: 20px;
+        font-size: 16px;
+        margin-bottom: 24px;
+        line-height: 1.7;
     }
 
     .hero-buttons {
@@ -1736,8 +2021,9 @@ main {
 
     /* 通用 */
     .section-title {
-        font-size: 20px;
-        margin-bottom: 24px;
+        font-size: 24px;
+        margin-bottom: 30px;
+        line-height: 1.4;
     }
 
     .features-grid {
@@ -1900,16 +2186,18 @@ main {
 /* 小屏手机 (≤480px) */
 @media (max-width: 480px) {
     .hero h2 {
-        font-size: 20px;
-        line-height: 1.4;
+        font-size: 24px;
+        line-height: 1.35;
     }
 
     .hero p {
-        font-size: 13px;
+        font-size: 15px;
+        line-height: 1.6;
     }
 
     .hero-buttons {
         flex-direction: column;
+        align-items: center;
         gap: 10px;
     }
 
@@ -2284,21 +2572,21 @@ main {
 }
 
 .product-info {
-    padding: 16px;
+    padding: 20px;
 }
 
 .product-name {
-    font-size: 15px;
+    font-size: 16px;
     font-weight: 600;
-    margin-bottom: 4px;
+    margin-bottom: 6px;
     color: #333;
-    line-height: 1.4;
+    line-height: 1.5;
 }
 
 .product-desc {
-    font-size: 12px;
+    font-size: 13px;
     color: #999;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
 }
 
 .product-tags {
@@ -2352,7 +2640,7 @@ main {
 }
 
 .price-now {
-    font-size: 20px;
+    font-size: 22px;
     font-weight: 700;
     color: var(--danger);
 }
@@ -2364,13 +2652,13 @@ main {
 }
 
 .btn-add-cart {
-    padding: 8px 14px;
+    padding: 10px 18px;
     background: var(--primary);
     color: white;
     border: none;
     border-radius: 20px;
     cursor: pointer;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 500;
     white-space: nowrap;
     transition: background 0.3s, transform 0.2s;
@@ -2980,4 +3268,106 @@ main {
     max-width: 90vw;
     text-align: center;
     box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+
+/* ========== 智能问候 ========== */
+.smart-greeting {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+.greeting-icon {
+    font-size: 36px;
+    flex-shrink: 0;
+}
+.greeting-text {
+    font-size: 18px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.95);
+    line-height: 1.5;
+}
+.greeting-time {
+    font-size: 14px;
+    font-weight: 300;
+    color: rgba(255,255,255,0.7);
+    display: block;
+}
+
+/* ========== 宠物主题切换 ========== */
+.theme-dog {
+    --primary: #5C6BC0;
+    --primary-dark: #3F51B5;
+    --primary-light: #7986CB;
+    --primary-bg: #e8eaf6;
+    --primary-glow: rgba(92, 107, 192, 0.2);
+}
+.theme-dog .hero {
+    background: linear-gradient(135deg, #1a237e 0%, var(--primary) 30%, #5C6BC0 60%, var(--primary-dark) 100%);
+}
+.theme-dog .section-title i { color: var(--primary); }
+.theme-dog .btn-primary { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); }
+
+.theme-cat {
+    --primary: #FF7043;
+    --primary-dark: #E64A19;
+    --primary-light: #FF8A65;
+    --primary-bg: #fbe9e7;
+    --primary-glow: rgba(255, 112, 67, 0.2);
+}
+.theme-cat .hero {
+    background: linear-gradient(135deg, #bf360c 0%, var(--primary) 30%, #FF7043 60%, var(--primary-dark) 100%);
+}
+.theme-cat .section-title i { color: var(--primary); }
+.theme-cat .btn-primary { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); }
+
+.pet-theme-toggle {
+    display: flex;
+    gap: 4px;
+    background: rgba(255,255,255,0.15);
+    border-radius: var(--radius-full);
+    padding: 3px;
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,0.2);
+}
+.pet-theme-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.pet-theme-btn.active {
+    background: rgba(255,255,255,0.3);
+    transform: scale(1.1);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+@media (max-width: 768px) {
+    .pet-theme-toggle {
+        margin-right: 8px;
+    }
+    .pet-theme-btn {
+        width: 28px;
+        height: 28px;
+        font-size: 14px;
+    }
+    .smart-greeting {
+        margin-bottom: 16px;
+    }
+    .greeting-icon {
+        font-size: 28px;
+    }
+    .greeting-text {
+        font-size: 16px;
+    }
+    .greeting-time {
+        font-size: 12px;
+    }
 }

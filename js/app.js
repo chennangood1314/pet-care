@@ -3,11 +3,17 @@ document.addEventListener('DOMContentLoaded', function() {
     // 初始化日期显示
     updateCurrentDate();
 
+    // 初始化智能问候
+    initSmartGreeting();
+
+    // 初始化宠物主题切换
+    initPetTheme();
+
     // 初始化导航栏
     initNavigation();
 
-    // 初始化新手指南标签页
-    initGuideTabs();
+    // 初始化健康百科标签页
+    initHealthTabs();
 
     // 初始化移动端菜单
     initMobileMenu();
@@ -21,12 +27,15 @@ document.addEventListener('DOMContentLoaded', function() {
     // 初始化 AI 问诊
     initAIConsultation();
 
+    // 初始化底部标签栏（移动端）
+    initBottomTabs();
+
     // 显示欢迎通知
     const hasVisited = storage.get('hasVisited', false);
     if (!hasVisited) {
         storage.set('hasVisited', true);
         setTimeout(() => {
-            showNotification('欢迎使用宠物新手助手！开始您的科学养宠之旅吧～');
+            showNotification('欢迎使用AI宠物问诊！AI智能分析，守护宠物健康～');
         }, 1000);
     }
 });
@@ -44,6 +53,81 @@ function updateCurrentDate() {
     const dateElement = document.getElementById('current-date');
     if (dateElement) {
         dateElement.textContent = dateStr;
+    }
+}
+
+// 初始化智能问候
+function initSmartGreeting() {
+    const greetingMsg = document.getElementById('greeting-msg');
+    const greetingIcon = document.getElementById('greeting-icon');
+    const greetingTime = document.getElementById('greeting-time');
+    if (!greetingMsg || !greetingIcon) return;
+
+    const now = new Date();
+    const hour = now.getHours();
+    let msg, icon;
+
+    if (hour >= 5 && hour < 9) {
+        msg = '早上好';
+        icon = '🌅';
+    } else if (hour >= 9 && hour < 12) {
+        msg = '上午好';
+        icon = '☀️';
+    } else if (hour >= 12 && hour < 14) {
+        msg = '中午好';
+        icon = '🌤️';
+    } else if (hour >= 14 && hour < 18) {
+        msg = '下午好';
+        icon = '🌻';
+    } else if (hour >= 18 && hour < 22) {
+        msg = '晚上好';
+        icon = '🌙';
+    } else {
+        msg = '夜深了';
+        icon = '🌟';
+    }
+
+    greetingMsg.textContent = msg + '，铲屎官！';
+    greetingIcon.textContent = icon;
+
+    if (greetingTime) {
+        const timeStr = now.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
+        greetingTime.textContent = '今天是 ' + now.toLocaleDateString('zh-CN', { month: 'long', day: 'numeric', weekday: 'long' }) + ' ' + timeStr;
+    }
+}
+
+// 初始化宠物主题切换
+function initPetTheme() {
+    const toggle = document.getElementById('pet-theme-toggle');
+    if (!toggle) return;
+
+    const savedTheme = storage.get('petTheme', 'default');
+    applyTheme(savedTheme);
+
+    toggle.querySelectorAll('.pet-theme-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.dataset.theme === savedTheme) {
+            btn.classList.add('active');
+        }
+
+        btn.addEventListener('click', function() {
+            toggle.querySelectorAll('.pet-theme-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            const theme = this.dataset.theme;
+            storage.set('petTheme', theme);
+            applyTheme(theme);
+        });
+    });
+}
+
+function applyTheme(theme) {
+    const body = document.body;
+    body.classList.remove('theme-dog', 'theme-cat');
+
+    if (theme === 'dog') {
+        body.classList.add('theme-dog');
+    } else if (theme === 'cat') {
+        body.classList.add('theme-cat');
     }
 }
 
@@ -86,21 +170,41 @@ function initNavigation() {
     });
 }
 
-// 初始化新手指南标签页
-function initGuideTabs() {
-    const guideTabs = document.querySelectorAll('.guide-tab');
-    const guidePanels = document.querySelectorAll('.guide-panel');
+// 初始化健康百科标签页
+function initHealthTabs() {
+    const healthTabs = document.querySelectorAll('.health-tab');
+    const healthPanels = document.querySelectorAll('.health-panel');
 
-    guideTabs.forEach(tab => {
+    healthTabs.forEach(tab => {
         tab.addEventListener('click', function() {
             const tabId = this.dataset.tab;
 
-            guideTabs.forEach(t => t.classList.remove('active'));
+            healthTabs.forEach(t => t.classList.remove('active'));
             this.classList.add('active');
 
-            guidePanels.forEach(panel => {
+            healthPanels.forEach(panel => {
                 panel.classList.remove('active');
                 if (panel.id === `${tabId}-panel`) {
+                    panel.classList.add('active');
+                }
+            });
+        });
+    });
+
+    // 养宠指南内部子标签
+    const guideInnerTabs = document.querySelectorAll('.guide-inner-tab');
+    const guideInnerPanels = document.querySelectorAll('.guide-inner-panel');
+
+    guideInnerTabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+            const guideId = this.dataset.guide;
+
+            guideInnerTabs.forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+
+            guideInnerPanels.forEach(panel => {
+                panel.classList.remove('active');
+                if (panel.id === `guide-${guideId}-panel`) {
                     panel.classList.add('active');
                 }
             });
@@ -600,6 +704,61 @@ document.addEventListener('click', function(e) {
     e.target.style.display = 'none';
   }
 });
+
+// ═════════════════════════════════════════
+// 底部标签栏 (移动端小程序风格)
+// ═════════════════════════════════════════
+
+function isOnIndexPage() {
+    var path = window.location.pathname;
+    return path === '/' || path.endsWith('/index.html') || path === '/index.html';
+}
+
+function setActiveBottomTab(tabName) {
+    document.querySelectorAll('.bottom-tab').forEach(function(t) {
+        t.classList.toggle('active', t.getAttribute('data-tab') === tabName);
+    });
+}
+
+function updateBottomTabOnScroll() {
+    var sections = [];
+    ['home', 'ai-consultation', 'health', 'store', 'profile'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) sections.push({ id: id, top: el.offsetTop });
+    });
+    if (sections.length === 0) return;
+
+    var scrollY = window.scrollY + 120;
+    var current = sections[0].id;
+    for (var i = sections.length - 1; i >= 0; i--) {
+        if (scrollY >= sections[i].top) { current = sections[i].id; break; }
+    }
+    setActiveBottomTab(current);
+}
+
+function initBottomTabs() {
+    var tabs = document.querySelectorAll('.bottom-tab');
+    if (tabs.length === 0) return;
+
+    tabs.forEach(function(tab) {
+        tab.addEventListener('click', function(e) {
+            var tabName = this.getAttribute('data-tab');
+            var targetId = this.getAttribute('data-target');
+
+            if (isOnIndexPage()) {
+                e.preventDefault();
+                setActiveBottomTab(tabName);
+                navigateTo(targetId);
+            }
+            // 子页面直接跳转 href，无需拦截
+        });
+    });
+
+    if (isOnIndexPage()) {
+        window.addEventListener('scroll', updateBottomTabOnScroll);
+        updateBottomTabOnScroll();
+    }
+}
 
 // 导出全局函数
 window.openTrainingDetail = openTrainingDetail;
