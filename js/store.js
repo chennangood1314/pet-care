@@ -234,7 +234,8 @@ function renderProducts() {
     <div class="product-card animate-on-scroll" data-id="${product.id}">
       ${product.badge ? `<span class="product-badge">${product.badge}</span>` : ''}
       <div class="product-img">
-        <img src="${product.img}" alt="${product.name}" loading="lazy">
+        <img src="${product.img}" alt="${product.name}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="product-img-fallback" style="display:none;width:100%;height:100%;background:linear-gradient(135deg,${product.category==='food'?'#fff3e0,#ffe0b2':product.category==='health'?'#e8f5e9,#c8e6c9':product.category==='toy'?'#fce4ec,#f8bbd0':product.category==='home'?'#e3f2fd,#bbdefb':'#f5f5f5,#e0e0e0'});align-items:center;justify-content:center;font-size:48px;">${product.category==='food'?'🍖':product.category==='health'?'💊':product.category==='toy'?'🎾':product.category==='home'?'🏠':'📦'}</div>
       </div>
       <div class="product-info">
         <h4 class="product-name">${product.name}</h4>
